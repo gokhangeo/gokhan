@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uygulama Portalı</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Özel scrollbar stilleri */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1f2937;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #4b5563;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #6b7280;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white antialiased">
+
+    <!-- Ana Konteyner -->
+    <div class="container mx-auto px-4 py-8 md:py-16">
+
+        <!-- Başlık Bölümü -->
+        <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-5xl font-bold mb-2 bg-gradient-to-r from-purple-400 to-indigo-500 text-transparent bg-clip-text">
+                Uygulama Merkezi
+            </h1>
+            <p class="text-gray-400 text-lg">
+                Tüm projelerinize tek bir yerden erişin.
+            </p>
+        </header>
+
+        <!-- Uygulama Kartları Grid'i -->
+        <main class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+            
+            <!-- Kart Şablonu -->
+            <a href="https://gokhangeo.github.io/istakip/" target="_blank" rel="noopener noreferrer" class="bg-gray-800 rounded-xl shadow-lg hover:shadow-indigo-500/50 transform hover:-translate-y-1 transition-all duration-300 ease-in-out p-6 flex items-center space-x-4">
+                <div class="bg-indigo-500 p-3 rounded-lg">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
+                </div>
+                <div>
+                    <h2 class="text-xl font-semibold text-gray-100">İş Takip</h2>
+                    <p class="text-gray-400">Görev ve proje takibi</p>
+                </div>
+            </a>
+
+            <a href="https://gokhangeo.github.io/tkmevzuat/" target="_blank" rel="noopener noreferrer" class="bg-gray-800 rounded-xl shadow-lg hover:shadow-purple-500/50 transform hover:-translate-y-1 transition-all duration-300 ease-in-out p-6 flex items-center space-x-4">
+                <div class="bg-purple-500 p-3 rounded-lg">
+                     <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v11.494m-9-5.747h18"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20.253H6.5a2.5 2.5 0 01-2.5-2.5V6.253a2.5 2.5 0 012.5-2.5H10m4 0h3.5a2.5 2.5 0 012.5 2.5v11.494a2.5 2.5 0 01-2.5 2.5H14"></path></svg>
+                </div>
+                <div>
+                    <h2 class="text-xl font-semibold text-gray-100">TK Mevzuat</h2>
+                    <p class="text-gray-400">Mevzuat ve yönetmelikler</p>
+                </div>
+            </a>
+            
+            <a href="https://gokhangeo.github.io/mersinistakip/" target="_blank" rel="noopener noreferrer" class="bg-gray-800 rounded-xl shadow-lg hover:shadow-sky-500/50 transform hover:-translate-y-1 transition-all duration-300 ease-in-out p-6 flex items-center space-x-4">
+                <div class="bg-sky-500 p-3 rounded-lg">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                </div>
+                <div>
+                    <h2 class="text-xl font-semibold text-gray-100">Mersin İş Takip</h2>
+                    <p class="text-gray-400">Bölgesel görev yönetimi</p>
+                </div>
+            </a>
+
+            <a href="https://gokhangeo.github.io/isyonetim/" target="_blank" rel="noopener noreferrer" class="bg-gray-800 rounded-xl shadow-lg hover:shadow-emerald-500/50 transform hover:-translate-y-1 transition-all duration-300 ease-in-out p-6 flex items-center space-x-4">
+                <div class="bg-emerald-500 p-3 rounded-lg">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                </div>
+                <div>
+                    <h2 class="text-xl font-semibold text-gray-100">İş Yönetim</h2>
+                    <p class="text-gray-400">Genel iş akışı yönetimi</p>
+                </div>
+            </a>
+            
+            <a href="https://gokhangeo.github.io/mersin-th/" target="_blank" rel="noopener noreferrer" class="bg-gray-800 rounded-xl shadow-lg hover:shadow-rose-500/50 transform hover:-translate-y-1 transition-all duration-300 ease-in-out p-6 flex items-center space-x-4">
+                <div class="bg-rose-500 p-3 rounded-lg">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h6m-6 4h6m-6 4h6"></path></svg>
+                </div>
+                <div>
+                    <h2 class="text-xl font-semibold text-gray-100">Mersin TH</h2>
+                    <p class="text-gray-400">Teknik hizmetler</p>
+                </div>
+            </a>
+
+            <a href="https://gokhangeo.github.io/mersin-norm/" target="_blank" rel="noopener noreferrer" class="bg-gray-800 rounded-xl shadow-lg hover:shadow-amber-500/50 transform hover:-translate-y-1 transition-all duration-300 ease-in-out p-6 flex items-center space-x-4">
+                <div class="bg-amber-500 p-3 rounded-lg">
+                   <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l-3-1m-3 1l-3 9"></path></svg>
+                </div>
+                <div>
+                    <h2 class="text-xl font-semibold text-gray-100">Mersin Norm</h2>
+                    <p class="text-gray-400">Norm kadro işlemleri</p>
+                </div>
+            </a>
+
+            <a href="https://gokhangeo.github.io/evraktakip/" target="_blank" rel="noopener noreferrer" class="bg-gray-800 rounded-xl shadow-lg hover:shadow-teal-500/50 transform hover:-translate-y-1 transition-all duration-300 ease-in-out p-6 flex items-center space-x-4">
+                <div class="bg-teal-500 p-3 rounded-lg">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path></svg>
+                </div>
+                <div>
+                    <h2 class="text-xl font-semibold text-gray-100">Evrak Takip</h2>
+                    <p class="text-gray-400">Belge ve evrak yönetimi</p>
+                </div>
+            </a>
+
+            <a href="https://gokhangeo.github.io/personelmesai/" target="_blank" rel="noopener noreferrer" class="bg-gray-800 rounded-xl shadow-lg hover:shadow-cyan-500/50 transform hover:-translate-y-1 transition-all duration-300 ease-in-out p-6 flex items-center space-x-4">
+                <div class="bg-cyan-500 p-3 rounded-lg">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                </div>
+                <div>
+                    <h2 class="text-xl font-semibold text-gray-100">Personel Mesai</h2>
+                    <p class="text-gray-400">Çalışma saatleri takibi</p>
+                </div>
+            </a>
+            
+            <a href="https://gokhangeo.github.io/asistan/" target="_blank" rel="noopener noreferrer" class="bg-gray-800 rounded-xl shadow-lg hover:shadow-pink-500/50 transform hover:-translate-y-1 transition-all duration-300 ease-in-out p-6 flex items-center space-x-4">
+                <div class="bg-pink-500 p-3 rounded-lg">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"></path></svg>
+                </div>
+                <div>
+                    <h2 class="text-xl font-semibold text-gray-100">Asistan</h2>
+                    <p class="text-gray-400">Kişisel dijital asistan</p>
+                </div>
+            </a>
+
+        </main>
+        
+        <!-- Footer -->
+        <footer class="text-center mt-12 text-gray-500">
+            <p>&copy; 2024 Uygulama Portalı. Tüm hakları saklıdır.</p>
+        </footer>
+
+    </div>
+
+</body>
+</html>
