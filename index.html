@@ -51,6 +51,11 @@
         }
         html.light .note-item { background-color: #f3f4f6; } /* bg-gray-100 */
         html.light .note-item:hover { background-color: #e5e7eb; } /* bg-gray-200 */
+        
+        .note-content-display {
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
     </style>
 </head>
 <body class="bg-gray-900 text-white antialiased">
@@ -207,6 +212,22 @@
             </button>
         </div>
     </div>
+    
+    <!-- Note Viewer Modal -->
+    <div id="note-viewer-modal" class="modal-bg fixed inset-0 flex items-center justify-center p-4 hidden z-50 transition-opacity duration-300">
+        <div class="modal-content bg-gray-800 rounded-2xl shadow-2xl w-full max-w-2xl p-6 md:p-8 relative transform scale-95 transition-transform duration-300 flex flex-col" style="max-height: 90vh;">
+            <button class="close-modal-btn absolute top-4 right-4 text-gray-500 hover:text-white transition-colors text-3xl leading-none">&times;</button>
+            <h2 class="text-2xl md:text-3xl font-bold text-center mb-6 text-header">Not Görüntüle</h2>
+            <div class="overflow-y-auto flex-grow bg-gray-700 p-4 rounded-lg mb-4">
+                <p id="note-viewer-content" class="note-content-display text-white"></p>
+            </div>
+            <button id="copy-note-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg transition-colors flex items-center justify-center">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                Kopyala
+            </button>
+             <div id="copy-message" class="mt-4 text-center text-sm h-5 text-green-400"></div>
+        </div>
+    </div>
 
 
     <script>
@@ -352,8 +373,9 @@
                 noteEl.setAttribute('data-id', note.id);
                 
                 const noteContent = document.createElement('p');
-                noteContent.className = 'flex-grow truncate pr-4 text-header';
+                noteContent.className = 'flex-grow truncate pr-4 text-header cursor-pointer';
                 noteContent.textContent = note.content.split('\n')[0] || 'Boş not'; // Show first line
+                noteContent.onclick = () => openNoteViewer(note.id);
                 noteEl.appendChild(noteContent);
                 
                 const buttonsContainer = document.createElement('div');
@@ -417,7 +439,6 @@
         };
         
         const openNoteEditor = (id = null) => {
-            const editorModal = document.getElementById('note-editor-modal');
             const editorTitle = document.getElementById('note-editor-title');
             const editorContent = document.getElementById('note-editor-content');
             const editorIdInput = document.getElementById('note-editor-id');
@@ -435,6 +456,14 @@
                 editorIdInput.value = '';
             }
             showModal('note-editor-modal');
+        };
+
+        const openNoteViewer = (id) => {
+            const note = notes.find(n => n.id === id);
+            if(note) {
+                document.getElementById('note-viewer-content').textContent = note.content;
+                showModal('note-viewer-modal');
+            }
         };
         
         const saveEditedNote = () => {
@@ -460,9 +489,22 @@
             renderNotes();
             saveNotesToGithub(true);
         };
+        
+        const copyNoteToClipboard = () => {
+            const content = document.getElementById('note-viewer-content').textContent;
+            const copyMessage = document.getElementById('copy-message');
+            navigator.clipboard.writeText(content).then(() => {
+                copyMessage.textContent = 'Not panoya kopyalandı!';
+                setTimeout(() => { copyMessage.textContent = ''; }, 2000);
+            }, () => {
+                copyMessage.textContent = 'Kopyalama başarısız oldu.';
+                 setTimeout(() => { copyMessage.textContent = ''; }, 2000);
+            });
+        };
 
         document.getElementById('add-new-note-btn').addEventListener('click', () => openNoteEditor());
         document.getElementById('save-edited-note-btn').addEventListener('click', saveEditedNote);
+        document.getElementById('copy-note-btn').addEventListener('click', copyNoteToClipboard);
 
 
         // --- Modal Yönetimi ---
@@ -513,6 +555,7 @@
         setupModal('other-modal');
         setupModal('notepad-modal', loadNotes);
         setupModal('note-editor-modal');
+        setupModal('note-viewer-modal');
         
         setupTrigger('open-tkgm-modal', 'tkgm-modal');
         setupTrigger('open-projects-modal', 'projects-modal');
