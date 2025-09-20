@@ -33,6 +33,24 @@
         .sortable-ghost { opacity: 0.4; background: #4f46e5; }
         .cursor-grab { cursor: grab; }
         .cursor-grabbing { cursor: grabbing; }
+        
+        /* Not Defteri Stilleri */
+        .note-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            background-color: #374151; /* bg-gray-700 */
+            margin-bottom: 0.75rem;
+            cursor: grab;
+            transition: background-color 0.2s;
+        }
+        .note-item:hover {
+            background-color: #4b5563; /* bg-gray-600 */
+        }
+        html.light .note-item { background-color: #f3f4f6; } /* bg-gray-100 */
+        html.light .note-item:hover { background-color: #e5e7eb; } /* bg-gray-200 */
     </style>
 </head>
 <body class="bg-gray-900 text-white antialiased">
@@ -61,15 +79,15 @@
 
         <!-- Kategori Kartları -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-            <div id="open-tkgm-modal" class="category-card card bg-gray-800 p-6 rounded-2xl shadow-lg flex flex-col justify-between items-center text-center cursor-pointer transform hover:-translate-y-2 transition-all duration-300">
+            <div id="open-tkgm-modal" class="category-card card bg-gray-800 p-6 rounded-2xl shadow-lg flex flex-col justify-between items-center text-center cursor-pointer transform hover:-translate-y-2 transition-all duration-300 hover:shadow-blue-500/50">
                 <h2 class="text-2xl font-bold text-header">TKGM Sistemleri</h2>
                 <p class="text-subheader mt-2">Resmi kurum uygulamaları</p>
             </div>
-            <div id="open-projects-modal" class="category-card card bg-gray-800 p-6 rounded-2xl shadow-lg flex flex-col justify-between items-center text-center cursor-pointer transform hover:-translate-y-2 transition-all duration-300">
+            <div id="open-projects-modal" class="category-card card bg-gray-800 p-6 rounded-2xl shadow-lg flex flex-col justify-between items-center text-center cursor-pointer transform hover:-translate-y-2 transition-all duration-300 hover:shadow-purple-500/50">
                 <h2 class="text-2xl font-bold text-header">Kişisel Projeler</h2>
                 <p class="text-subheader mt-2">Geliştirilen özel araçlar</p>
             </div>
-            <div id="open-other-modal" class="category-card card bg-gray-800 p-6 rounded-2xl shadow-lg flex flex-col justify-between items-center text-center cursor-pointer transform hover:-translate-y-2 transition-all duration-300">
+            <div id="open-other-modal" class="category-card card bg-gray-800 p-6 rounded-2xl shadow-lg flex flex-col justify-between items-center text-center cursor-pointer transform hover:-translate-y-2 transition-all duration-300 hover:shadow-yellow-500/50">
                 <h2 class="text-2xl font-bold text-header">Diğer Uygulamalar</h2>
                 <p class="text-subheader mt-2">Sosyal medya ve sık kullanılanlar</p>
             </div>
@@ -144,14 +162,32 @@
         </div>
     </div>
 
-    <!-- Notepad Modal -->
+    <!-- Notepad List Modal -->
     <div id="notepad-modal" class="modal-bg fixed inset-0 flex items-center justify-center p-4 hidden z-50 transition-opacity duration-300">
-        <div class="modal-content bg-gray-800 rounded-2xl shadow-2xl w-full max-w-2xl p-6 md:p-8 relative transform scale-95 transition-transform duration-300 flex flex-col">
+        <div class="modal-content bg-gray-800 rounded-2xl shadow-2xl w-full max-w-2xl p-6 md:p-8 relative transform scale-95 transition-transform duration-300 flex flex-col" style="max-height: 90vh;">
             <button class="close-modal-btn absolute top-4 right-4 text-gray-500 hover:text-white transition-colors text-3xl leading-none">&times;</button>
-            <h2 class="text-2xl md:text-3xl font-bold text-center mb-6 text-header">Not Defteri</h2>
-            <textarea id="note-content" class="w-full h-64 p-4 rounded-lg bg-gray-700 border border-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 flex-grow" placeholder="Notlarınızı GitHub'dan yüklemek için bekleyin..."></textarea>
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl md:text-3xl font-bold text-header">Not Defteri</h2>
+                <button id="add-new-note-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg transition-colors flex items-center">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                    Yeni Not Ekle
+                </button>
+            </div>
+            <div id="notes-list-container" class="overflow-y-auto flex-grow">
+                <!-- Notlar buraya yüklenecek -->
+            </div>
             <div id="notepad-message" class="mt-4 text-center text-sm h-5"></div>
-            <button id="save-note-btn" class="mt-6 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg transition-colors w-full sm:w-auto sm:self-center disabled:bg-gray-500 disabled:cursor-not-allowed">
+        </div>
+    </div>
+    
+    <!-- Note Editor Modal -->
+    <div id="note-editor-modal" class="modal-bg fixed inset-0 flex items-center justify-center p-4 hidden z-50 transition-opacity duration-300">
+        <div class="modal-content bg-gray-800 rounded-2xl shadow-2xl w-full max-w-2xl p-6 md:p-8 relative transform scale-95 transition-transform duration-300 flex flex-col">
+             <button class="close-modal-btn absolute top-4 right-4 text-gray-500 hover:text-white transition-colors text-3xl leading-none">&times;</button>
+            <h2 id="note-editor-title" class="text-2xl md:text-3xl font-bold text-center mb-6 text-header">Notu Düzenle</h2>
+            <input type="hidden" id="note-editor-id">
+            <textarea id="note-editor-content" class="w-full h-64 p-4 rounded-lg bg-gray-700 border border-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 flex-grow" placeholder="Notunuzu buraya yazın..."></textarea>
+            <button id="save-edited-note-btn" class="mt-6 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg transition-colors w-full sm:w-auto sm:self-center">
                 Kaydet
             </button>
         </div>
@@ -218,28 +254,19 @@
         });
 
         // --- Notepad GitHub Integration ---
-        const notepadContent = document.getElementById('note-content');
-        const saveNoteBtn = document.getElementById('save-note-btn');
         const notepadMessage = document.getElementById('notepad-message');
-        let fileSha = null; // To store the SHA of the file for updates
+        const notesListContainer = document.getElementById('notes-list-container');
+        let fileSha = null;
+        let notes = [];
 
-        /*
-        !!! ÖNEMLİ GÜVENLİK UYARISI !!!
-        GitHub API anahtarını doğrudan istemci tarafı koduna (HTML/JavaScript) yerleştirmek son derece risklidir.
-        Bu anahtar, tarayıcıda herkes tarafından görülebilir ve GitHub hesabınızda kötüye kullanıma yol açabilir.
-        Bu anahtarın yetkileri dahilinde (repo silme, kod değiştirme vb.) her türlü işlem yapılabilir.
-        Tavsiye edilen yöntem, GitHub API isteklerini yapan bir backend (sunucu tarafı) servisi oluşturmak ve
-        bu istemci uygulamasının o servisle konuşmasını sağlamaktır.
-        Bu kod sadece sizin isteğiniz üzerine bir prototip olarak hazırlanmıştır.
-        */
         const p1 = 'ghp_MAuvwYTJDUiqF';
         const p2 = 'Y5h72CZeXnMKux';
         const p3 = 'rCJ08sfAl';
         const GITHUB_TOKEN = p1 + p2 + p3;
         
         const GITHUB_USER = 'gokhangeo';
-        const GITHUB_REPO = 'portal-notes'; // Lütfen bu isimde bir repoyu GitHub'da oluşturun.
-        const FILE_PATH = 'notes.txt';
+        const GITHUB_REPO = 'gokhan';
+        const FILE_PATH = 'portal-notes/notes.json';
         const API_URL = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/${FILE_PATH}`;
 
         const showNotepadMessage = (message, isError = false) => {
@@ -250,71 +277,21 @@
             }, 3000);
         };
 
-        // Türkçe karakterleri desteklemek için Base64 çevirme fonksiyonları
         function b64EncodeUnicode(str) {
-            // önce yüzde kodlamalı UTF-8'i almak için encodeURIComponent kullanıyoruz,
-            // sonra yüzde kodlamalarını btoa'ya beslenebilecek ham baytlara dönüştürüyoruz.
             return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g,
-                function toSolidBytes(match, p1) {
-                    return String.fromCharCode('0x' + p1);
-            }));
+                (match, p1) => String.fromCharCode('0x' + p1)));
         }
 
         function b64DecodeUnicode(str) {
-            // Geriye doğru: bayt akışından yüzde kodlamasına, orijinal dizeye.
-            return decodeURIComponent(atob(str).split('').map(function(c) {
+            return decodeURIComponent(atob(str).split('').map((c) => {
                 return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
             }).join(''));
         }
 
-        const loadNotes = async () => {
-            if (!GITHUB_TOKEN) {
-                notepadContent.value = "GitHub API anahtarı ayarlanmamış.";
-                saveNoteBtn.disabled = true;
-                return;
-            }
-            
-            saveNoteBtn.disabled = true;
-            saveNoteBtn.textContent = 'Yükleniyor...';
-            notepadContent.value = '';
-            fileSha = null;
-
-            try {
-                const response = await fetch(API_URL, {
-                    headers: {
-                        'Authorization': `token ${GITHUB_TOKEN}`,
-                        'Accept': 'application/vnd.github.v3+json'
-                    }
-                });
-
-                if (response.ok) {
-                    const data = await response.json();
-                    // content base64 ile kodlanmıştır, bu yüzden onu çözmemiz gerekiyor
-                    notepadContent.value = b64DecodeUnicode(data.content);
-                    fileSha = data.sha;
-                } else if (response.status === 404) {
-                    notepadContent.placeholder = 'Henüz not kaydedilmemiş. İlk notunuzu buraya yazın.';
-                } else {
-                    const error = await response.json();
-                    throw new Error(error.message || 'Notlar yüklenemedi.');
-                }
-            } catch (error) {
-                showNotepadMessage(`Hata: ${error.message}. Repoyu oluşturduğunuzdan emin olun.`, true);
-                notepadContent.value = `Notlar yüklenemedi. Konsolu kontrol edin.`;
-            } finally {
-                saveNoteBtn.disabled = false;
-                saveNoteBtn.textContent = 'Kaydet';
-            }
-        };
-
-        const saveNotes = async () => {
-            const content = notepadContent.value;
-            // içeriğin unicode desteğiyle base64 kodlu olması gerekiyor
+        const saveNotesToGithub = async (showSuccessMessage = false) => {
+            const content = JSON.stringify(notes, null, 2);
             const encodedContent = b64EncodeUnicode(content);
 
-            saveNoteBtn.disabled = true;
-            saveNoteBtn.textContent = 'Kaydediliyor...';
-            
             try {
                 const body = {
                     message: `Notlar güncellendi - ${new Date().toISOString()}`,
@@ -336,30 +313,149 @@
                 
                 if (response.ok || response.status === 201) {
                     const data = await response.json();
-                    fileSha = data.content.sha; // Update sha for the next save
-                    showNotepadMessage('Notlar başarıyla GitHub\'a kaydedildi!', false);
+                    fileSha = data.content.sha;
+                    if(showSuccessMessage) showNotepadMessage('Notlar başarıyla GitHub\'a kaydedildi!', false);
                 } else {
                     const error = await response.json();
                     throw new Error(error.message || 'Notlar kaydedilemedi.');
                 }
-
             } catch (error) {
                  showNotepadMessage(`Hata: ${error.message}`, true);
-            } finally {
-                saveNoteBtn.disabled = false;
-                saveNoteBtn.textContent = 'Kaydet';
             }
         };
+        
+        const renderNotes = () => {
+            notesListContainer.innerHTML = '';
+            if (notes.length === 0) {
+                 notesListContainer.innerHTML = `<p class="text-center text-gray-400">Henüz not eklenmemiş.</p>`;
+                 return;
+            }
 
-        saveNoteBtn.addEventListener('click', saveNotes);
+            notes.forEach(note => {
+                const noteEl = document.createElement('div');
+                noteEl.className = 'note-item';
+                noteEl.setAttribute('data-id', note.id);
+                
+                const noteContent = document.createElement('p');
+                noteContent.className = 'flex-grow truncate pr-4 text-header';
+                noteContent.textContent = note.content.split('\n')[0] || 'Boş not'; // Show first line
+                noteEl.appendChild(noteContent);
+                
+                const buttonsContainer = document.createElement('div');
+                buttonsContainer.className = 'flex items-center space-x-2';
+                
+                const editBtn = document.createElement('button');
+                editBtn.innerHTML = `<svg class="w-5 h-5 text-gray-400 hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.5L15.232 5.232z"></path></svg>`;
+                editBtn.className = 'edit-note-btn';
+                editBtn.onclick = () => openNoteEditor(note.id);
+                buttonsContainer.appendChild(editBtn);
+
+                const deleteBtn = document.createElement('button');
+                deleteBtn.innerHTML = `<svg class="w-5 h-5 text-gray-400 hover:text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>`;
+                deleteBtn.className = 'delete-note-btn';
+                deleteBtn.onclick = () => deleteNote(note.id);
+                buttonsContainer.appendChild(deleteBtn);
+
+                noteEl.appendChild(buttonsContainer);
+                notesListContainer.appendChild(noteEl);
+            });
+
+            new Sortable(notesListContainer, {
+                animation: 150,
+                ghostClass: 'sortable-ghost',
+                onEnd: (evt) => {
+                    const sortedIDs = Array.from(evt.to.children).map(el => el.getAttribute('data-id'));
+                    notes.sort((a, b) => sortedIDs.indexOf(String(a.id)) - sortedIDs.indexOf(String(b.id)));
+                    saveNotesToGithub();
+                }
+            });
+        };
+
+        const loadNotes = async () => {
+            notesListContainer.innerHTML = `<p class="text-center text-gray-400">Notlar GitHub'dan yükleniyor...</p>`;
+            try {
+                const response = await fetch(API_URL, {
+                    headers: { 'Authorization': `token ${GITHUB_TOKEN}`, 'Accept': 'application/vnd.github.v3+json' }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    notes = JSON.parse(b64DecodeUnicode(data.content));
+                    fileSha = data.sha;
+                } else if (response.status === 404) {
+                    notes = [];
+                } else {
+                    const error = await response.json();
+                    throw new Error(error.message || 'Notlar yüklenemedi.');
+                }
+            } catch (error) {
+                showNotepadMessage(`Hata: ${error.message}.`, true);
+                notes = [];
+            }
+            renderNotes();
+        };
+
+        const deleteNote = (id) => {
+            notes = notes.filter(note => note.id !== id);
+            renderNotes();
+            saveNotesToGithub(true);
+        };
+        
+        const openNoteEditor = (id = null) => {
+            const editorModal = document.getElementById('note-editor-modal');
+            const editorTitle = document.getElementById('note-editor-title');
+            const editorContent = document.getElementById('note-editor-content');
+            const editorIdInput = document.getElementById('note-editor-id');
+            
+            if (id) { // Editing existing note
+                const note = notes.find(n => n.id === id);
+                if(note) {
+                    editorTitle.textContent = 'Notu Düzenle';
+                    editorContent.value = note.content;
+                    editorIdInput.value = id;
+                }
+            } else { // Adding new note
+                editorTitle.textContent = 'Yeni Not Ekle';
+                editorContent.value = '';
+                editorIdInput.value = '';
+            }
+            showModal('note-editor-modal');
+        };
+        
+        const saveEditedNote = () => {
+            const editorContent = document.getElementById('note-editor-content');
+            const editorIdInput = document.getElementById('note-editor-id');
+            const id = editorIdInput.value;
+            const content = editorContent.value;
+
+            if (id) { // Update existing note
+                const noteIndex = notes.findIndex(n => n.id == id);
+                if (noteIndex > -1) {
+                    notes[noteIndex].content = content;
+                }
+            } else { // Create new note
+                const newNote = {
+                    id: Date.now(),
+                    content: content
+                };
+                notes.unshift(newNote); // Add to the beginning
+            }
+            
+            hideModal('note-editor-modal');
+            renderNotes();
+            saveNotesToGithub(true);
+        };
+
+        document.getElementById('add-new-note-btn').addEventListener('click', () => openNoteEditor());
+        document.getElementById('save-edited-note-btn').addEventListener('click', saveEditedNote);
 
 
         // --- Modal Yönetimi ---
-        const setupModal = (triggerId, modalId, onShowCallback) => {
-            const trigger = document.getElementById(triggerId);
-            const modal = document.getElementById(modalId);
-            if (!trigger || !modal) return;
+        const modalInstances = {};
 
+        const setupModal = (modalId, onShowCallback) => {
+            const modal = document.getElementById(modalId);
+            if (!modal) return;
             const modalContent = modal.querySelector('.modal-content');
             const closeButtons = modal.querySelectorAll('.close-modal-btn');
 
@@ -368,9 +464,7 @@
                 setTimeout(() => {
                     modal.classList.add('opacity-100');
                     modalContent.classList.add('scale-100');
-                    if(onShowCallback) {
-                        onShowCallback();
-                    }
+                    if (onShowCallback) onShowCallback();
                 }, 10);
             };
 
@@ -379,18 +473,36 @@
                 modalContent.classList.remove('scale-100');
                 setTimeout(() => modal.classList.add('hidden'), 300);
             };
-
-            trigger.addEventListener('click', show);
+            
+            modalInstances[modalId] = { show, hide };
+            
             closeButtons.forEach(btn => btn.addEventListener('click', hide));
             modal.addEventListener('click', (e) => {
                 if (e.target === modal) hide();
             });
         };
         
-        setupModal('open-tkgm-modal', 'tkgm-modal');
-        setupModal('open-projects-modal', 'projects-modal');
-        setupModal('open-other-modal', 'other-modal');
-        setupModal('open-notepad-modal', 'notepad-modal', loadNotes);
+        const showModal = (modalId) => modalInstances[modalId]?.show();
+        const hideModal = (modalId) => modalInstances[modalId]?.hide();
+
+        const setupTrigger = (triggerId, modalId) => {
+            const trigger = document.getElementById(triggerId);
+            if (trigger) {
+                trigger.addEventListener('click', () => showModal(modalId));
+            }
+        };
+        
+        // Modalları ve tetikleyicileri ayarla
+        setupModal('tkgm-modal');
+        setupModal('projects-modal');
+        setupModal('other-modal');
+        setupModal('notepad-modal', loadNotes);
+        setupModal('note-editor-modal');
+        
+        setupTrigger('open-tkgm-modal', 'tkgm-modal');
+        setupTrigger('open-projects-modal', 'projects-modal');
+        setupTrigger('open-other-modal', 'other-modal');
+        setupTrigger('open-notepad-modal', 'notepad-modal');
     });
     </script>
 </body>
