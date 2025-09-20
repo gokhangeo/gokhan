@@ -5,31 +5,52 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Uygulama Portalı</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Inter', sans-serif;
+            transition: background-color 0.3s, color 0.3s;
         }
         /* Özel scrollbar stilleri */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #1f2937;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #4b5563;
-            border-radius: 10px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #6b7280;
-        }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #1f2937; }
+        ::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #6b7280; }
+
+        /* Light Tema Stilleri */
+        html.light body { background-color: #f3f4f6; color: #111827; }
+        html.light ::-webkit-scrollbar-track { background: #e5e7eb; }
+        html.light ::-webkit-scrollbar-thumb { background: #9ca3af; }
+        html.light .card, html.light .category-card, html.light .modal-content { background-color: #ffffff; border-color: #e5e7eb; }
+        html.light .text-header { color: #1f2937; }
+        html.light .text-subheader { color: #4b5563; }
+        html.light .card:hover, html.light .category-card:hover { box-shadow: 0 4px_6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06); }
+        html.light .footer-text { color: #6b7280; }
+        html.light .modal-bg { background-color: rgba(0, 0, 0, 0.5); }
+        
+        /* Kart Sürükleme Stili */
+        .sortable-ghost { opacity: 0.4; background: #4f46e5; }
+        .cursor-grab { cursor: grab; }
+        .cursor-grabbing { cursor: grabbing; }
     </style>
 </head>
 <body class="bg-gray-900 text-white antialiased">
 
     <!-- Ana Konteyner -->
     <div class="container mx-auto px-4 py-8 md:py-12">
+
+        <!-- Üst Bilgi Alanı: Saat, Tarih ve Tema Butonu -->
+        <div class="flex justify-between items-center mb-8">
+            <div id="live-info" class="text-lg font-medium text-subheader">
+                <span id="time"></span>
+                <span class="mx-2">|</span>
+                <span id="date"></span>
+            </div>
+            <button id="theme-toggle" class="p-2 rounded-full bg-gray-700 hover:bg-gray-600 transition-colors">
+                <!-- Ikonlar JavaScript ile değiştirilecek -->
+            </button>
+        </div>
 
         <!-- Başlık Bölümü -->
         <header class="text-center mb-10">
@@ -38,259 +59,179 @@
             </h1>
         </header>
 
-        <!-- Uygulama Kartları Grid'i -->
-        <main class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-            
-            <a href="https://ebys.tkgm.gov.tr/edys-web/sistemeGiris.xhtml" target="_blank" rel="noopener noreferrer" class="bg-gray-800 rounded-xl shadow-lg hover:shadow-gray-500/50 transform hover:-translate-y-1 transition-all duration-300 ease-in-out p-4 flex items-center space-x-3">
-                <div class="bg-gray-500 p-2 rounded-lg">
-                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                </div>
-                <div>
-                    <h2 class="text-lg font-semibold text-gray-100">EBYS</h2>
-                    <p class="text-sm text-gray-400">Elektronik Belge Yönetim Sistemi</p>
-                </div>
-            </a>
-
-            <a href="https://bulut.tkgm.gov.tr/" target="_blank" rel="noopener noreferrer" class="bg-gray-800 rounded-xl shadow-lg hover:shadow-cyan-400/50 transform hover:-translate-y-1 transition-all duration-300 ease-in-out p-4 flex items-center space-x-3">
-                <div class="bg-cyan-400 p-2 rounded-lg">
-                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"></path></svg>
-                </div>
-                <div>
-                    <h2 class="text-lg font-semibold text-gray-100">BULUT</h2>
-                    <p class="text-sm text-gray-400">TKGM Bulut</p>
-                </div>
-            </a>
-
-            <a href="https://cbs.tkgm.gov.tr/login.aspx" target="_blank" rel="noopener noreferrer" class="bg-gray-800 rounded-xl shadow-lg hover:shadow-green-500/50 transform hover:-translate-y-1 transition-all duration-300 ease-in-out p-4 flex items-center space-x-3">
-                <div class="bg-green-500 p-2 rounded-lg">
-                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9V3m0 18a9 9 0 009-9m-9 9a9 9 0 00-9-9"></path></svg>
-                </div>
-                <div>
-                    <h2 class="text-lg font-semibold text-gray-100">CBS</h2>
-                    <p class="text-sm text-gray-400">Coğrafi Bilgi Sistemi</p>
-                </div>
-            </a>
-
-            <!-- Kart Şablonu -->
-            <a href="https://gokhangeo.github.io/istakip/" target="_blank" rel="noopener noreferrer" class="bg-gray-800 rounded-xl shadow-lg hover:shadow-indigo-500/50 transform hover:-translate-y-1 transition-all duration-300 ease-in-out p-4 flex items-center space-x-3">
-                <div class="bg-indigo-500 p-2 rounded-lg">
-                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
-                </div>
-                <div>
-                    <h2 class="text-lg font-semibold text-gray-100">MEGSİS</h2>
-                    <p class="text-sm text-gray-400">İşlem Süreçleri</p>
-                </div>
-            </a>
-
-            <a href="https://gokhangeo.github.io/tkmevzuat/" target="_blank" rel="noopener noreferrer" class="bg-gray-800 rounded-xl shadow-lg hover:shadow-purple-500/50 transform hover:-translate-y-1 transition-all duration-300 ease-in-out p-4 flex items-center space-x-3">
-                <div class="bg-purple-500 p-2 rounded-lg">
-                     <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v11.494m-9-5.747h18"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20.253H6.5a2.5 2.5 0 01-2.5-2.5V6.253a2.5 2.5 0 012.5-2.5H10m4 0h3.5a2.5 2.5 0 012.5 2.5v11.494a2.5 2.5 0 01-2.5 2.5H14"></path></svg>
-                </div>
-                <div>
-                    <h2 class="text-lg font-semibold text-gray-100">TK Mevzuat</h2>
-                    <p class="text-sm text-gray-400">Mevzuat ve yönetmelikler</p>
-                </div>
-            </a>
-            
-            <a href="https://gokhangeo.github.io/mersinistakip/" target="_blank" rel="noopener noreferrer" class="bg-gray-800 rounded-xl shadow-lg hover:shadow-sky-500/50 transform hover:-translate-y-1 transition-all duration-300 ease-in-out p-4 flex items-center space-x-3">
-                <div class="bg-sky-500 p-2 rounded-lg">
-                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                </div>
-                <div>
-                    <h2 class="text-lg font-semibold text-gray-100">İhale/Müdürlük Çalışmaları</h2>
-                    <p class="text-sm text-gray-400">22-a, 2B</p>
-                </div>
-            </a>
-
-            <a href="https://gokhangeo.github.io/isyonetim/" target="_blank" rel="noopener noreferrer" class="bg-gray-800 rounded-xl shadow-lg hover:shadow-emerald-500/50 transform hover:-translate-y-1 transition-all duration-300 ease-in-out p-4 flex items-center space-x-3">
-                <div class="bg-emerald-500 p-2 rounded-lg">
-                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-                </div>
-                <div>
-                    <h2 class="text-lg font-semibold text-gray-100">İş Yönetim</h2>
-                    <p class="text-sm text-gray-400">Başvuru İş Dağılımı</p>
-                </div>
-            </a>
-            
-            <a href="https://gokhangeo.github.io/mersin-th/" target="_blank" rel="noopener noreferrer" class="bg-gray-800 rounded-xl shadow-lg hover:shadow-rose-500/50 transform hover:-translate-y-1 transition-all duration-300 ease-in-out p-4 flex items-center space-x-3">
-                <div class="bg-rose-500 p-2 rounded-lg">
-                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h6m-6 4h6m-6 4h6"></path></svg>
-                </div>
-                <div>
-                    <h2 class="text-lg font-semibold text-gray-100">Mersin TH</h2>
-                    <p class="text-sm text-gray-400">Tescil Harici Alanlar</p>
-                </div>
-            </a>
-
-            <a href="https://gokhangeo.github.io/mersin-norm/" target="_blank" rel="noopener noreferrer" class="bg-gray-800 rounded-xl shadow-lg hover:shadow-amber-500/50 transform hover:-translate-y-1 transition-all duration-300 ease-in-out p-4 flex items-center space-x-3">
-                <div class="bg-amber-500 p-2 rounded-lg">
-                   <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l-3-1m-3 1l-3 9"></path></svg>
-                </div>
-                <div>
-                    <h2 class="text-lg font-semibold text-gray-100">Mersin Norm</h2>
-                    <p class="text-sm text-gray-400">Norm kadro işlemleri</p>
-                </div>
-            </a>
-
-            <a href="https://gokhangeo.github.io/evraktakip/" target="_blank" rel="noopener noreferrer" class="bg-gray-800 rounded-xl shadow-lg hover:shadow-teal-500/50 transform hover:-translate-y-1 transition-all duration-300 ease-in-out p-4 flex items-center space-x-3">
-                <div class="bg-teal-500 p-2 rounded-lg">
-                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path></svg>
-                </div>
-                <div>
-                    <h2 class="text-lg font-semibold text-gray-100">Evrak Takip</h2>
-                    <p class="text-sm text-gray-400">Belge ve evrak yönetimi</p>
-                </div>
-            </a>
-
-            <a href="https://gokhangeo.github.io/personelmesai/" target="_blank" rel="noopener noreferrer" class="bg-gray-800 rounded-xl shadow-lg hover:shadow-cyan-500/50 transform hover:-translate-y-1 transition-all duration-300 ease-in-out p-4 flex items-center space-x-3">
-                <div class="bg-cyan-500 p-2 rounded-lg">
-                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                </div>
-                <div>
-                    <h2 class="text-lg font-semibold text-gray-100">Personel Mesai</h2>
-                    <p class="text-sm text-gray-400">Çalışma saatleri takibi</p>
-                </div>
-            </a>
-            
-            <a href="https://gokhangeo.github.io/asistan/" target="_blank" rel="noopener noreferrer" class="bg-gray-800 rounded-xl shadow-lg hover:shadow-pink-500/50 transform hover:-translate-y-1 transition-all duration-300 ease-in-out p-4 flex items-center space-x-3">
-                <div class="bg-pink-500 p-2 rounded-lg">
-                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"></path></svg>
-                </div>
-                <div>
-                    <h2 class="text-lg font-semibold text-gray-100">Asistan</h2>
-                    <p class="text-sm text-gray-400">Kişisel dijital asistan</p>
-                </div>
-            </a>
-
-            <a href="https://www.tkgm.gov.tr/" target="_blank" rel="noopener noreferrer" class="bg-gray-800 rounded-xl shadow-lg hover:shadow-blue-500/50 transform hover:-translate-y-1 transition-all duration-300 ease-in-out p-4 flex items-center space-x-3">
-                <div class="bg-blue-500 p-2 rounded-lg">
-                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z"></path></svg>
-                </div>
-                <div>
-                    <h2 class="text-lg font-semibold text-gray-100">TKGM</h2>
-                    <p class="text-sm text-gray-400">Tapu ve Kadastro Genel Müdürlüğü</p>
-                </div>
-            </a>
-
-            <a href="https://ybs.tkgm.gov.tr/" target="_blank" rel="noopener noreferrer" class="bg-gray-800 rounded-xl shadow-lg hover:shadow-yellow-500/50 transform hover:-translate-y-1 transition-all duration-300 ease-in-out p-4 flex items-center space-x-3">
-                <div class="bg-yellow-500 p-2 rounded-lg">
-                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"></path></svg>
-                </div>
-                <div>
-                    <h2 class="text-lg font-semibold text-gray-100">YBS</h2>
-                    <p class="text-sm text-gray-400">Yönetim Bilgi Sistemi</p>
-                </div>
-            </a>
-
-            <a href="https://yts.tkgm.gov.tr/" target="_blank" rel="noopener noreferrer" class="bg-gray-800 rounded-xl shadow-lg hover:shadow-red-500/50 transform hover:-translate-y-1 transition-all duration-300 ease-in-out p-4 flex items-center space-x-3">
-                <div class="bg-red-500 p-2 rounded-lg">
-                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
-                </div>
-                <div>
-                    <h2 class="text-lg font-semibold text-gray-100">YTS</h2>
-                    <p class="text-sm text-gray-400">Yatırım Takip Sistemi</p>
-                </div>
-            </a>
-            
-            <!-- SOSYAL Kartı -->
-            <div id="openSocialModal" class="bg-gray-800 rounded-xl shadow-lg hover:shadow-orange-500/50 transform hover:-translate-y-1 transition-all duration-300 ease-in-out p-4 flex items-center space-x-3 cursor-pointer">
-                <div class="bg-orange-500 p-2 rounded-lg">
-                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 00-3-3.87"></path><path d="M16 3.13a4 4 0 010 7.75"></path></svg>
-                </div>
-                <div>
-                    <h2 class="text-lg font-semibold text-gray-100">SOSYAL</h2>
-                    <p class="text-sm text-gray-400">Sosyal Medya ve Araçlar</p>
-                </div>
+        <!-- Kategori Kartları -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+            <div id="open-tkgm-modal" class="category-card card bg-gray-800 p-6 rounded-2xl shadow-lg flex flex-col justify-between items-center text-center cursor-pointer transform hover:-translate-y-2 transition-all duration-300">
+                <h2 class="text-2xl font-bold text-header">TKGM Sistemleri</h2>
+                <p class="text-subheader mt-2">Resmi kurum uygulamaları</p>
             </div>
-
-        </main>
+            <div id="open-projects-modal" class="category-card card bg-gray-800 p-6 rounded-2xl shadow-lg flex flex-col justify-between items-center text-center cursor-pointer transform hover:-translate-y-2 transition-all duration-300">
+                <h2 class="text-2xl font-bold text-header">Kişisel Projeler</h2>
+                <p class="text-subheader mt-2">Geliştirilen özel araçlar</p>
+            </div>
+            <div id="open-other-modal" class="category-card card bg-gray-800 p-6 rounded-2xl shadow-lg flex flex-col justify-between items-center text-center cursor-pointer transform hover:-translate-y-2 transition-all duration-300">
+                <h2 class="text-2xl font-bold text-header">Diğer Uygulamalar</h2>
+                <p class="text-subheader mt-2">Sosyal medya ve sık kullanılanlar</p>
+            </div>
+        </div>
         
         <!-- Footer -->
-        <footer class="text-center mt-12 text-gray-500">
+        <footer class="text-center mt-12 footer-text">
             <p>© Gökhan ELGÜL tarafından tasarlanmıştır.</p>
         </footer>
-
     </div>
 
-    <!-- Sosyal Medya Modalı -->
-    <div id="socialModal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 hidden z-50 transition-opacity duration-300">
-        <div class="bg-gray-800 rounded-2xl shadow-2xl w-full max-w-4xl p-6 md:p-8 relative transform scale-95 transition-transform duration-300">
-            <button id="closeModalBtn" class="absolute top-4 right-4 text-gray-500 hover:text-white transition-colors text-3xl leading-none">&times;</button>
-            <h2 class="text-2xl md:text-3xl font-bold text-center mb-8 text-white">Sosyal Medya ve Araçlar</h2>
+    <!-- Modallar -->
+    <!-- TKGM Modal -->
+    <div id="tkgm-modal" class="modal-bg fixed inset-0 flex items-center justify-center p-4 hidden z-50 transition-opacity duration-300">
+        <div class="modal-content bg-gray-800 rounded-2xl shadow-2xl w-full max-w-4xl p-6 md:p-8 relative transform scale-95 transition-transform duration-300">
+            <button class="close-modal-btn absolute top-4 right-4 text-gray-500 hover:text-white transition-colors text-3xl leading-none">&times;</button>
+            <h2 class="text-2xl md:text-3xl font-bold text-center mb-8 text-header">TKGM Sistemleri</h2>
+            <section id="group-tkgm">
+                <main class="card-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+                    <a id="ebys" href="https://ebys.tkgm.gov.tr/edys-web/sistemeGiris.xhtml" target="_blank" rel="noopener noreferrer" class="card cursor-grab bg-gray-700 rounded-xl shadow-lg hover:shadow-gray-500/50 transform hover:-translate-y-1 transition-all duration-300 ease-in-out p-4 flex items-center space-x-3"><div class="bg-gray-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg></div><div><h2 class="text-lg font-semibold text-header">EBYS</h2><p class="text-sm text-subheader">Elektronik Belge Yönetim Sistemi</p></div></a>
+                    <a id="bulut" href="https://bulut.tkgm.gov.tr/" target="_blank" rel="noopener noreferrer" class="card cursor-grab bg-gray-700 rounded-xl shadow-lg hover:shadow-cyan-400/50 transform hover:-translate-y-1 transition-all duration-300 ease-in-out p-4 flex items-center space-x-3"><div class="bg-cyan-400 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"></path></svg></div><div><h2 class="text-lg font-semibold text-header">BULUT</h2><p class="text-sm text-subheader">TKGM Bulut</p></div></a>
+                    <a id="cbs" href="https://cbs.tkgm.gov.tr/login.aspx" target="_blank" rel="noopener noreferrer" class="card cursor-grab bg-gray-700 rounded-xl shadow-lg hover:shadow-green-500/50 transform hover:-translate-y-1 transition-all duration-300 ease-in-out p-4 flex items-center space-x-3"><div class="bg-green-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9V3m0 18a9 9 0 009-9m-9 9a9 9 0 00-9-9"></path></svg></div><div><h2 class="text-lg font-semibold text-header">CBS</h2><p class="text-sm text-subheader">Coğrafi Bilgi Sistemi</p></div></a>
+                    <a id="tkgm" href="https://www.tkgm.gov.tr/" target="_blank" rel="noopener noreferrer" class="card cursor-grab bg-gray-700 rounded-xl shadow-lg hover:shadow-blue-500/50 transform hover:-translate-y-1 transition-all duration-300 ease-in-out p-4 flex items-center space-x-3"><div class="bg-blue-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z"></path></svg></div><div><h2 class="text-lg font-semibold text-header">TKGM</h2><p class="text-sm text-subheader">Tapu ve Kadastro Gn. Md.</p></div></a>
+                    <a id="ybs" href="https://ybs.tkgm.gov.tr/" target="_blank" rel="noopener noreferrer" class="card cursor-grab bg-gray-700 rounded-xl shadow-lg hover:shadow-yellow-500/50 transform hover:-translate-y-1 transition-all duration-300 ease-in-out p-4 flex items-center space-x-3"><div class="bg-yellow-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"></path></svg></div><div><h2 class="text-lg font-semibold text-header">YBS</h2><p class="text-sm text-subheader">Yönetim Bilgi Sistemi</p></div></a>
+                    <a id="yts" href="https://yts.tkgm.gov.tr/" target="_blank" rel="noopener noreferrer" class="card cursor-grab bg-gray-700 rounded-xl shadow-lg hover:shadow-red-500/50 transform hover:-translate-y-1 transition-all duration-300 ease-in-out p-4 flex items-center space-x-3"><div class="bg-red-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg></div><div><h2 class="text-lg font-semibold text-header">YTS</h2><p class="text-sm text-subheader">Yatırım Takip Sistemi</p></div></a>
+                </main>
+            </section>
+        </div>
+    </div>
+
+    <!-- Projects Modal -->
+    <div id="projects-modal" class="modal-bg fixed inset-0 flex items-center justify-center p-4 hidden z-50 transition-opacity duration-300">
+        <div class="modal-content bg-gray-800 rounded-2xl shadow-2xl w-full max-w-4xl p-6 md:p-8 relative transform scale-95 transition-transform duration-300">
+            <button class="close-modal-btn absolute top-4 right-4 text-gray-500 hover:text-white transition-colors text-3xl leading-none">&times;</button>
+            <h2 class="text-2xl md:text-3xl font-bold text-center mb-8 text-header">Kişisel Projeler</h2>
+            <section id="group-projects">
+                <main class="card-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+                    <a id="megsis" href="https://gokhangeo.github.io/istakip/" target="_blank" rel="noopener noreferrer" class="card cursor-grab bg-gray-700 rounded-xl shadow-lg hover:shadow-indigo-500/50 transform hover:-translate-y-1 transition-all duration-300 ease-in-out p-4 flex items-center space-x-3"><div class="bg-indigo-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg></div><div><h2 class="text-lg font-semibold text-header">MEGSİS</h2><p class="text-sm text-subheader">İşlem Süreçleri</p></div></a>
+                    <a id="tkmevzuat" href="https://gokhangeo.github.io/tkmevzuat/" target="_blank" rel="noopener noreferrer" class="card cursor-grab bg-gray-700 rounded-xl shadow-lg hover:shadow-purple-500/50 transform hover:-translate-y-1 transition-all duration-300 ease-in-out p-4 flex items-center space-x-3"><div class="bg-purple-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v11.494m-9-5.747h18"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20.253H6.5a2.5 2.5 0 01-2.5-2.5V6.253a2.5 2.5 0 012.5-2.5H10m4 0h3.5a2.5 2.5 0 012.5 2.5v11.494a2.5 2.5 0 01-2.5 2.5H14"></path></svg></div><div><h2 class="text-lg font-semibold text-header">TK Mevzuat</h2><p class="text-sm text-subheader">Mevzuat ve yönetmelikler</p></div></a>
+                    <a id="mersinistakip" href="https://gokhangeo.github.io/mersinistakip/" target="_blank" rel="noopener noreferrer" class="card cursor-grab bg-gray-700 rounded-xl shadow-lg hover:shadow-sky-500/50 transform hover:-translate-y-1 transition-all duration-300 ease-in-out p-4 flex items-center space-x-3"><div class="bg-sky-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg></div><div><h2 class="text-lg font-semibold text-header">İhale/Müdürlük Çalışmaları</h2><p class="text-sm text-subheader">22-a, 2B</p></div></a>
+                    <a id="isyonetim" href="https://gokhangeo.github.io/isyonetim/" target="_blank" rel="noopener noreferrer" class="card cursor-grab bg-gray-700 rounded-xl shadow-lg hover:shadow-emerald-500/50 transform hover:-translate-y-1 transition-all duration-300 ease-in-out p-4 flex items-center space-x-3"><div class="bg-emerald-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg></div><div><h2 class="text-lg font-semibold text-header">İş Yönetim</h2><p class="text-sm text-subheader">Başvuru İş Dağılımı</p></div></a>
+                    <a id="mersinth" href="https://gokhangeo.github.io/mersin-th/" target="_blank" rel="noopener noreferrer" class="card cursor-grab bg-gray-700 rounded-xl shadow-lg hover:shadow-rose-500/50 transform hover:-translate-y-1 transition-all duration-300 ease-in-out p-4 flex items-center space-x-3"><div class="bg-rose-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h6m-6 4h6m-6 4h6"></path></svg></div><div><h2 class="text-lg font-semibold text-header">Mersin TH</h2><p class="text-sm text-subheader">Tescil Harici Alanlar</p></div></a>
+                    <a id="mersinnorm" href="https://gokhangeo.github.io/mersin-norm/" target="_blank" rel="noopener noreferrer" class="card cursor-grab bg-gray-700 rounded-xl shadow-lg hover:shadow-amber-500/50 transform hover:-translate-y-1 transition-all duration-300 ease-in-out p-4 flex items-center space-x-3"><div class="bg-amber-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l-3-1m-3 1l-3 9"></path></svg></div><div><h2 class="text-lg font-semibold text-header">Mersin Norm</h2><p class="text-sm text-subheader">Norm kadro işlemleri</p></div></a>
+                    <a id="evraktakip" href="https://gokhangeo.github.io/evraktakip/" target="_blank" rel="noopener noreferrer" class="card cursor-grab bg-gray-700 rounded-xl shadow-lg hover:shadow-teal-500/50 transform hover:-translate-y-1 transition-all duration-300 ease-in-out p-4 flex items-center space-x-3"><div class="bg-teal-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path></svg></div><div><h2 class="text-lg font-semibold text-header">Evrak Takip</h2><p class="text-sm text-subheader">Belge ve evrak yönetimi</p></div></a>
+                    <a id="personelmesai" href="https://gokhangeo.github.io/personelmesai/" target="_blank" rel="noopener noreferrer" class="card cursor-grab bg-gray-700 rounded-xl shadow-lg hover:shadow-cyan-500/50 transform hover:-translate-y-1 transition-all duration-300 ease-in-out p-4 flex items-center space-x-3"><div class="bg-cyan-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></div><div><h2 class="text-lg font-semibold text-header">Personel Mesai</h2><p class="text-sm text-subheader">Çalışma saatleri takibi</p></div></a>
+                    <a id="asistan" href="https://gokhangeo.github.io/asistan/" target="_blank" rel="noopener noreferrer" class="card cursor-grab bg-gray-700 rounded-xl shadow-lg hover:shadow-pink-500/50 transform hover:-translate-y-1 transition-all duration-300 ease-in-out p-4 flex items-center space-x-3"><div class="bg-pink-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"></path></svg></div><div><h2 class="text-lg font-semibold text-header">Asistan</h2><p class="text-sm text-subheader">Kişisel dijital asistan</p></div></a>
+                </main>
+            </section>
+        </div>
+    </div>
+    
+    <!-- Other/Social Modal -->
+    <div id="other-modal" class="modal-bg fixed inset-0 flex items-center justify-center p-4 hidden z-50 transition-opacity duration-300">
+         <div class="modal-content bg-gray-800 rounded-2xl shadow-2xl w-full max-w-4xl p-6 md:p-8 relative transform scale-95 transition-transform duration-300">
+            <button class="close-modal-btn absolute top-4 right-4 text-gray-500 hover:text-white transition-colors text-3xl leading-none">&times;</button>
+            <h2 class="text-2xl md:text-3xl font-bold text-center mb-8 text-header">Sosyal Medya ve Araçlar</h2>
             <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-                <!-- X -->
-                <a href="https://x.com" target="_blank" rel="noopener noreferrer" class="bg-gray-700 hover:bg-gray-600 p-4 rounded-xl flex flex-col items-center justify-center space-y-2 transition-all hover:scale-105">
-                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 6L6 18M6 6l12 12"></path></svg>
-                    <span class="font-semibold">X</span>
-                </a>
-                <!-- YouTube -->
-                <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" class="bg-gray-700 hover:bg-gray-600 p-4 rounded-xl flex flex-col items-center justify-center space-y-2 transition-all hover:scale-105">
-                    <svg class="w-8 h-8 text-red-500" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M21.582,6.186C21.23,4.92,20.218,3.908,18.952,3.56C17.3,3.001,12,3,12,3S6.7,3.001,5.048,3.56 C3.782,3.908,2.77,4.92,2.418,6.186C1.999,7.844,2,12,2,12s-0.001,4.156,0.418,5.814c0.352,1.266,1.364,2.278,2.63,2.628 C6.7,21,12,21,12,21s5.3-0.001,6.952-0.558c1.266-0.35,2.278-1.362,2.63-2.628C22,16.156,22,12,22,12S22,7.844,21.582,6.186z M10,15.464V8.536L16,12L10,15.464z"></path></svg>
-                    <span class="font-semibold">YouTube</span>
-                </a>
-                <!-- Facebook -->
-                <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" class="bg-gray-700 hover:bg-gray-600 p-4 rounded-xl flex flex-col items-center justify-center space-y-2 transition-all hover:scale-105">
-                    <svg class="w-8 h-8 text-blue-500" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18,2H15a5,5,0,0,0-5,5v3H7v4h3v8h4V14h3l1-4H14V7a1,1,0,0,1,1-1h3Z"></path></svg>
-                    <span class="font-semibold">Facebook</span>
-                </a>
-                <!-- Gemini -->
-                <a href="https://gemini.google.com/" target="_blank" rel="noopener noreferrer" class="bg-gray-700 hover:bg-gray-600 p-4 rounded-xl flex flex-col items-center justify-center space-y-2 transition-all hover:scale-105">
-                    <svg class="w-8 h-8 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.82 5.82 22 7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
-                    <span class="font-semibold">Gemini</span>
-                </a>
-                <!-- GitHub -->
-                <a href="https://github.com/" target="_blank" rel="noopener noreferrer" class="bg-gray-700 hover:bg-gray-600 p-4 rounded-xl flex flex-col items-center justify-center space-y-2 transition-all hover:scale-105">
-                    <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"></path></svg>
-                    <span class="font-semibold">GitHub</span>
-                </a>
-                <!-- ChatGPT -->
-                <a href="https://chat.openai.com/" target="_blank" rel="noopener noreferrer" class="bg-gray-700 hover:bg-gray-600 p-4 rounded-xl flex flex-col items-center justify-center space-y-2 transition-all hover:scale-105">
-                     <svg class="w-8 h-8 text-teal-400" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20.73,8.21a2.84,2.84,0,0,0-4-3.83,2.83,2.83,0,0,0-4.63,2,2.84,2.84,0,0,0-1.5,5.1,2.84,2.84,0,0,0,4,3.83,2.83,2.83,0,0,0,4.63-2,2.84,2.84,0,0,0,1.5-5.1ZM12.06,14a1,1,0,1,1-1-1A1,1,0,0,1,12.06,14ZM16,12.06a1,1,0,1,1,1,1A1,1,0,0,1,16,12.06Zm-1-4a1,1,0,1,1-1-1A1,1,0,0,1,15,8.11Zm-4,.05a1,1,0,1,1,1-1A1,1,0,0,1,11,8.16Zm-2.8,2.9a1,1,0,1,1,1.05-1,1,1,0,0,1-1.05,1ZM9.05,16a1,1,0,1,1,1,1A1,1,0,0,1,9.05,16Z"></path></svg>
-                    <span class="font-semibold">ChatGPT</span>
-                </a>
-                <!-- TradingView -->
-                <a href="https://www.tradingview.com/" target="_blank" rel="noopener noreferrer" class="bg-gray-700 hover:bg-gray-600 p-4 rounded-xl flex flex-col items-center justify-center space-y-2 transition-all hover:scale-105">
-                    <svg class="w-8 h-8 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 11V7a2 2 0 012-2h2a2 2 0 012 2v4m-4 5v-1.5a1.5 1.5 0 011.5-1.5h1a1.5 1.5 0 011.5 1.5V16m-4 0h4m-4 0H7m0 0v-5m0 5v2m6-11v-1.5a1.5 1.5 0 00-1.5-1.5h-1a1.5 1.5 0 00-1.5 1.5V5m4 0H9m0 0v5m0-5V3"></path></svg>
-                    <span class="font-semibold">TradingView</span>
-                </a>
+                <a href="https://x.com" target="_blank" class="bg-gray-700 hover:bg-gray-600 p-4 rounded-xl flex flex-col items-center justify-center space-y-2 transition-all hover:scale-105"><svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 6L6 18M6 6l12 12"></path></svg><span class="font-semibold text-header">X</span></a>
+                <a href="https://youtube.com" target="_blank" class="bg-gray-700 hover:bg-gray-600 p-4 rounded-xl flex flex-col items-center justify-center space-y-2 transition-all hover:scale-105"><svg class="w-8 h-8 text-red-500" fill="currentColor" viewBox="0 0 24 24"><path d="M21.582,6.186C21.23,4.92,20.218,3.908,18.952,3.56C17.3,3.001,12,3,12,3S6.7,3.001,5.048,3.56 C3.782,3.908,2.77,4.92,2.418,6.186C1.999,7.844,2,12,2,12s-0.001,4.156,0.418,5.814c0.352,1.266,1.364,2.278,2.63,2.628 C6.7,21,12,21,12,21s5.3-0.001,6.952-0.558c1.266-0.35,2.278-1.362,2.63-2.628C22,16.156,22,12,22,12S22,7.844,21.582,6.186z M10,15.464V8.536L16,12L10,15.464z"></path></svg><span class="font-semibold text-header">YouTube</span></a>
+                <a href="https://facebook.com" target="_blank" class="bg-gray-700 hover:bg-gray-600 p-4 rounded-xl flex flex-col items-center justify-center space-y-2 transition-all hover:scale-105"><svg class="w-8 h-8 text-blue-500" fill="currentColor" viewBox="0 0 24 24"><path d="M18,2H15a5,5,0,0,0-5,5v3H7v4h3v8h4V14h3l1-4H14V7a1,1,0,0,1,1-1h3Z"></path></svg><span class="font-semibold text-header">Facebook</span></a>
+                <a href="https://gemini.google.com/" target="_blank" class="bg-gray-700 hover:bg-gray-600 p-4 rounded-xl flex flex-col items-center justify-center space-y-2 transition-all hover:scale-105"><svg class="w-8 h-8 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.82 5.82 22 7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg><span class="font-semibold text-header">Gemini</span></a>
+                <a href="https://github.com/" target="_blank" class="bg-gray-700 hover:bg-gray-600 p-4 rounded-xl flex flex-col items-center justify-center space-y-2 transition-all hover:scale-105"><svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"></path></svg><span class="font-semibold text-header">GitHub</span></a>
+                <a href="https://chat.openai.com/" target="_blank" class="bg-gray-700 hover:bg-gray-600 p-4 rounded-xl flex flex-col items-center justify-center space-y-2 transition-all hover:scale-105"><svg class="w-8 h-8 text-teal-400" fill="currentColor" viewBox="0 0 24 24"><path d="M20.73,8.21a2.84,2.84,0,0,0-4-3.83,2.83,2.83,0,0,0-4.63,2,2.84,2.84,0,0,0-1.5,5.1,2.84,2.84,0,0,0,4,3.83,2.83,2.83,0,0,0,4.63-2,2.84,2.84,0,0,0,1.5-5.1ZM12.06,14a1,1,0,1,1-1-1A1,1,0,0,1,12.06,14ZM16,12.06a1,1,0,1,1,1,1A1,1,0,0,1,16,12.06Zm-1-4a1,1,0,1,1-1-1A1,1,0,0,1,15,8.11Zm-4,.05a1,1,0,1,1,1-1A1,1,0,0,1,11,8.16Zm-2.8,2.9a1,1,0,1,1,1.05-1,1,1,0,0,1-1.05,1ZM9.05,16a1,1,0,1,1,1,1A1,1,0,0,1,9.05,16Z"></path></svg><span class="font-semibold text-header">ChatGPT</span></a>
+                <a href="https://www.tradingview.com/" target="_blank" class="bg-gray-700 hover:bg-gray-600 p-4 rounded-xl flex flex-col items-center justify-center space-y-2 transition-all hover:scale-105"><svg class="w-8 h-8 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 11V7a2 2 0 012-2h2a2 2 0 012 2v4m-4 5v-1.5a1.5 1.5 0 011.5-1.5h1a1.5 1.5 0 011.5 1.5V16m-4 0h4m-4 0H7m0 0v-5m0 5v2m6-11v-1.5a1.5 1.5 0 00-1.5-1.5h-1a1.5 1.5 0 00-1.5 1.5V5m4 0H9m0 0v5m0-5V3"></path></svg><span class="font-semibold text-header">TradingView</span></a>
             </div>
         </div>
     </div>
 
     <script>
-        const openBtn = document.getElementById('openSocialModal');
-        const closeBtn = document.getElementById('closeModalBtn');
-        const modal = document.getElementById('socialModal');
-        const modalContent = modal.querySelector('div');
+    document.addEventListener('DOMContentLoaded', () => {
+        const themeToggle = document.getElementById('theme-toggle');
+        const timeEl = document.getElementById('time');
+        const dateEl = document.getElementById('date');
+        const htmlEl = document.documentElement;
+        
+        const sunIcon = `<svg class="w-6 h-6 text-yellow-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>`;
+        const moonIcon = `<svg class="w-6 h-6 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>`;
 
-        const showModal = () => {
-            modal.classList.remove('hidden');
-            setTimeout(() => {
-                modal.classList.add('opacity-100');
-                modalContent.classList.add('scale-100');
-            }, 10);
-        };
-
-        const hideModal = () => {
-            modal.classList.remove('opacity-100');
-            modalContent.classList.remove('scale-100');
-            setTimeout(() => {
-                modal.classList.add('hidden');
-            }, 300);
-        };
-
-        openBtn.addEventListener('click', showModal);
-        closeBtn.addEventListener('click', hideModal);
-
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) {
-                hideModal();
+        const applyTheme = (theme) => {
+            if (theme === 'light') {
+                htmlEl.classList.add('light');
+                themeToggle.innerHTML = moonIcon;
+            } else {
+                htmlEl.classList.remove('light');
+                themeToggle.innerHTML = sunIcon;
             }
+        };
+
+        let currentTheme = localStorage.getItem('theme') || 'dark';
+        applyTheme(currentTheme);
+
+        themeToggle.addEventListener('click', () => {
+            currentTheme = htmlEl.classList.contains('light') ? 'dark' : 'light';
+            localStorage.setItem('theme', currentTheme);
+            applyTheme(currentTheme);
         });
+
+        const updateTime = () => {
+            const now = new Date();
+            timeEl.textContent = now.toLocaleTimeString('tr-TR');
+            dateEl.textContent = now.toLocaleDateString('tr-TR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+        };
+        setInterval(updateTime, 1000);
+        updateTime();
+
+        const cardGrids = document.querySelectorAll('.card-grid');
+        cardGrids.forEach(grid => {
+            const groupId = grid.parentElement.id;
+            const savedOrder = JSON.parse(localStorage.getItem(groupId + '_order'));
+            if (savedOrder) {
+                savedOrder.forEach(cardId => {
+                    const card = document.getElementById(cardId);
+                    if (card) grid.appendChild(card);
+                });
+            }
+            new Sortable(grid, {
+                animation: 150,
+                ghostClass: 'sortable-ghost',
+                onStart: () => document.body.classList.add('cursor-grabbing'),
+                onEnd: (evt) => {
+                    document.body.classList.remove('cursor-grabbing');
+                    const newOrder = Array.from(evt.to.children).map(el => el.id);
+                    localStorage.setItem(groupId + '_order', JSON.stringify(newOrder));
+                }
+            });
+        });
+
+        // --- Modal Yönetimi ---
+        const setupModal = (triggerId, modalId) => {
+            const trigger = document.getElementById(triggerId);
+            const modal = document.getElementById(modalId);
+            if (!trigger || !modal) return;
+
+            const modalContent = modal.querySelector('.modal-content');
+            const closeButtons = modal.querySelectorAll('.close-modal-btn');
+
+            const show = () => {
+                modal.classList.remove('hidden');
+                setTimeout(() => {
+                    modal.classList.add('opacity-100');
+                    modalContent.classList.add('scale-100');
+                }, 10);
+            };
+
+            const hide = () => {
+                modal.classList.remove('opacity-100');
+                modalContent.classList.remove('scale-100');
+                setTimeout(() => modal.classList.add('hidden'), 300);
+            };
+
+            trigger.addEventListener('click', show);
+            closeButtons.forEach(btn => btn.addEventListener('click', hide));
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) hide();
+            });
+        };
+        
+        setupModal('open-tkgm-modal', 'tkgm-modal');
+        setupModal('open-projects-modal', 'projects-modal');
+        setupModal('open-other-modal', 'other-modal');
+    });
     </script>
 </body>
 </html>
-
-
-
 
