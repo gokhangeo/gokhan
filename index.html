@@ -65,7 +65,7 @@
 
         <!-- Üst Bilgi Alanı: Saat, Tarih ve Tema Butonu -->
         <div class="flex justify-between items-center mb-8">
-            <div id="live-info" class="text-lg font-medium text-subheader">
+            <div id="live-info" class="text-base sm:text-lg font-medium text-subheader">
                 <span id="time"></span>
                 <span class="mx-2">|</span>
                 <span id="date"></span>
@@ -77,13 +77,13 @@
 
         <!-- Başlık Bölümü -->
         <header class="text-center mb-10">
-            <h1 class="text-4xl md:text-5xl font-bold mb-2 bg-gradient-to-r from-purple-400 to-indigo-500 text-transparent bg-clip-text">
+            <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold mb-2 bg-gradient-to-r from-purple-400 to-indigo-500 text-transparent bg-clip-text">
                 Uygulama Merkezi
             </h1>
         </header>
 
         <!-- Kategori Kartları -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mb-12">
             <div id="open-tkgm-modal" class="category-card card bg-gray-800 p-6 rounded-2xl shadow-lg flex flex-col justify-center items-center text-center cursor-pointer transform hover:-translate-y-2 transition-all duration-300 hover:shadow-blue-500/50">
                 <div class="bg-blue-500 p-3 rounded-xl mb-4">
                     <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V10a2 2 0 00-2-2H7a2 2 0 00-2 2v11m14 0H3m16 0h2m-2 0h-5m-9 0H3m2 0h5M5 12h14M5 8h14"></path></svg>
@@ -188,9 +188,9 @@
             <button class="close-modal-btn absolute top-4 right-4 text-gray-500 hover:text-white transition-colors text-3xl leading-none">&times;</button>
             <div class="flex justify-between items-center mb-6">
                 <h2 class="text-2xl md:text-3xl font-bold text-header">Not Defteri</h2>
-                <button id="add-new-note-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg transition-colors flex items-center">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
-                    Yeni Not Ekle
+                <button id="add-new-note-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold p-2 sm:py-2 sm:px-4 rounded-lg transition-colors flex items-center">
+                    <svg class="w-5 h-5 sm:mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                    <span class="hidden sm:inline">Yeni Not Ekle</span>
                 </button>
             </div>
             <div id="notes-list-container" class="overflow-y-auto flex-grow">
