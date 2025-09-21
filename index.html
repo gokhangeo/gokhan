@@ -122,10 +122,10 @@
     <!-- Modallar -->
     <!-- TKGM Modal -->
     <div id="tkgm-modal" class="modal-bg fixed inset-0 flex items-center justify-center p-4 hidden z-50 transition-opacity duration-300">
-        <div class="modal-content bg-gray-800 rounded-2xl shadow-2xl w-full max-w-4xl p-6 md:p-8 relative transform scale-95 transition-transform duration-300">
-            <button class="close-modal-btn absolute top-4 right-4 text-gray-500 hover:text-white transition-colors text-3xl leading-none">&times;</button>
-            <h2 class="text-2xl md:text-3xl font-bold text-center mb-8 text-header">TKGM Sistemleri</h2>
-            <section id="group-tkgm">
+        <div class="modal-content bg-gray-800 rounded-2xl shadow-2xl w-full max-w-4xl p-6 md:p-8 relative transform scale-95 transition-transform duration-300 flex flex-col" style="max-height: 90vh;">
+            <button class="close-modal-btn absolute top-4 right-4 text-gray-500 hover:text-white transition-colors text-3xl leading-none z-10">&times;</button>
+            <h2 class="text-2xl md:text-3xl font-bold text-center mb-8 text-header flex-shrink-0">TKGM Sistemleri</h2>
+            <section id="group-tkgm" class="overflow-y-auto">
                 <main class="card-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
                     <a id="ebys" href="https://ebys.tkgm.gov.tr/edys-web/sistemeGiris.xhtml" target="_blank" rel="noopener noreferrer" class="card cursor-grab bg-gray-700 rounded-xl shadow-lg hover:shadow-gray-500/50 transform hover:-translate-y-1 transition-all duration-300 ease-in-out p-4 flex items-center space-x-3"><div class="bg-gray-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg></div><div><h2 class="text-lg font-semibold text-header">EBYS</h2><p class="text-sm text-subheader">Elektronik Belge Yönetim Sistemi</p></div></a>
                     <a id="bulut" href="https://bulut.tkgm.gov.tr/" target="_blank" rel="noopener noreferrer" class="card cursor-grab bg-gray-700 rounded-xl shadow-lg hover:shadow-cyan-400/50 transform hover:-translate-y-1 transition-all duration-300 ease-in-out p-4 flex items-center space-x-3"><div class="bg-cyan-400 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"></path></svg></div><div><h2 class="text-lg font-semibold text-header">BULUT</h2><p class="text-sm text-subheader">TKGM Bulut</p></div></a>
@@ -140,10 +140,10 @@
 
     <!-- Projects Modal -->
     <div id="projects-modal" class="modal-bg fixed inset-0 flex items-center justify-center p-4 hidden z-50 transition-opacity duration-300">
-        <div class="modal-content bg-gray-800 rounded-2xl shadow-2xl w-full max-w-4xl p-6 md:p-8 relative transform scale-95 transition-transform duration-300">
-            <button class="close-modal-btn absolute top-4 right-4 text-gray-500 hover:text-white transition-colors text-3xl leading-none">&times;</button>
-            <h2 class="text-2xl md:text-3xl font-bold text-center mb-8 text-header">Kişisel Projeler</h2>
-            <section id="group-projects">
+        <div class="modal-content bg-gray-800 rounded-2xl shadow-2xl w-full max-w-4xl p-6 md:p-8 relative transform scale-95 transition-transform duration-300 flex flex-col" style="max-height: 90vh;">
+            <button class="close-modal-btn absolute top-4 right-4 text-gray-500 hover:text-white transition-colors text-3xl leading-none z-10">&times;</button>
+            <h2 class="text-2xl md:text-3xl font-bold text-center mb-8 text-header flex-shrink-0">Kişisel Projeler</h2>
+            <section id="group-projects" class="overflow-y-auto">
                 <main class="card-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
                     <a id="megsis" href="https://gokhangeo.github.io/istakip/" target="_blank" rel="noopener noreferrer" class="card cursor-grab bg-gray-700 rounded-xl shadow-lg hover:shadow-indigo-500/50 transform hover:-translate-y-1 transition-all duration-300 ease-in-out p-4 flex items-center space-x-3"><div class="bg-indigo-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg></div><div><h2 class="text-lg font-semibold text-header">MEGSİS</h2><p class="text-sm text-subheader">İşlem Süreçleri</p></div></a>
                     <a id="tkmevzuat" href="https://gokhangeo.github.io/tkmevzuat/" target="_blank" rel="noopener noreferrer" class="card cursor-grab bg-gray-700 rounded-xl shadow-lg hover:shadow-purple-500/50 transform hover:-translate-y-1 transition-all duration-300 ease-in-out p-4 flex items-center space-x-3"><div class="bg-purple-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v11.494m-9-5.747h18"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20.253H6.5a2.5 2.5 0 01-2.5-2.5V6.253a2.5 2.5 0 012.5-2.5H10m4 0h3.5a2.5 2.5 0 012.5 2.5v11.494a2.5 2.5 0 01-2.5 2.5H14"></path></svg></div><div><h2 class="text-lg font-semibold text-header">TK Mevzuat</h2><p class="text-sm text-subheader">Mevzuat ve yönetmelikler</p></div></a>
@@ -161,23 +161,25 @@
     
     <!-- Other/Social Modal -->
     <div id="other-modal" class="modal-bg fixed inset-0 flex items-center justify-center p-4 hidden z-50 transition-opacity duration-300">
-         <div class="modal-content bg-gray-800 rounded-2xl shadow-2xl w-full max-w-4xl p-6 md:p-8 relative transform scale-95 transition-transform duration-300">
-            <button class="close-modal-btn absolute top-4 right-4 text-gray-500 hover:text-white transition-colors text-3xl leading-none">&times;</button>
-            <h2 class="text-2xl md:text-3xl font-bold text-center mb-8 text-header">Sosyal Medya ve Araçlar</h2>
-            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-                <a href="https://x.com" target="_blank" class="bg-gray-700 hover:bg-gray-600 p-4 rounded-xl flex flex-col items-center justify-center space-y-2 transition-all hover:scale-105"><svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 16 16"><path d="M12.6.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867-5.07-4.425 5.07H.316l5.733-6.57L0 .75h5.063l3.495 4.633L12.602.75Zm-2.267 12.95h1.506L5.032 2.15H3.436l6.9 11.55Z"></path></svg><span class="font-semibold text-header">X</span></a>
-                <a href="https://youtube.com" target="_blank" class="bg-gray-700 hover:bg-gray-600 p-4 rounded-xl flex flex-col items-center justify-center space-y-2 transition-all hover:scale-105"><svg class="w-8 h-8 text-red-500" fill="currentColor" viewBox="0 0 24 24"><path d="M21.582,6.186C21.23,4.92,20.218,3.908,18.952,3.56C17.3,3.001,12,3,12,3S6.7,3.001,5.048,3.56 C3.782,3.908,2.77,4.92,2.418,6.186C1.999,7.844,2,12,2,12s-0.001,4.156,0.418,5.814c0.352,1.266,1.364,2.278,2.63,2.628 C6.7,21,12,21,12,21s5.3-0.001,6.952-0.558c1.266-0.35,2.278-1.362,2.63-2.628C22,16.156,22,12,22,12S22,7.844,21.582,6.186z M10,15.464V8.536L16,12L10,15.464z"></path></svg><span class="font-semibold text-header">YouTube</span></a>
-                <a href="https://facebook.com" target="_blank" class="bg-gray-700 hover:bg-gray-600 p-4 rounded-xl flex flex-col items-center justify-center space-y-2 transition-all hover:scale-105"><svg class="w-8 h-8 text-blue-500" fill="currentColor" viewBox="0 0 24 24"><path d="M18,2H15a5,5,0,0,0-5,5v3H7v4h3v8h4V14h3l1-4H14V7a1,1,0,0,1,1-1h3Z"></path></svg><span class="font-semibold text-header">Facebook</span></a>
-                <a href="https://gemini.google.com/" target="_blank" class="bg-gray-700 hover:bg-gray-600 p-4 rounded-xl flex flex-col items-center justify-center space-y-2 transition-all hover:scale-105"><svg class="w-8 h-8 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.82 5.82 22 7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg><span class="font-semibold text-header">Gemini</span></a>
-                <a href="https://github.com/" target="_blank" class="bg-gray-700 hover:bg-gray-600 p-4 rounded-xl flex flex-col items-center justify-center space-y-2 transition-all hover:scale-105"><svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"></path></svg><span class="font-semibold text-header">GitHub</span></a>
-                <a href="https://chat.openai.com/" target="_blank" class="bg-gray-700 hover:bg-gray-600 p-4 rounded-xl flex flex-col items-center justify-center space-y-2 transition-all hover:scale-105"><svg class="w-8 h-8 text-teal-400" fill="currentColor" viewBox="0 0 24 24"><path d="M20.73,8.21a2.84,2.84,0,0,0-4-3.83,2.83,2.83,0,0,0-4.63,2,2.84,2.84,0,0,0-1.5,5.1,2.84,2.84,0,0,0,4,3.83,2.83,2.83,0,0,0,4.63-2,2.84,2.84,0,0,0,1.5-5.1ZM12.06,14a1,1,0,1,1-1-1A1,1,0,0,1,12.06,14ZM16,12.06a1,1,0,1,1,1,1A1,1,0,0,1,16,12.06Zm-1-4a1,1,0,1,1-1-1A1,1,0,0,1,15,8.11Zm-4,.05a1,1,0,1,1,1-1A1,1,0,0,1,11,8.16Zm-2.8,2.9a1,1,0,1,1,1.05-1,1,1,0,0,1-1.05,1ZM9.05,16a1,1,0,1,1,1,1A1,1,0,0,1,9.05,16Z"></path></svg><span class="font-semibold text-header">ChatGPT</span></a>
-                <a href="https://www.tradingview.com/" target="_blank" class="bg-gray-700 hover:bg-gray-600 p-4 rounded-xl flex flex-col items-center justify-center space-y-2 transition-all hover:scale-105"><svg class="w-8 h-8 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 11V7a2 2 0 012-2h2a2 2 0 012 2v4m-4 5v-1.5a1.5 1.5 0 011.5-1.5h1a1.5 1.5 0 011.5 1.5V16m-4 0h4m-4 0H7m0 0v-5m0 5v2m6-11v-1.5a1.5 1.5 0 00-1.5-1.5h-1a1.5 1.5 0 00-1.5 1.5V5m4 0H9m0 0v5m0-5V3"></path></svg><span class="font-semibold text-header">TradingView</span></a>
-                <a id="open-notepad-modal" class="cursor-pointer bg-gray-700 hover:bg-gray-600 p-4 rounded-xl flex flex-col items-center justify-center space-y-2 transition-all hover:scale-105">
-                    <svg class="w-8 h-8 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-                    </svg>
-                    <span class="font-semibold text-header">Not Defteri</span>
-                </a>
+         <div class="modal-content bg-gray-800 rounded-2xl shadow-2xl w-full max-w-4xl p-6 md:p-8 relative transform scale-95 transition-transform duration-300 flex flex-col" style="max-height: 90vh;">
+            <button class="close-modal-btn absolute top-4 right-4 text-gray-500 hover:text-white transition-colors text-3xl leading-none z-10">&times;</button>
+            <h2 class="text-2xl md:text-3xl font-bold text-center mb-8 text-header flex-shrink-0">Sosyal Medya ve Araçlar</h2>
+            <div class="overflow-y-auto">
+                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+                    <a href="https://x.com" target="_blank" class="bg-gray-700 hover:bg-gray-600 p-4 rounded-xl flex flex-col items-center justify-center space-y-2 transition-all hover:scale-105"><svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 16 16"><path d="M12.6.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867-5.07-4.425 5.07H.316l5.733-6.57L0 .75h5.063l3.495 4.633L12.602.75Zm-2.267 12.95h1.506L5.032 2.15H3.436l6.9 11.55Z"></path></svg><span class="font-semibold text-header">X</span></a>
+                    <a href="https://youtube.com" target="_blank" class="bg-gray-700 hover:bg-gray-600 p-4 rounded-xl flex flex-col items-center justify-center space-y-2 transition-all hover:scale-105"><svg class="w-8 h-8 text-red-500" fill="currentColor" viewBox="0 0 24 24"><path d="M21.582,6.186C21.23,4.92,20.218,3.908,18.952,3.56C17.3,3.001,12,3,12,3S6.7,3.001,5.048,3.56 C3.782,3.908,2.77,4.92,2.418,6.186C1.999,7.844,2,12,2,12s-0.001,4.156,0.418,5.814c0.352,1.266,1.364,2.278,2.63,2.628 C6.7,21,12,21,12,21s5.3-0.001,6.952-0.558c1.266-0.35,2.278-1.362,2.63-2.628C22,16.156,22,12,22,12S22,7.844,21.582,6.186z M10,15.464V8.536L16,12L10,15.464z"></path></svg><span class="font-semibold text-header">YouTube</span></a>
+                    <a href="https://facebook.com" target="_blank" class="bg-gray-700 hover:bg-gray-600 p-4 rounded-xl flex flex-col items-center justify-center space-y-2 transition-all hover:scale-105"><svg class="w-8 h-8 text-blue-500" fill="currentColor" viewBox="0 0 24 24"><path d="M18,2H15a5,5,0,0,0-5,5v3H7v4h3v8h4V14h3l1-4H14V7a1,1,0,0,1,1-1h3Z"></path></svg><span class="font-semibold text-header">Facebook</span></a>
+                    <a href="https://gemini.google.com/" target="_blank" class="bg-gray-700 hover:bg-gray-600 p-4 rounded-xl flex flex-col items-center justify-center space-y-2 transition-all hover:scale-105"><svg class="w-8 h-8 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.82 5.82 22 7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg><span class="font-semibold text-header">Gemini</span></a>
+                    <a href="https://github.com/" target="_blank" class="bg-gray-700 hover:bg-gray-600 p-4 rounded-xl flex flex-col items-center justify-center space-y-2 transition-all hover:scale-105"><svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"></path></svg><span class="font-semibold text-header">GitHub</span></a>
+                    <a href="https://chat.openai.com/" target="_blank" class="bg-gray-700 hover:bg-gray-600 p-4 rounded-xl flex flex-col items-center justify-center space-y-2 transition-all hover:scale-105"><svg class="w-8 h-8 text-teal-400" fill="currentColor" viewBox="0 0 24 24"><path d="M20.73,8.21a2.84,2.84,0,0,0-4-3.83,2.83,2.83,0,0,0-4.63,2,2.84,2.84,0,0,0-1.5,5.1,2.84,2.84,0,0,0,4,3.83,2.83,2.83,0,0,0,4.63-2,2.84,2.84,0,0,0,1.5-5.1ZM12.06,14a1,1,0,1,1-1-1A1,1,0,0,1,12.06,14ZM16,12.06a1,1,0,1,1,1,1A1,1,0,0,1,16,12.06Zm-1-4a1,1,0,1,1-1-1A1,1,0,0,1,15,8.11Zm-4,.05a1,1,0,1,1,1-1A1,1,0,0,1,11,8.16Zm-2.8,2.9a1,1,0,1,1,1.05-1,1,1,0,0,1-1.05,1ZM9.05,16a1,1,0,1,1,1,1A1,1,0,0,1,9.05,16Z"></path></svg><span class="font-semibold text-header">ChatGPT</span></a>
+                    <a href="https://www.tradingview.com/" target="_blank" class="bg-gray-700 hover:bg-gray-600 p-4 rounded-xl flex flex-col items-center justify-center space-y-2 transition-all hover:scale-105"><svg class="w-8 h-8 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 11V7a2 2 0 012-2h2a2 2 0 012 2v4m-4 5v-1.5a1.5 1.5 0 011.5-1.5h1a1.5 1.5 0 011.5 1.5V16m-4 0h4m-4 0H7m0 0v-5m0 5v2m6-11v-1.5a1.5 1.5 0 00-1.5-1.5h-1a1.5 1.5 0 00-1.5 1.5V5m4 0H9m0 0v5m0-5V3"></path></svg><span class="font-semibold text-header">TradingView</span></a>
+                    <a id="open-notepad-modal" class="cursor-pointer bg-gray-700 hover:bg-gray-600 p-4 rounded-xl flex flex-col items-center justify-center space-y-2 transition-all hover:scale-105">
+                        <svg class="w-8 h-8 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                        </svg>
+                        <span class="font-semibold text-header">Not Defteri</span>
+                    </a>
+                </div>
             </div>
         </div>
     </div>
@@ -185,8 +187,8 @@
     <!-- Notepad List Modal -->
     <div id="notepad-modal" class="modal-bg fixed inset-0 flex items-center justify-center p-4 hidden z-50 transition-opacity duration-300">
         <div class="modal-content bg-gray-800 rounded-2xl shadow-2xl w-full max-w-2xl p-6 md:p-8 relative transform scale-95 transition-transform duration-300 flex flex-col" style="max-height: 90vh;">
-            <button class="close-modal-btn absolute top-4 right-4 text-gray-500 hover:text-white transition-colors text-3xl leading-none">&times;</button>
-            <div class="flex justify-between items-center mb-6">
+            <button class="close-modal-btn absolute top-4 right-4 text-gray-500 hover:text-white transition-colors text-3xl leading-none z-10">&times;</button>
+            <div class="flex justify-between items-center mb-6 flex-shrink-0">
                 <h2 class="text-2xl md:text-3xl font-bold text-header">Not Defteri</h2>
                 <button id="add-new-note-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold p-2 sm:py-2 sm:px-4 rounded-lg transition-colors flex items-center">
                     <svg class="w-5 h-5 sm:mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
@@ -196,18 +198,18 @@
             <div id="notes-list-container" class="overflow-y-auto flex-grow">
                 <!-- Notlar buraya yüklenecek -->
             </div>
-            <div id="notepad-message" class="mt-4 text-center text-sm h-5"></div>
+            <div id="notepad-message" class="mt-4 text-center text-sm h-5 flex-shrink-0"></div>
         </div>
     </div>
     
     <!-- Note Editor Modal -->
     <div id="note-editor-modal" class="modal-bg fixed inset-0 flex items-center justify-center p-4 hidden z-50 transition-opacity duration-300">
-        <div class="modal-content bg-gray-800 rounded-2xl shadow-2xl w-full max-w-2xl p-6 md:p-8 relative transform scale-95 transition-transform duration-300 flex flex-col">
-             <button class="close-modal-btn absolute top-4 right-4 text-gray-500 hover:text-white transition-colors text-3xl leading-none">&times;</button>
-            <h2 id="note-editor-title" class="text-2xl md:text-3xl font-bold text-center mb-6 text-header">Notu Düzenle</h2>
+        <div class="modal-content bg-gray-800 rounded-2xl shadow-2xl w-full max-w-2xl p-6 md:p-8 relative transform scale-95 transition-transform duration-300 flex flex-col" style="max-height: 90vh;">
+             <button class="close-modal-btn absolute top-4 right-4 text-gray-500 hover:text-white transition-colors text-3xl leading-none z-10">&times;</button>
+            <h2 id="note-editor-title" class="text-2xl md:text-3xl font-bold text-center mb-6 text-header flex-shrink-0">Notu Düzenle</h2>
             <input type="hidden" id="note-editor-id">
-            <textarea id="note-editor-content" class="w-full h-64 p-4 rounded-lg bg-gray-700 border border-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 flex-grow" placeholder="Notunuzu buraya yazın..."></textarea>
-            <button id="save-edited-note-btn" class="mt-6 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg transition-colors w-full sm:w-auto sm:self-center">
+            <textarea id="note-editor-content" class="w-full p-4 rounded-lg bg-gray-700 border border-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 flex-grow" placeholder="Notunuzu buraya yazın..."></textarea>
+            <button id="save-edited-note-btn" class="mt-6 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg transition-colors w-full sm:w-auto sm:self-center flex-shrink-0">
                 Kaydet
             </button>
         </div>
@@ -216,16 +218,18 @@
     <!-- Note Viewer Modal -->
     <div id="note-viewer-modal" class="modal-bg fixed inset-0 flex items-center justify-center p-4 hidden z-50 transition-opacity duration-300">
         <div class="modal-content bg-gray-800 rounded-2xl shadow-2xl w-full max-w-2xl p-6 md:p-8 relative transform scale-95 transition-transform duration-300 flex flex-col" style="max-height: 90vh;">
-            <button class="close-modal-btn absolute top-4 right-4 text-gray-500 hover:text-white transition-colors text-3xl leading-none">&times;</button>
-            <h2 class="text-2xl md:text-3xl font-bold text-center mb-6 text-header">Not Görüntüle</h2>
+            <button class="close-modal-btn absolute top-4 right-4 text-gray-500 hover:text-white transition-colors text-3xl leading-none z-10">&times;</button>
+            <h2 class="text-2xl md:text-3xl font-bold text-center mb-6 text-header flex-shrink-0">Not Görüntüle</h2>
             <div class="overflow-y-auto flex-grow bg-gray-700 p-4 rounded-lg mb-4">
                 <p id="note-viewer-content" class="note-content-display text-white"></p>
             </div>
-            <button id="copy-note-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg transition-colors flex items-center justify-center">
-                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
-                Kopyala
-            </button>
-             <div id="copy-message" class="mt-4 text-center text-sm h-5 text-green-400"></div>
+            <div class="flex-shrink-0">
+                <button id="copy-note-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg transition-colors flex items-center justify-center w-full">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                    Kopyala
+                </button>
+                <div id="copy-message" class="mt-4 text-center text-sm h-5 text-green-400"></div>
+            </div>
         </div>
     </div>
 
