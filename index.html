@@ -59,6 +59,21 @@
         }
         html.light .weather-card { background: rgba(0, 0, 0, 0.05); }
 
+        /* Haber Bandı Animasyonu */
+        @keyframes marquee {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+        .animate-marquee {
+            display: inline-block;
+            white-space: nowrap;
+            animation: marquee 40s linear infinite;
+            padding-left: 100%; /* Başlangıçta sağdan gelmesi için */
+        }
+        .news-ticker-container:hover .animate-marquee {
+            animation-play-state: paused;
+        }
+
         /* Responsive adjustments */
         @media (max-width: 768px) {
             .card-grid {
@@ -77,13 +92,16 @@
                 flex-direction: column;
                 gap: 1rem;
             }
+            #main-content {
+                padding-bottom: 4rem; /* Haber bandı için yer aç */
+            }
         }
     </style>
 </head>
 <body class="bg-gray-900 text-white antialiased flex flex-col h-screen overflow-hidden">
 
-    <!-- TradingView Ticker Tape (Kayan Yazı) -->
-    <div class="tradingview-widget-container w-full z-40">
+    <!-- TradingView Ticker Tape (Kayan Yazı - Üst) -->
+    <div class="tradingview-widget-container w-full z-40 flex-shrink-0">
         <div class="tradingview-widget-container__widget"></div>
         <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
         {
@@ -127,7 +145,7 @@
     </div>
 
     <!-- Ana Konteyner -->
-    <div id="main-content" class="container mx-auto px-4 py-8 flex-grow overflow-y-auto hidden">
+    <div id="main-content" class="container mx-auto px-4 py-8 flex-grow overflow-y-auto hidden pb-16">
 
         <!-- Üst Bilgi Alanı: Hava Durumu, Saat, Tarih ve Tema Butonu -->
         <div class="top-info-bar flex justify-between items-center mb-8">
@@ -189,6 +207,18 @@
         <footer class="text-center mt-12 footer-text pb-4">
             <p>© Gökhan ELGÜL tarafından tasarlanmıştır.</p>
         </footer>
+    </div>
+    
+    <!-- Son Dakika Haber Bandı (Alt) -->
+    <div class="fixed bottom-0 w-full h-10 bg-gray-900 border-t border-gray-700 flex items-center z-50 news-ticker-container shadow-2xl">
+        <div class="bg-red-600 text-white text-xs md:text-sm font-bold px-3 md:px-4 h-full flex items-center z-10 flex-shrink-0 shadow-md uppercase tracking-wider">
+            Son Dakika
+        </div>
+        <div class="overflow-hidden relative w-full h-full flex items-center bg-gray-800">
+            <div id="news-ticker-content" class="animate-marquee whitespace-nowrap text-sm text-gray-200 font-medium">
+                Haberler yükleniyor...
+            </div>
+        </div>
     </div>
 
     <!-- Modallar -->
@@ -406,6 +436,34 @@
         fetchWeather();
         // Update weather every 30 mins
         setInterval(fetchWeather, 1800000);
+
+        // --- News Ticker Logic ---
+        const newsTickerContent = document.getElementById('news-ticker-content');
+        
+        const fetchNews = async () => {
+            try {
+                // Using rss2json to fetch TRT Haber RSS
+                const res = await fetch('https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fwww.trthaber.com%2Fsondakika.rss');
+                const data = await res.json();
+                
+                if(data.status === 'ok') {
+                    const items = data.items.map(item => {
+                        return `<span class="inline-block mx-6 py-2"><span class="text-red-400 font-bold mr-1">•</span> ${item.title}</span>`;
+                    }).join('');
+                    
+                    // Double the content for smoother infinite scroll effect if needed, 
+                    // but CSS padding-left: 100% handles the start well.
+                    newsTickerContent.innerHTML = items; 
+                }
+            } catch (e) {
+                console.error("Haberler alınamadı", e);
+                newsTickerContent.textContent = "Haber akışı şu anda güncellenemiyor. Lütfen bağlantınızı kontrol edin.";
+            }
+        };
+
+        fetchNews();
+        // Refresh news every 5 minutes
+        setInterval(fetchNews, 300000);
 
 
         const themeToggle = document.getElementById('theme-toggle');
