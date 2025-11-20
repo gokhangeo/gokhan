@@ -61,14 +61,13 @@
 
         /* Haber Bandı Animasyonu */
         @keyframes marquee {
-            0% { transform: translateX(100%); }
+            0% { transform: translateX(0); }
             100% { transform: translateX(-100%); }
         }
         .animate-marquee {
-            display: inline-block;
+            display: flex;
             white-space: nowrap;
-            animation: marquee 90s linear infinite; /* Hız düşürüldü: 40s -> 90s */
-            padding-left: 100%; /* Başlangıçta sağdan gelmesi için */
+            animation: marquee 90s linear infinite;
         }
         .news-ticker-container:hover .animate-marquee {
             animation-play-state: paused;
@@ -100,8 +99,9 @@
 </head>
 <body class="bg-gray-900 text-white antialiased flex flex-col h-screen overflow-hidden">
 
-    <!-- TradingView Ticker Tape (Kayan Yazı - Üst) -->
-    <div class="tradingview-widget-container w-full z-40 flex-shrink-0">
+    <!-- TradingView Ticker Tape (Kayan Yazı - Üst - Daraltılmış) -->
+    <!-- style="height: 46px;" ekleyerek bandı daralttık -->
+    <div class="tradingview-widget-container w-full z-40 flex-shrink-0 bg-gray-900" style="height: 46px; overflow: hidden;">
         <div class="tradingview-widget-container__widget"></div>
         <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
         {
@@ -125,8 +125,8 @@
         ],
         "showSymbolLogo": true,
         "colorTheme": "dark",
-        "isTransparent": false,
-        "displayMode": "adaptive",
+        "isTransparent": true,
+        "displayMode": "regular", 
         "locale": "tr"
         }
         </script>
@@ -195,7 +195,7 @@
                  </div>
             </div>
             <div id="open-other-modal" class="category-card card bg-gray-800 p-6 rounded-2xl shadow-lg flex flex-col justify-center items-center text-center cursor-pointer transform hover:-translate-y-2 transition-all duration-300 hover:shadow-yellow-500/50 space-y-3">
-                <div class="bg-yellow-500 p-3 rounded-xl"><svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg></div>
+                <div class="bg-yellow-500 p-3 rounded-xl"><svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2-2v-2z"></path></svg></div>
                 <div>
                     <h2 class="text-xl md:text-2xl font-bold text-header">Diğer Uygulamalar</h2>
                     <p class="text-subheader mt-2 text-sm md:text-base">Sosyal medya ve sık kullanılanlar</p>
@@ -215,8 +215,13 @@
             Son Dakika
         </div>
         <div class="overflow-hidden relative w-full h-full flex items-center bg-gray-800">
-            <div id="news-ticker-content" class="animate-marquee whitespace-nowrap text-sm text-gray-200 font-medium">
-                Haberler yükleniyor...
+            <!-- Başlangıçta dolu içerik ile başlar, JS ile güncellenir -->
+            <div id="news-ticker-content" class="animate-marquee flex text-sm text-gray-200 font-medium">
+                <span class="inline-block mx-6 py-2"><span class="text-red-400 font-bold mr-1">•</span> Uygulama Portalı'na Hoşgeldiniz</span>
+                <span class="inline-block mx-6 py-2"><span class="text-red-400 font-bold mr-1">•</span> Güncel haberler yükleniyor...</span>
+                <span class="inline-block mx-6 py-2"><span class="text-red-400 font-bold mr-1">•</span> Mersin için hava durumu bilgisi üst panelde mevcuttur</span>
+                <span class="inline-block mx-6 py-2"><span class="text-red-400 font-bold mr-1">•</span> İyi çalışmalar dileriz</span>
+                <!-- Bu içerik haberler gelince değişecek -->
             </div>
         </div>
     </div>
@@ -235,7 +240,7 @@
                     <a id="tkgm" href="https://www.tkgm.gov.tr/" target="_blank" rel="noopener noreferrer" class="card bg-gray-700 rounded-xl shadow-lg hover:shadow-blue-500/50 transform hover:-translate-y-1 transition-all duration-300 ease-in-out p-4 flex items-center space-x-3"><div class="bg-blue-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z"></path></svg></div><div><h2 class="text-lg font-semibold text-header">TKGM</h2><p class="text-sm text-subheader">Tapu ve Kadastro Gn. Md.</p></div></a>
                     <a id="ybs" href="https://ybs.tkgm.gov.tr/" target="_blank" rel="noopener noreferrer" class="card bg-gray-700 rounded-xl shadow-lg hover:shadow-yellow-500/50 transform hover:-translate-y-1 transition-all duration-300 ease-in-out p-4 flex items-center space-x-3"><div class="bg-yellow-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"></path></svg></div><div><h2 class="text-lg font-semibold text-header">YBS</h2><p class="text-sm text-subheader">Yönetim Bilgi Sistemi</p></div></a>
                     <a id="yts" href="https://yts.tkgm.gov.tr/" target="_blank" rel="noopener noreferrer" class="card bg-gray-700 rounded-xl shadow-lg hover:shadow-red-500/50 transform hover:-translate-y-1 transition-all duration-300 ease-in-out p-4 flex items-center space-x-3"><div class="bg-red-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg></div><div><h2 class="text-lg font-semibold text-header">YTS</h2><p class="text-sm text-subheader">Yatırım Takip Sistemi</p></div></a>
-                    <a id="thagis" href="https://thagis.tkgm.gov.tr/TKGM" target="_blank" rel="noopener noreferrer" class="card bg-gray-700 rounded-xl shadow-lg hover:shadow-teal-500/50 transform hover:-translate-y-1 transition-all duration-300 ease-in-out p-4 flex items-center space-x-3"><div class="bg-teal-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L15 9l-2.053 2.053a1 1 0 01-1.414 0L9 9v11zM15 20l5.447-2.724A1 1 0 0021 16.382V5.618a1 1 0 00-1.447-.894L15 9l2.053 2.053a1 1 0 001.414 0L21 9v-2.382l-6 3-6-3v2.382l6 3 6-3v-2.382l-6 3-6-3v11l6-3z"></path></svg></div><div><h2 class="text-lg font-semibold text-header">Netigma</h2><p class="text-sm text-subheader">THA Bilgi Sistemi</p></div></a>
+                    <a id="thagis" href="https://thagis.tkgm.gov.tr/TKGM" target="_blank" rel="noopener noreferrer" class="card bg-gray-700 rounded-xl shadow-lg hover:shadow-teal-500/50 transform hover:-translate-y-1 transition-all duration-300 ease-in-out p-4 flex items-center space-x-3"><div class="bg-teal-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 9l-2.053 2.053a1 1 0 01-1.414 0L9 9v11zM15 20l5.447-2.724A1 1 0 0021 16.382V5.618a1 1 0 00-1.447-.894L15 9l2.053 2.053a1 1 0 001.414 0L21 9v-2.382l-6 3-6-3v2.382l6 3 6-3v-2.382l-6 3-6-3v11l6-3z"></path></svg></div><div><h2 class="text-lg font-semibold text-header">Netigma</h2><p class="text-sm text-subheader">THA Bilgi Sistemi</p></div></a>
                     <a id="webmail" href="https://webposta.tkgm.gov.tr/owa/auth/logon.aspx?replaceCurrent=1&url=https%3a%2f%2fwebposta.tkgm.gov.tr%2fowa" target="_blank" rel="noopener noreferrer" class="card bg-gray-700 rounded-xl shadow-lg hover:shadow-orange-500/50 transform hover:-translate-y-1 transition-all duration-300 ease-in-out p-4 flex items-center space-x-3"><div class="bg-orange-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg></div><div><h2 class="text-lg font-semibold text-header">Web-Mail</h2><p class="text-sm text-subheader">TKGM E-Posta</p></div></a>
                     <a id="parselsorgu" href="https://parselsorgu.tkgm.gov.tr/" target="_blank" rel="noopener noreferrer" class="card bg-gray-700 rounded-xl shadow-lg hover:shadow-lime-500/50 transform hover:-translate-y-1 transition-all duration-300 ease-in-out p-4 flex items-center space-x-3">
                         <div class="bg-lime-500 p-2 rounded-lg">
@@ -451,13 +456,11 @@
                         return `<span class="inline-block mx-6 py-2"><span class="text-red-400 font-bold mr-1">•</span> ${item.title}</span>`;
                     }).join('');
                     
-                    // Double the content for smoother infinite scroll effect if needed, 
-                    // but CSS padding-left: 100% handles the start well.
                     newsTickerContent.innerHTML = items; 
                 }
             } catch (e) {
                 console.error("Haberler alınamadı", e);
-                newsTickerContent.textContent = "Haber akışı şu anda güncellenemiyor. Lütfen bağlantınızı kontrol edin.";
+                // Hata durumunda mevcut içeriği koru veya hata mesajı göster
             }
         };
 
