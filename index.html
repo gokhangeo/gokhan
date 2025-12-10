@@ -21,7 +21,7 @@
         html.light body { background-color: #f3f4f6; color: #111827; }
         html.light ::-webkit-scrollbar-track { background: #e5e7eb; }
         html.light ::-webkit-scrollbar-thumb { background: #9ca3af; }
-        html.light .card, html.light .category-card, html.light .modal-content, html.light #login-overlay > div { background-color: #ffffff; border-color: #e5e7eb; }
+        html.light .card, html.light .category-card, html.light .modal-content, html.light #login-overlay > div, html.light .dashboard-note-bg { background-color: #ffffff; border-color: #e5e7eb; }
         html.light .text-header { color: #1f2937; }
         html.light .text-subheader { color: #4b5563; }
         html.light .card:hover, html.light .category-card:hover { box-shadow: 0 4px_6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06); }
@@ -73,6 +73,14 @@
             animation-play-state: paused;
         }
 
+        /* Dashboard Not Alanı */
+        .dashboard-note-item {
+            transition: all 0.3s ease;
+        }
+        .dashboard-note-item:hover {
+            transform: translateX(4px);
+        }
+
         /* Responsive adjustments */
         @media (max-width: 768px) {
             .card-grid {
@@ -100,7 +108,6 @@
 <body class="bg-gray-900 text-white antialiased flex flex-col h-screen overflow-hidden">
 
     <!-- TradingView Ticker Tape (Kayan Yazı - Üst - Daraltılmış) -->
-    <!-- style="height: 46px;" ekleyerek bandı daralttık -->
     <div class="tradingview-widget-container w-full z-40 flex-shrink-0 bg-gray-900" style="height: 46px; overflow: hidden;">
         <div class="tradingview-widget-container__widget"></div>
         <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
@@ -172,11 +179,57 @@
         </div>
 
         <!-- Başlık Bölümü -->
-        <header class="text-center mb-10">
+        <header class="text-center mb-8">
             <h1 class="text-4xl md:text-5xl font-bold mb-2 bg-gradient-to-r from-purple-400 to-indigo-500 text-transparent bg-clip-text">
                 Uygulama Merkezi
             </h1>
         </header>
+
+        <!-- YENİ: Hızlı Bildirim & Not Panosu (Dashboard Widget) -->
+        <div class="max-w-4xl mx-auto mb-10 w-full">
+            <div class="bg-gray-800 dashboard-note-bg rounded-xl shadow-lg border border-gray-700 overflow-hidden transition-all duration-300">
+                <!-- Pano Başlığı (Tıklanabilir) -->
+                <div id="dashboard-toggle" class="p-4 flex justify-between items-center cursor-pointer hover:bg-gray-700/50 transition-colors">
+                    <div class="flex items-center space-x-3">
+                        <div class="bg-indigo-600/20 text-indigo-400 p-2 rounded-lg">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold text-header">Hızlı Bildirimler & Notlar</h3>
+                            <p class="text-xs text-subheader">Günlük hatırlatmalar ve acil işler</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <!-- Sayaç Rozeti -->
+                        <span id="dashboard-count" class="bg-red-500 text-white text-xs font-bold px-2.5 py-1 rounded-full hidden shadow-sm animate-pulse">0</span>
+                        <svg id="dashboard-chevron" class="w-6 h-6 text-gray-400 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </div>
+                </div>
+
+                <!-- Pano İçeriği (Açılır Kapanır) -->
+                <div id="dashboard-content" class="hidden border-t border-gray-700 bg-gray-900/30">
+                    <!-- Hızlı Ekleme Formu -->
+                    <div class="p-4 border-b border-gray-700/50 flex flex-col sm:flex-row gap-3">
+                        <input type="text" id="quick-note-text" placeholder="Yeni bir hatırlatma ekle..." class="flex-grow p-2.5 rounded-lg bg-gray-700 border border-gray-600 text-white text-sm focus:outline-none focus:border-indigo-500 transition-colors placeholder-gray-400">
+                        <select id="quick-note-priority" class="p-2.5 rounded-lg bg-gray-700 border border-gray-600 text-white text-sm focus:outline-none focus:border-indigo-500 cursor-pointer">
+                            <option value="normal">Normal (Mavi)</option>
+                            <option value="important">Önemli (Sarı)</option>
+                            <option value="critical">Kritik (Kırmızı)</option>
+                        </select>
+                        <button id="add-quick-note-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-lg text-sm transition-colors flex items-center justify-center">
+                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                            Ekle
+                        </button>
+                    </div>
+                    
+                    <!-- Not Listesi -->
+                    <div id="dashboard-list" class="p-3 space-y-2 max-h-64 overflow-y-auto custom-scrollbar">
+                        <!-- JS ile doldurulacak -->
+                        <div class="text-center text-gray-500 py-4 text-sm">Henüz bildirim yok.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <!-- Kategori Kartları -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
@@ -195,7 +248,7 @@
                  </div>
             </div>
             <div id="open-other-modal" class="category-card card bg-gray-800 p-6 rounded-2xl shadow-lg flex flex-col justify-center items-center text-center cursor-pointer transform hover:-translate-y-2 transition-all duration-300 hover:shadow-yellow-500/50 space-y-3">
-                <div class="bg-yellow-500 p-3 rounded-xl"><svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2-2v-2z"></path></svg></div>
+                <div class="bg-yellow-500 p-3 rounded-xl"><svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg></div>
                 <div>
                     <h2 class="text-xl md:text-2xl font-bold text-header">Diğer Uygulamalar</h2>
                     <p class="text-subheader mt-2 text-sm md:text-base">Sosyal medya ve sık kullanılanlar</p>
@@ -221,12 +274,11 @@
                 <span class="inline-block mx-6 py-2"><span class="text-red-400 font-bold mr-1">•</span> Güncel haberler yükleniyor...</span>
                 <span class="inline-block mx-6 py-2"><span class="text-red-400 font-bold mr-1">•</span> Mersin için hava durumu bilgisi üst panelde mevcuttur</span>
                 <span class="inline-block mx-6 py-2"><span class="text-red-400 font-bold mr-1">•</span> İyi çalışmalar dileriz</span>
-                <!-- Bu içerik haberler gelince değişecek -->
             </div>
         </div>
     </div>
 
-    <!-- Modallar -->
+    <!-- Modallar (İçerik Gizlendi - Önceki kod ile aynı) -->
     <!-- TKGM Modal -->
     <div id="tkgm-modal" class="modal-bg fixed inset-0 flex items-center justify-center p-4 hidden z-50 transition-opacity duration-300">
         <div class="modal-content bg-gray-800 rounded-2xl shadow-2xl w-full max-w-4xl p-6 md:p-8 relative transform scale-95 transition-transform duration-300" style="max-height: 90vh;">
@@ -293,7 +345,7 @@
         </div>
     </div>
     
-    <!-- Other/Social Modal -->
+    <!-- Other/Social Modal (İçerik aynı) -->
     <div id="other-modal" class="modal-bg fixed inset-0 flex items-center justify-center p-4 hidden z-50 transition-opacity duration-300">
          <div class="modal-content bg-gray-800 rounded-2xl shadow-2xl w-full max-w-4xl p-6 md:p-8 relative transform scale-95 transition-transform duration-300" style="max-height: 90vh;">
             <button class="close-modal-btn absolute top-4 right-4 text-gray-500 hover:text-white transition-colors text-3xl leading-none z-10">&times;</button>
@@ -326,8 +378,9 @@
         </div>
     </div>
 
-    <!-- Notepad List Modal -->
+    <!-- Notepad List Modal (Önceki kod ile aynı) -->
     <div id="notepad-modal" class="modal-bg fixed inset-0 flex items-center justify-center p-4 hidden z-50 transition-opacity duration-300">
+        <!-- ... -->
         <div class="modal-content bg-gray-800 rounded-2xl shadow-2xl w-full max-w-2xl p-6 md:p-8 relative transform scale-95 transition-transform duration-300 flex flex-col" style="max-height: 90vh;">
             <button class="close-modal-btn absolute top-4 right-4 text-gray-500 hover:text-white transition-colors text-3xl leading-none">&times;</button>
             <div class="flex justify-between items-center mb-6">
@@ -346,6 +399,7 @@
     
     <!-- Note Editor Modal -->
     <div id="note-editor-modal" class="modal-bg fixed inset-0 flex items-center justify-center p-4 hidden z-50 transition-opacity duration-300">
+        <!-- ... -->
         <div class="modal-content bg-gray-800 rounded-2xl shadow-2xl w-full max-w-2xl p-6 md:p-8 relative transform scale-95 transition-transform duration-300 flex flex-col" style="max-height: 90vh;">
              <button class="close-modal-btn absolute top-4 right-4 text-gray-500 hover:text-white transition-colors text-3xl leading-none">&times;</button>
             <h2 id="note-editor-title" class="text-2xl md:text-3xl font-bold text-center mb-6 text-header">Notu Düzenle</h2>
@@ -359,6 +413,7 @@
     
     <!-- Note Viewer Modal -->
     <div id="note-viewer-modal" class="modal-bg fixed inset-0 flex items-center justify-center p-4 hidden z-50 transition-opacity duration-300">
+        <!-- ... -->
         <div class="modal-content bg-gray-800 rounded-2xl shadow-2xl w-full max-w-2xl p-6 md:p-8 relative transform scale-95 transition-transform duration-300 flex flex-col" style="max-height: 90vh;">
              <button class="close-modal-btn absolute top-4 right-4 text-gray-500 hover:text-white transition-colors text-3xl leading-none">&times;</button>
             <h2 class="text-2xl md:text-3xl font-bold text-center mb-6 text-header">Not Görüntüle</h2>
@@ -387,7 +442,7 @@
                 mainContent.classList.remove('hidden');
                 setTimeout(() => {
                     loginOverlay.classList.add('hidden');
-                }, 500); // Wait for transition
+                }, 500); 
             } else {
                 loginError.textContent = 'Hatalı şifre. Lütfen tekrar deneyin.';
                 passwordInput.value = '';
@@ -412,13 +467,12 @@
         const lon = 34.6415;
 
         const getWeatherIcon = (code) => {
-            // WMO Weather interpretation codes (WW)
-            if (code === 0) return '☀️'; // Clear sky
-            if (code === 1 || code === 2 || code === 3) return '⛅'; // Mainly clear, partly cloudy, and overcast
-            if (code >= 45 && code <= 48) return '🌫️'; // Fog
-            if (code >= 51 && code <= 67) return '🌧️'; // Drizzle, Rain
-            if (code >= 80 && code <= 82) return '🌦️'; // Rain showers
-            if (code >= 95 && code <= 99) return '⛈️'; // Thunderstorm
+            if (code === 0) return '☀️'; 
+            if (code === 1 || code === 2 || code === 3) return '⛅'; 
+            if (code >= 45 && code <= 48) return '🌫️'; 
+            if (code >= 51 && code <= 67) return '🌧️'; 
+            if (code >= 80 && code <= 82) return '🌦️'; 
+            if (code >= 95 && code <= 99) return '⛈️'; 
             return '🌡️';
         };
 
@@ -429,7 +483,6 @@
                     const data = await response.json();
                     const temp = Math.round(data.current_weather.temperature);
                     const code = data.current_weather.weathercode;
-                    
                     weatherTempEl.textContent = `${temp}°C`;
                     weatherIconEl.textContent = getWeatherIcon(code);
                 }
@@ -439,34 +492,140 @@
             }
         };
         fetchWeather();
-        // Update weather every 30 mins
         setInterval(fetchWeather, 1800000);
 
         // --- News Ticker Logic ---
         const newsTickerContent = document.getElementById('news-ticker-content');
-        
         const fetchNews = async () => {
             try {
-                // Using rss2json to fetch TRT Haber RSS
                 const res = await fetch('https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fwww.trthaber.com%2Fsondakika.rss');
                 const data = await res.json();
-                
                 if(data.status === 'ok') {
                     const items = data.items.map(item => {
                         return `<span class="inline-block mx-6 py-2"><span class="text-red-400 font-bold mr-1">•</span> ${item.title}</span>`;
                     }).join('');
-                    
                     newsTickerContent.innerHTML = items; 
                 }
             } catch (e) {
                 console.error("Haberler alınamadı", e);
-                // Hata durumunda mevcut içeriği koru veya hata mesajı göster
             }
         };
-
         fetchNews();
-        // Refresh news every 5 minutes
         setInterval(fetchNews, 300000);
+
+        // --- Dashboard Notes Logic (NEW) ---
+        const dashboardToggle = document.getElementById('dashboard-toggle');
+        const dashboardContent = document.getElementById('dashboard-content');
+        const dashboardChevron = document.getElementById('dashboard-chevron');
+        const dashboardList = document.getElementById('dashboard-list');
+        const quickNoteInput = document.getElementById('quick-note-text');
+        const quickNotePriority = document.getElementById('quick-note-priority');
+        const addQuickNoteBtn = document.getElementById('add-quick-note-btn');
+        const dashboardCountBadge = document.getElementById('dashboard-count');
+
+        // Toggle Accordion
+        dashboardToggle.addEventListener('click', () => {
+            dashboardContent.classList.toggle('hidden');
+            if(dashboardContent.classList.contains('hidden')) {
+                dashboardChevron.classList.remove('rotate-180');
+            } else {
+                dashboardChevron.classList.add('rotate-180');
+            }
+        });
+
+        // Load Dashboard Notes from LocalStorage
+        let dashboardNotes = JSON.parse(localStorage.getItem('dashboardNotes')) || [];
+
+        const renderDashboardNotes = () => {
+            dashboardList.innerHTML = '';
+            
+            // Filter out empty notes just in case
+            dashboardNotes = dashboardNotes.filter(note => note.text.trim() !== '');
+            localStorage.setItem('dashboardNotes', JSON.stringify(dashboardNotes));
+
+            // Update badge count
+            if (dashboardNotes.length > 0) {
+                dashboardCountBadge.textContent = dashboardNotes.length;
+                dashboardCountBadge.classList.remove('hidden');
+            } else {
+                dashboardCountBadge.classList.add('hidden');
+            }
+
+            if (dashboardNotes.length === 0) {
+                dashboardList.innerHTML = '<div class="text-center text-gray-500 py-4 text-sm">Henüz bildirim yok.</div>';
+                return;
+            }
+
+            dashboardNotes.forEach((note, index) => {
+                const noteEl = document.createElement('div');
+                // Color coding based on priority
+                let borderClass = 'border-l-4 border-indigo-500';
+                let bgClass = 'bg-gray-700'; // Default dark
+                
+                if (note.priority === 'critical') {
+                    borderClass = 'border-l-4 border-red-500';
+                    // bgClass = 'bg-red-900/20'; // Optional tint
+                } else if (note.priority === 'important') {
+                    borderClass = 'border-l-4 border-yellow-500';
+                }
+
+                noteEl.className = `dashboard-note-item relative p-3 rounded shadow-sm ${bgClass} ${borderClass} flex justify-between items-start`;
+                noteEl.innerHTML = `
+                    <div class="flex-grow pr-2">
+                        <p class="text-sm font-medium text-white break-words">${note.text}</p>
+                        <p class="text-xs text-gray-400 mt-1">${note.date}</p>
+                    </div>
+                    <button class="text-gray-400 hover:text-red-400 transition-colors focus:outline-none delete-dash-btn" data-index="${index}">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
+                `;
+                dashboardList.appendChild(noteEl);
+            });
+
+            // Add delete event listeners
+            document.querySelectorAll('.delete-dash-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation(); // Prevent accordion toggle if bubbling occurs
+                    const idx = parseInt(btn.getAttribute('data-index'));
+                    deleteDashboardNote(idx);
+                });
+            });
+        };
+
+        const addDashboardNote = () => {
+            const text = quickNoteInput.value.trim();
+            const priority = quickNotePriority.value;
+            
+            if (!text) return;
+
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' });
+
+            const newNote = {
+                text: text,
+                priority: priority,
+                date: dateStr
+            };
+
+            dashboardNotes.unshift(newNote); // Add to top
+            localStorage.setItem('dashboardNotes', JSON.stringify(dashboardNotes));
+            quickNoteInput.value = '';
+            renderDashboardNotes();
+        };
+
+        const deleteDashboardNote = (index) => {
+            dashboardNotes.splice(index, 1);
+            localStorage.setItem('dashboardNotes', JSON.stringify(dashboardNotes));
+            renderDashboardNotes();
+        };
+
+        addQuickNoteBtn.addEventListener('click', addDashboardNote);
+        quickNoteInput.addEventListener('keypress', (e) => {
+            if(e.key === 'Enter') addDashboardNote();
+        });
+
+        // Initial render
+        renderDashboardNotes();
 
 
         const themeToggle = document.getElementById('theme-toggle');
@@ -504,7 +663,7 @@
         setInterval(updateTime, 1000);
         updateTime();
         
-        // --- Notepad GitHub Integration ---
+        // --- Notepad GitHub Integration (Existing Code) ---
         const notepadMessage = document.getElementById('notepad-message');
         const notesListContainer = document.getElementById('notes-list-container');
         let fileSha = null;
