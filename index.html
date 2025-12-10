@@ -32,12 +32,12 @@
         html.light body { background-color: #f3f4f6; color: #111827; }
         html.light ::-webkit-scrollbar-track { background: #e5e7eb; }
         html.light ::-webkit-scrollbar-thumb { background: #9ca3af; }
-        html.light .card, html.light .category-card, html.light .modal-content, html.light #login-overlay > div, html.light .dashboard-note-bg { background-color: #ffffff; border-color: #e5e7eb; }
+        html.light .card, html.light .category-card, html.light .modal-content, html.light #login-overlay > div, html.light .dashboard-note-bg, html.light #reminder-modal > div { background-color: #ffffff; border-color: #e5e7eb; }
         html.light .text-header { color: #1f2937; }
         html.light .text-subheader { color: #4b5563; }
         html.light .card:hover, html.light .category-card:hover { box-shadow: 0 4px_6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06); }
         html.light .footer-text { color: #6b7280; }
-        html.light .modal-bg, html.light #login-overlay { background-color: rgba(0, 0, 0, 0.5); }
+        html.light .modal-bg, html.light #login-overlay, html.light #reminder-modal { background-color: rgba(0, 0, 0, 0.5); }
         
         /* Not Defteri Stilleri */
         .note-item {
@@ -90,6 +90,15 @@
         }
         .dashboard-note-item:hover {
             transform: translateX(4px);
+        }
+        
+        /* Date Input Dark Mode Fix */
+        input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+            cursor: pointer;
+        }
+        html.light input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+            filter: invert(0);
         }
 
         /* Responsive adjustments */
@@ -152,13 +161,31 @@
 
     <!-- Login Overlay -->
     <div id="login-overlay" class="fixed inset-0 bg-gray-900 flex items-center justify-center z-[100]">
-        <div class="bg-gray-800 p-8 rounded-2xl shadow-2xl w-full max-w-sm text-center">
-            <h2 class="text-2xl font-bold mb-6 text-header">Giriş Yap</h2>
+        <div class="bg-gray-800 p-8 rounded-2xl shadow-2xl w-full max-w-sm text-center transform transition-all duration-300">
+            <h2 id="login-header" class="text-2xl font-bold mb-6 text-header cursor-pointer select-none" title="Gizli Giriş: 3 Kez Tıkla">Giriş Yap</h2>
             <input type="password" id="password-input" class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 text-white text-center focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Şifrenizi Girin">
             <button id="login-button" class="mt-6 w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-lg transition-colors">
                 Giriş
             </button>
             <p id="login-error" class="mt-4 text-red-500 h-5"></p>
+        </div>
+    </div>
+
+    <!-- Reminder Notification Modal (YENİ: Uyarı Bildirimi) -->
+    <div id="reminder-modal" class="fixed inset-0 bg-black/80 flex items-center justify-center z-[110] hidden opacity-0 transition-opacity duration-300">
+        <div class="bg-gray-800 p-6 rounded-2xl shadow-2xl max-w-md w-full border border-red-500/50 transform scale-95 transition-transform duration-300">
+            <div class="flex justify-between items-center mb-4 border-b border-gray-700 pb-2">
+                <h3 class="text-xl font-bold text-header flex items-center">
+                    <span class="text-2xl mr-2">🔔</span> Hatırlatmalar
+                </h3>
+                <button id="close-reminder" class="text-gray-400 hover:text-white text-2xl leading-none">&times;</button>
+            </div>
+            <div id="reminder-list" class="space-y-3 max-h-60 overflow-y-auto">
+                <!-- Hatırlatmalar buraya gelecek -->
+            </div>
+            <button id="close-reminder-btn" class="mt-6 w-full bg-gray-700 hover:bg-gray-600 text-white font-medium py-2 rounded-lg transition-colors">
+                Tamam
+            </button>
         </div>
     </div>
 
@@ -176,15 +203,20 @@
                 </div>
             </div>
 
-            <!-- Sağ Taraf: Saat ve Tema -->
+            <!-- Sağ Taraf: Saat, Tema ve Kilit -->
             <div class="flex items-center space-x-4">
                 <div id="live-info" class="text-lg font-medium text-subheader text-right">
                     <span id="time" class="block sm:inline"></span>
                     <span class="hidden sm:inline mx-2">|</span>
                     <span id="date" class="block sm:inline text-sm sm:text-lg"></span>
                 </div>
-                <button id="theme-toggle" class="p-2 rounded-full bg-gray-700 hover:bg-gray-600 transition-colors flex-shrink-0">
+                <!-- Daire (Tema) ve Çizgi (Ayraç) -->
+                <div class="h-6 w-px bg-gray-600 mx-2"></div> <!-- Çizgi Ayraç -->
+                <button id="theme-toggle" class="p-2 rounded-full bg-gray-700 hover:bg-gray-600 transition-colors flex-shrink-0" title="Temayı Değiştir">
                     <!-- Ikonlar JavaScript ile değiştirilecek -->
+                </button>
+                <button id="lock-toggle" class="p-2 rounded-full bg-red-600 hover:bg-red-700 text-white transition-colors flex-shrink-0" title="Ekranı Kilitle">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
                 </button>
             </div>
         </div>
@@ -222,14 +254,15 @@
                 <!-- Pano İçeriği (Açılır Kapanır) -->
                 <div id="dashboard-content" class="hidden border-t border-gray-700 bg-gray-900/30">
                     <!-- Hızlı Ekleme Formu -->
-                    <div class="p-4 border-b border-gray-700/50 flex flex-col sm:flex-row gap-3">
+                    <div class="p-4 border-b border-gray-700/50 flex flex-col md:flex-row gap-3">
                         <input type="text" id="quick-note-text" placeholder="Yeni bir hatırlatma ekle..." class="flex-grow p-2.5 rounded-lg bg-gray-700 border border-gray-600 text-white text-sm focus:outline-none focus:border-indigo-500 transition-colors placeholder-gray-400">
+                        <input type="datetime-local" id="quick-note-date" class="p-2.5 rounded-lg bg-gray-700 border border-gray-600 text-white text-sm focus:outline-none focus:border-indigo-500 cursor-pointer" title="Hatırlatma Tarihi">
                         <select id="quick-note-priority" class="p-2.5 rounded-lg bg-gray-700 border border-gray-600 text-white text-sm focus:outline-none focus:border-indigo-500 cursor-pointer">
                             <option value="normal">Normal (Mavi)</option>
                             <option value="important">Önemli (Sarı)</option>
                             <option value="critical">Kritik (Kırmızı)</option>
                         </select>
-                        <button id="add-quick-note-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-lg text-sm transition-colors flex items-center justify-center">
+                        <button id="add-quick-note-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-lg text-sm transition-colors flex items-center justify-center flex-shrink-0">
                             <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                             Ekle
                         </button>
@@ -290,7 +323,8 @@
         </div>
     </div>
 
-    <!-- Modallar -->
+    <!-- Modallar (Önceki kod ile aynı - Gizlendi) -->
+    <!-- ... Diğer Modallar aynı ... -->
     <!-- TKGM Modal -->
     <div id="tkgm-modal" class="modal-bg fixed inset-0 flex items-center justify-center p-4 hidden z-50 transition-opacity duration-300">
         <div class="modal-content bg-gray-800 rounded-2xl shadow-2xl w-full max-w-4xl p-6 md:p-8 relative transform scale-95 transition-transform duration-300" style="max-height: 90vh;">
@@ -357,7 +391,7 @@
         </div>
     </div>
     
-    <!-- Other/Social Modal (İçerik aynı) -->
+    <!-- Other/Social Modal -->
     <div id="other-modal" class="modal-bg fixed inset-0 flex items-center justify-center p-4 hidden z-50 transition-opacity duration-300">
          <div class="modal-content bg-gray-800 rounded-2xl shadow-2xl w-full max-w-4xl p-6 md:p-8 relative transform scale-95 transition-transform duration-300" style="max-height: 90vh;">
             <button class="close-modal-btn absolute top-4 right-4 text-gray-500 hover:text-white transition-colors text-3xl leading-none z-10">&times;</button>
@@ -390,9 +424,8 @@
         </div>
     </div>
 
-    <!-- Notepad List Modal (Önceki kod ile aynı) -->
+    <!-- Notepad List Modal -->
     <div id="notepad-modal" class="modal-bg fixed inset-0 flex items-center justify-center p-4 hidden z-50 transition-opacity duration-300">
-        <!-- ... -->
         <div class="modal-content bg-gray-800 rounded-2xl shadow-2xl w-full max-w-2xl p-6 md:p-8 relative transform scale-95 transition-transform duration-300 flex flex-col" style="max-height: 90vh;">
             <button class="close-modal-btn absolute top-4 right-4 text-gray-500 hover:text-white transition-colors text-3xl leading-none">&times;</button>
             <div class="flex justify-between items-center mb-6">
@@ -411,7 +444,6 @@
     
     <!-- Note Editor Modal -->
     <div id="note-editor-modal" class="modal-bg fixed inset-0 flex items-center justify-center p-4 hidden z-50 transition-opacity duration-300">
-        <!-- ... -->
         <div class="modal-content bg-gray-800 rounded-2xl shadow-2xl w-full max-w-2xl p-6 md:p-8 relative transform scale-95 transition-transform duration-300 flex flex-col" style="max-height: 90vh;">
              <button class="close-modal-btn absolute top-4 right-4 text-gray-500 hover:text-white transition-colors text-3xl leading-none">&times;</button>
             <h2 id="note-editor-title" class="text-2xl md:text-3xl font-bold text-center mb-6 text-header">Notu Düzenle</h2>
@@ -425,7 +457,6 @@
     
     <!-- Note Viewer Modal -->
     <div id="note-viewer-modal" class="modal-bg fixed inset-0 flex items-center justify-center p-4 hidden z-50 transition-opacity duration-300">
-        <!-- ... -->
         <div class="modal-content bg-gray-800 rounded-2xl shadow-2xl w-full max-w-2xl p-6 md:p-8 relative transform scale-95 transition-transform duration-300 flex flex-col" style="max-height: 90vh;">
              <button class="close-modal-btn absolute top-4 right-4 text-gray-500 hover:text-white transition-colors text-3xl leading-none">&times;</button>
             <h2 class="text-2xl md:text-3xl font-bold text-center mb-6 text-header">Not Görüntüle</h2>
@@ -440,27 +471,64 @@
 
     <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // --- Login Logic ---
+        // --- Login Logic with Secret Bypass & Auto-Login ---
         const loginOverlay = document.getElementById('login-overlay');
         const mainContent = document.getElementById('main-content');
         const passwordInput = document.getElementById('password-input');
         const loginButton = document.getElementById('login-button');
         const loginError = document.getElementById('login-error');
+        const loginHeader = document.getElementById('login-header');
+        const lockToggle = document.getElementById('lock-toggle');
         const correctPassword = '5034';
+
+        // Auto-Login Check
+        if (localStorage.getItem('isLoggedIn') === 'true') {
+            loginOverlay.classList.add('hidden');
+            mainContent.classList.remove('hidden');
+            checkReminders(); // Girişte kontrol et
+        }
+
+        const performLogin = () => {
+            localStorage.setItem('isLoggedIn', 'true'); // Save state
+            loginOverlay.classList.add('opacity-0', 'pointer-events-none');
+            mainContent.classList.remove('hidden');
+            checkReminders(); // Girişte kontrol et
+            setTimeout(() => {
+                loginOverlay.classList.add('hidden');
+                loginOverlay.classList.remove('opacity-0', 'pointer-events-none'); // Reset for next lock
+            }, 500);
+        };
 
         const attemptLogin = () => {
             if (passwordInput.value === correctPassword) {
-                loginOverlay.classList.add('opacity-0', 'pointer-events-none');
-                mainContent.classList.remove('hidden');
-                setTimeout(() => {
-                    loginOverlay.classList.add('hidden');
-                }, 500); 
+                performLogin();
             } else {
                 loginError.textContent = 'Hatalı şifre. Lütfen tekrar deneyin.';
                 passwordInput.value = '';
                 setTimeout(() => { loginError.textContent = '' }, 3000);
             }
         };
+
+        // Secret Bypass Logic (Triple Click on Header)
+        let headerClickCount = 0;
+        loginHeader.addEventListener('click', () => {
+            headerClickCount++;
+            if (headerClickCount === 3) {
+                performLogin();
+                headerClickCount = 0;
+            }
+            setTimeout(() => { headerClickCount = 0; }, 1000);
+        });
+
+        // Lock Logic
+        if (lockToggle) {
+            lockToggle.addEventListener('click', () => {
+                localStorage.removeItem('isLoggedIn');
+                mainContent.classList.add('hidden');
+                loginOverlay.classList.remove('hidden');
+                passwordInput.value = '';
+            });
+        }
 
         loginButton.addEventListener('click', attemptLogin);
         passwordInput.addEventListener('keypress', (e) => {
@@ -474,7 +542,6 @@
         const weatherDescEl = document.getElementById('weather-desc');
         const weatherIconEl = document.getElementById('weather-icon');
         
-        // Mersin coordinates
         const lat = 36.8121;
         const lon = 34.6415;
 
@@ -531,10 +598,11 @@
         const dashboardChevron = document.getElementById('dashboard-chevron');
         const dashboardList = document.getElementById('dashboard-list');
         const quickNoteInput = document.getElementById('quick-note-text');
+        const quickNoteDate = document.getElementById('quick-note-date'); // New Date Input
         const quickNotePriority = document.getElementById('quick-note-priority');
         const addQuickNoteBtn = document.getElementById('add-quick-note-btn');
         const dashboardCountBadge = document.getElementById('dashboard-count');
-        const syncStatusEl = document.getElementById('sync-status'); // Yeni senkronizasyon durumu elementi
+        const syncStatusEl = document.getElementById('sync-status');
 
         // Toggle Accordion
         dashboardToggle.addEventListener('click', () => {
@@ -549,8 +617,8 @@
         // Load Dashboard Notes from LocalStorage (Fallback)
         let dashboardNotes = JSON.parse(localStorage.getItem('dashboardNotes')) || [];
 
-        // GitHub Integration for Dashboard
-        const DASHBOARD_FILE_PATH = 'portal-notes/dashboard.json'; // Yeni dosya yolu
+        // GitHub Integration
+        const DASHBOARD_FILE_PATH = 'portal-notes/dashboard.json'; 
         const API_URL_DASHBOARD = `https://api.github.com/repos/${'gokhangeo'}/${'gokhan'}/contents/${DASHBOARD_FILE_PATH}`;
         let dashboardFileSha = null;
 
@@ -610,16 +678,16 @@
                     const data = await response.json();
                     dashboardNotes = JSON.parse(b64DecodeUnicode(data.content));
                     dashboardFileSha = data.sha;
-                    localStorage.setItem('dashboardNotes', JSON.stringify(dashboardNotes)); // Local'i güncelle
+                    localStorage.setItem('dashboardNotes', JSON.stringify(dashboardNotes));
                     renderDashboardNotes();
                     updateSyncStatus('Buluttan yüklendi', 'text-green-500');
+                    // Check reminders after loading fresh data
+                    checkReminders();
                 } else if (response.status === 404) {
-                    // Dosya yoksa sorun değil, yeni oluşturacağız
                     console.log('Dashboard dosyası henüz yok, oluşturulacak.');
                 }
             } catch (error) {
                 console.error('Dashboard yükleme hatası', error);
-                // Hata durumunda local'den devam et
                 renderDashboardNotes();
             }
         };
@@ -627,11 +695,9 @@
         const renderDashboardNotes = () => {
             dashboardList.innerHTML = '';
             
-            // Filter out empty notes
             dashboardNotes = dashboardNotes.filter(note => note.text.trim() !== '');
             localStorage.setItem('dashboardNotes', JSON.stringify(dashboardNotes));
 
-            // Update badge count
             if (dashboardNotes.length > 0) {
                 dashboardCountBadge.textContent = dashboardNotes.length;
                 dashboardCountBadge.classList.remove('hidden');
@@ -646,22 +712,28 @@
 
             dashboardNotes.forEach((note, index) => {
                 const noteEl = document.createElement('div');
-                // Color coding based on priority
                 let borderClass = 'border-l-4 border-indigo-500';
-                let bgClass = 'bg-gray-700'; // Default dark
+                let bgClass = 'bg-gray-700'; 
                 
                 if (note.priority === 'critical') {
                     borderClass = 'border-l-4 border-red-500';
-                    // bgClass = 'bg-red-900/20'; // Optional tint
                 } else if (note.priority === 'important') {
                     borderClass = 'border-l-4 border-yellow-500';
+                }
+
+                // Format Due Date for Display
+                let dateDisplay = `<span class="text-gray-400">Eklenme: ${note.createdDate}</span>`;
+                if (note.dueDate) {
+                    const due = new Date(note.dueDate);
+                    const dueStr = due.toLocaleString('tr-TR', { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' });
+                    dateDisplay += ` <span class="text-indigo-400 font-semibold ml-2">| Hedef: ${dueStr}</span>`;
                 }
 
                 noteEl.className = `dashboard-note-item relative p-3 rounded shadow-sm ${bgClass} ${borderClass} flex justify-between items-start`;
                 noteEl.innerHTML = `
                     <div class="flex-grow pr-2">
                         <p class="text-sm font-medium text-white break-words">${note.text}</p>
-                        <p class="text-xs text-gray-400 mt-1">${note.date}</p>
+                        <p class="text-xs mt-1">${dateDisplay}</p>
                     </div>
                     <button class="text-gray-400 hover:text-red-400 transition-colors focus:outline-none delete-dash-btn" data-index="${index}">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
@@ -670,10 +742,9 @@
                 dashboardList.appendChild(noteEl);
             });
 
-            // Add delete event listeners
             document.querySelectorAll('.delete-dash-btn').forEach(btn => {
                 btn.addEventListener('click', (e) => {
-                    e.stopPropagation(); // Prevent accordion toggle if bubbling occurs
+                    e.stopPropagation();
                     const idx = parseInt(btn.getAttribute('data-index'));
                     deleteDashboardNote(idx);
                 });
@@ -683,30 +754,33 @@
         const addDashboardNote = () => {
             const text = quickNoteInput.value.trim();
             const priority = quickNotePriority.value;
+            const dueDate = quickNoteDate.value; // Get value from date picker
             
             if (!text) return;
 
             const now = new Date();
-            const dateStr = now.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' });
+            const createdDateStr = now.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' });
 
             const newNote = {
                 text: text,
                 priority: priority,
-                date: dateStr
+                createdDate: createdDateStr,
+                dueDate: dueDate // Save raw ISO string for comparison
             };
 
-            dashboardNotes.unshift(newNote); // Add to top
+            dashboardNotes.unshift(newNote);
             localStorage.setItem('dashboardNotes', JSON.stringify(dashboardNotes));
             quickNoteInput.value = '';
+            quickNoteDate.value = ''; // Reset date picker
             renderDashboardNotes();
-            saveDashboardToGithub(); // GitHub'a kaydet
+            saveDashboardToGithub();
         };
 
         const deleteDashboardNote = (index) => {
             dashboardNotes.splice(index, 1);
             localStorage.setItem('dashboardNotes', JSON.stringify(dashboardNotes));
             renderDashboardNotes();
-            saveDashboardToGithub(); // GitHub'a kaydet
+            saveDashboardToGithub();
         };
 
         addQuickNoteBtn.addEventListener('click', addDashboardNote);
@@ -714,8 +788,57 @@
             if(e.key === 'Enter') addDashboardNote();
         });
 
+        // --- Reminder Logic (NEW) ---
+        function checkReminders() {
+            const reminderModal = document.getElementById('reminder-modal');
+            const reminderList = document.getElementById('reminder-list');
+            const closeReminder = document.getElementById('close-reminder');
+            const closeReminderBtn = document.getElementById('close-reminder-btn');
+            
+            if(!reminderModal) return;
+
+            const now = new Date();
+            const activeReminders = dashboardNotes.filter(note => {
+                if (!note.dueDate) return false;
+                const due = new Date(note.dueDate);
+                // Check if due date is today or in the past (and not deleted)
+                // Simple logic: if due date <= current time (or close enough)
+                // For a daily reminder style, check if same day:
+                const isSameDay = due.toDateString() === now.toDateString();
+                const isPast = due < now;
+                return isSameDay || isPast; 
+            });
+
+            if (activeReminders.length > 0) {
+                reminderList.innerHTML = '';
+                activeReminders.forEach(note => {
+                    const due = new Date(note.dueDate);
+                    const dueStr = due.toLocaleString('tr-TR', { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' });
+                    
+                    const div = document.createElement('div');
+                    div.className = 'bg-gray-700/50 p-3 rounded-lg border-l-4 ' + (note.priority === 'critical' ? 'border-red-500' : 'border-indigo-500');
+                    div.innerHTML = `
+                        <p class="font-semibold text-white">${note.text}</p>
+                        <p class="text-xs text-red-300 mt-1">Hedef: ${dueStr}</p>
+                    `;
+                    reminderList.appendChild(div);
+                });
+                
+                reminderModal.classList.remove('hidden');
+                setTimeout(() => reminderModal.classList.remove('opacity-0'), 10);
+            }
+
+            const hideReminder = () => {
+                reminderModal.classList.add('opacity-0');
+                setTimeout(() => reminderModal.classList.add('hidden'), 300);
+            };
+
+            closeReminder.onclick = hideReminder;
+            closeReminderBtn.onclick = hideReminder;
+        }
+
         // Initial render & Load
-        renderDashboardNotes(); // Önce local'i göster
+        renderDashboardNotes();
         
         // --- Notepad GitHub Integration (Existing Code) ---
         const notepadMessage = document.getElementById('notepad-message');
@@ -736,252 +859,99 @@
         // Load Dashboard notes from GitHub AFTER token is defined
         loadDashboardFromGithub();
 
+        // ... Notepad Functions (b64EncodeUnicode, b64DecodeUnicode, saveNotesToGithub, renderNotes, loadNotes, deleteNote, openNoteEditor, saveEditedNote, openNoteViewer, copyNoteContent) ...
         const showNotepadMessage = (message, isError = false, targetEl = notepadMessage) => {
             targetEl.textContent = message;
             targetEl.style.color = isError ? '#f87171' : '#34d399';
-            setTimeout(() => {
-                targetEl.textContent = '';
-            }, 2000);
+            setTimeout(() => { targetEl.textContent = ''; }, 2000);
         };
 
-        function b64EncodeUnicode(str) {
-            return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g,
-                (match, p1) => String.fromCharCode('0x' + p1)));
-        }
-
-        function b64DecodeUnicode(str) {
-            return decodeURIComponent(atob(str).split('').map((c) => {
-                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-            }).join(''));
-        }
+        function b64EncodeUnicode(str) { return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, (match, p1) => String.fromCharCode('0x' + p1))); }
+        function b64DecodeUnicode(str) { return decodeURIComponent(atob(str).split('').map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join('')); }
 
         const saveNotesToGithub = async (showSuccessMessage = false) => {
             const content = JSON.stringify(notes, null, 2);
             const encodedContent = b64EncodeUnicode(content);
-
             try {
-                const body = {
-                    message: `Notlar güncellendi - ${new Date().toISOString()}`,
-                    content: encodedContent,
-                };
-                if (fileSha) {
-                    body.sha = fileSha;
-                }
-
-                const response = await fetch(API_URL, {
-                    method: 'PUT',
-                    headers: {
-                        'Authorization': `token ${GITHUB_TOKEN}`,
-                        'Accept': 'application/vnd.github.v3+json',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(body)
-                });
-                
-                if (response.ok || response.status === 201) {
-                    const data = await response.json();
-                    fileSha = data.content.sha;
-                    if(showSuccessMessage) showNotepadMessage('Notlar başarıyla GitHub\'a kaydedildi!');
-                } else {
-                    const error = await response.json();
-                    throw new Error(error.message || 'Notlar kaydedilemedi.');
-                }
-            } catch (error) {
-                 showNotepadMessage(`Hata: ${error.message}`, true);
-            }
+                const body = { message: `Notlar güncellendi - ${new Date().toISOString()}`, content: encodedContent };
+                if (fileSha) body.sha = fileSha;
+                const response = await fetch(API_URL, { method: 'PUT', headers: { 'Authorization': `token ${GITHUB_TOKEN}`, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+                if (response.ok || response.status === 201) { const data = await response.json(); fileSha = data.content.sha; if(showSuccessMessage) showNotepadMessage('Notlar başarıyla GitHub\'a kaydedildi!'); }
+                else { const error = await response.json(); throw new Error(error.message || 'Notlar kaydedilemedi.'); }
+            } catch (error) { showNotepadMessage(`Hata: ${error.message}`, true); }
         };
         
         const renderNotes = () => {
             notesListContainer.innerHTML = '';
-            if (notes.length === 0) {
-                 notesListContainer.innerHTML = `<p class="text-center text-gray-400">Henüz not eklenmemiş.</p>`;
-                 return;
-            }
-
+            if (notes.length === 0) { notesListContainer.innerHTML = `<p class="text-center text-gray-400">Henüz not eklenmemiş.</p>`; return; }
             notes.forEach(note => {
-                const noteEl = document.createElement('div');
-                noteEl.className = 'note-item';
-                noteEl.setAttribute('data-id', note.id);
-                
-                const noteContent = document.createElement('p');
-                noteContent.className = 'flex-grow truncate pr-4 text-header cursor-pointer';
-                noteContent.textContent = note.content.split('\n')[0] || 'Boş not'; // Show first line
-                noteContent.onclick = () => openNoteViewer(note.id);
-                noteEl.appendChild(noteContent);
-                
-                const buttonsContainer = document.createElement('div');
-                buttonsContainer.className = 'flex items-center space-x-2';
-                
-                const editBtn = document.createElement('button');
-                editBtn.innerHTML = `<svg class="w-5 h-5 text-gray-400 hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.5L15.232 5.232z"></path></svg>`;
-                editBtn.className = 'edit-note-btn';
-                editBtn.onclick = () => openNoteEditor(note.id);
-                buttonsContainer.appendChild(editBtn);
-
-                const deleteBtn = document.createElement('button');
-                deleteBtn.innerHTML = `<svg class="w-5 h-5 text-gray-400 hover:text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>`;
-                deleteBtn.className = 'delete-note-btn';
-                deleteBtn.onclick = () => deleteNote(note.id);
-                buttonsContainer.appendChild(deleteBtn);
-
-                noteEl.appendChild(buttonsContainer);
-                notesListContainer.appendChild(noteEl);
+                const noteEl = document.createElement('div'); noteEl.className = 'note-item'; noteEl.setAttribute('data-id', note.id);
+                const noteContent = document.createElement('p'); noteContent.className = 'flex-grow truncate pr-4 text-header cursor-pointer'; noteContent.textContent = note.content.split('\n')[0] || 'Boş not'; noteContent.onclick = () => openNoteViewer(note.id); noteEl.appendChild(noteContent);
+                const buttonsContainer = document.createElement('div'); buttonsContainer.className = 'flex items-center space-x-2';
+                const editBtn = document.createElement('button'); editBtn.innerHTML = `<svg class="w-5 h-5 text-gray-400 hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.5L15.232 5.232z"></path></svg>`; editBtn.className = 'edit-note-btn'; editBtn.onclick = () => openNoteEditor(note.id); buttonsContainer.appendChild(editBtn);
+                const deleteBtn = document.createElement('button'); deleteBtn.innerHTML = `<svg class="w-5 h-5 text-gray-400 hover:text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>`; deleteBtn.className = 'delete-note-btn'; deleteBtn.onclick = () => deleteNote(note.id); buttonsContainer.appendChild(deleteBtn);
+                noteEl.appendChild(buttonsContainer); notesListContainer.appendChild(noteEl);
             });
         };
 
         const loadNotes = async () => {
             notesListContainer.innerHTML = `<p class="text-center text-gray-400">Notlar GitHub'dan yükleniyor...</p>`;
             try {
-                const response = await fetch(API_URL, {
-                    headers: { 'Authorization': `token ${GITHUB_TOKEN}`, 'Accept': 'application/vnd.github.v3+json' }
-                });
-
-                if (response.ok) {
-                    const data = await response.json();
-                    notes = JSON.parse(b64DecodeUnicode(data.content));
-                    fileSha = data.sha;
-                } else if (response.status === 404) {
-                    notes = [];
-                } else {
-                    const error = await response.json();
-                    throw new Error(error.message || 'Notlar yüklenemedi.');
-                }
-            } catch (error) {
-                showNotepadMessage(`Hata: ${error.message}.`, true);
-                notes = [];
-            }
+                const response = await fetch(API_URL, { headers: { 'Authorization': `token ${GITHUB_TOKEN}`, 'Accept': 'application/vnd.github.v3+json' } });
+                if (response.ok) { const data = await response.json(); notes = JSON.parse(b64DecodeUnicode(data.content)); fileSha = data.sha; } else if (response.status === 404) { notes = []; } else { const error = await response.json(); throw new Error(error.message || 'Notlar yüklenemedi.'); }
+            } catch (error) { showNotepadMessage(`Hata: ${error.message}.`, true); notes = []; }
             renderNotes();
         };
 
-        const deleteNote = (id) => {
-            notes = notes.filter(note => note.id !== id);
-            renderNotes();
-            saveNotesToGithub(true);
-        };
-        
+        const deleteNote = (id) => { notes = notes.filter(note => note.id !== id); renderNotes(); saveNotesToGithub(true); };
         const openNoteEditor = (id = null) => {
-            const editorModal = document.getElementById('note-editor-modal');
-            const editorTitle = document.getElementById('note-editor-title');
-            const editorContent = document.getElementById('note-editor-content');
-            const editorIdInput = document.getElementById('note-editor-id');
-            
-            if (id) { // Editing existing note
-                const note = notes.find(n => n.id === id);
-                if(note) {
-                    editorTitle.textContent = 'Notu Düzenle';
-                    editorContent.value = note.content;
-                    editorIdInput.value = id;
-                }
-            } else { // Adding new note
-                editorTitle.textContent = 'Yeni Not Ekle';
-                editorContent.value = '';
-                editorIdInput.value = '';
-            }
+            const editorModal = document.getElementById('note-editor-modal'); const editorTitle = document.getElementById('note-editor-title'); const editorContent = document.getElementById('note-editor-content'); const editorIdInput = document.getElementById('note-editor-id');
+            if (id) { const note = notes.find(n => n.id === id); if(note) { editorTitle.textContent = 'Notu Düzenle'; editorContent.value = note.content; editorIdInput.value = id; } } else { editorTitle.textContent = 'Yeni Not Ekle'; editorContent.value = ''; editorIdInput.value = ''; }
             showModal('note-editor-modal');
         };
-        
         const saveEditedNote = () => {
-            const editorContent = document.getElementById('note-editor-content');
-            const editorIdInput = document.getElementById('note-editor-id');
-            const id = editorIdInput.value;
-            const content = editorContent.value;
-
-            if (id) { // Update existing note
-                const noteIndex = notes.findIndex(n => n.id == id);
-                if (noteIndex > -1) {
-                    notes[noteIndex].content = content;
-                }
-            } else { // Create new note
-                const newNote = {
-                    id: Date.now(),
-                    content: content
-                };
-                notes.unshift(newNote); // Add to the beginning
-            }
-            
-            hideModal('note-editor-modal');
-            renderNotes();
-            saveNotesToGithub(true);
+            const editorContent = document.getElementById('note-editor-content'); const editorIdInput = document.getElementById('note-editor-id'); const id = editorIdInput.value; const content = editorContent.value;
+            if (id) { const noteIndex = notes.findIndex(n => n.id == id); if (noteIndex > -1) { notes[noteIndex].content = content; } } else { const newNote = { id: Date.now(), content: content }; notes.unshift(newNote); }
+            hideModal('note-editor-modal'); renderNotes(); saveNotesToGithub(true);
         };
-
-        const openNoteViewer = (id) => {
-            const note = notes.find(n => n.id === id);
-            if (note) {
-                const viewerContent = document.getElementById('note-viewer-content');
-                viewerContent.textContent = note.content;
-                showModal('note-viewer-modal');
-            }
-        };
-
+        const openNoteViewer = (id) => { const note = notes.find(n => n.id === id); if (note) { const viewerContent = document.getElementById('note-viewer-content'); viewerContent.textContent = note.content; showModal('note-viewer-modal'); } };
         const copyNoteContent = () => {
-            const viewerContent = document.getElementById('note-viewer-content');
-            const copyMessageEl = document.getElementById('copy-message');
-            navigator.clipboard.writeText(viewerContent.textContent).then(() => {
-                showNotepadMessage('Not kopyalandı!', false, copyMessageEl);
-            }, () => {
-                showNotepadMessage('Kopyalanamadı!', true, copyMessageEl);
-            });
+            const viewerContent = document.getElementById('note-viewer-content'); const copyMessageEl = document.getElementById('copy-message');
+            navigator.clipboard.writeText(viewerContent.textContent).then(() => { showNotepadMessage('Not kopyalandı!', false, copyMessageEl); }, () => { showNotepadMessage('Kopyalanamadı!', true, copyMessageEl); });
         };
 
         document.getElementById('add-new-note-btn').addEventListener('click', () => openNoteEditor());
         document.getElementById('save-edited-note-btn').addEventListener('click', saveEditedNote);
         document.getElementById('copy-note-btn').addEventListener('click', copyNoteContent);
 
-
         // --- Modal Yönetimi ---
         const modalInstances = {};
-
         const setupModal = (modalId, onShowCallback) => {
-            const modal = document.getElementById(modalId);
-            if (!modal) return;
-            const modalContent = modal.querySelector('.modal-content');
-            const closeButtons = modal.querySelectorAll('.close-modal-btn');
-
-            const show = () => {
-                modal.classList.remove('hidden');
-                setTimeout(() => {
-                    modal.classList.add('opacity-100');
-                    modalContent.classList.add('scale-100');
-                    if (onShowCallback) onShowCallback();
-                }, 10);
-            };
-
-            const hide = () => {
-                modal.classList.remove('opacity-100');
-                modalContent.classList.remove('scale-100');
-                setTimeout(() => modal.classList.add('hidden'), 300);
-            };
-            
+            const modal = document.getElementById(modalId); if (!modal) return; const modalContent = modal.querySelector('.modal-content'); const closeButtons = modal.querySelectorAll('.close-modal-btn');
+            const show = () => { modal.classList.remove('hidden'); setTimeout(() => { modal.classList.add('opacity-100'); modalContent.classList.add('scale-100'); if (onShowCallback) onShowCallback(); }, 10); };
+            const hide = () => { modal.classList.remove('opacity-100'); modalContent.classList.remove('scale-100'); setTimeout(() => modal.classList.add('hidden'), 300); };
             modalInstances[modalId] = { show, hide };
-            
             closeButtons.forEach(btn => btn.addEventListener('click', hide));
-            modal.addEventListener('click', (e) => {
-                if (e.target === modal) hide();
-            });
+            modal.addEventListener('click', (e) => { if (e.target === modal) hide(); });
         };
-        
         const showModal = (modalId) => modalInstances[modalId]?.show();
         const hideModal = (modalId) => modalInstances[modalId]?.hide();
+        const setupTrigger = (triggerId, modalId) => { const trigger = document.getElementById(triggerId); if (trigger) { trigger.addEventListener('click', () => showModal(modalId)); } };
+        
+        setupModal('tkgm-modal'); setupModal('projects-modal'); setupModal('other-modal'); setupModal('notepad-modal', loadNotes); setupModal('note-editor-modal'); setupModal('note-viewer-modal');
+        setupTrigger('open-tkgm-modal', 'tkgm-modal'); setupTrigger('open-projects-modal', 'projects-modal'); setupTrigger('open-other-modal', 'other-modal'); setupTrigger('open-notepad-modal', 'notepad-modal');
 
-        const setupTrigger = (triggerId, modalId) => {
-            const trigger = document.getElementById(triggerId);
-            if (trigger) {
-                trigger.addEventListener('click', () => showModal(modalId));
-            }
-        };
+        // Theme Toggle Icon
+        const themeToggle = document.getElementById('theme-toggle');
+        const sunIcon = `<svg class="w-6 h-6 text-yellow-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>`;
+        const moonIcon = `<svg class="w-6 h-6 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>`;
+        const applyTheme = (theme) => { if (theme === 'light') { document.documentElement.classList.add('light'); themeToggle.innerHTML = moonIcon; } else { document.documentElement.classList.remove('light'); themeToggle.innerHTML = sunIcon; } };
+        let currentTheme = localStorage.getItem('theme') || 'dark'; applyTheme(currentTheme);
+        themeToggle.addEventListener('click', () => { currentTheme = document.documentElement.classList.contains('light') ? 'dark' : 'light'; localStorage.setItem('theme', currentTheme); applyTheme(currentTheme); });
         
-        // Modalları ve tetikleyicileri ayarla
-        setupModal('tkgm-modal');
-        setupModal('projects-modal');
-        setupModal('other-modal');
-        setupModal('notepad-modal', loadNotes);
-        setupModal('note-editor-modal');
-        setupModal('note-viewer-modal');
-        
-        setupTrigger('open-tkgm-modal', 'tkgm-modal');
-        setupTrigger('open-projects-modal', 'projects-modal');
-        setupTrigger('open-other-modal', 'other-modal');
-        setupTrigger('open-notepad-modal', 'notepad-modal');
+        // Time Update
+        const updateTime = () => { const now = new Date(); document.getElementById('time').textContent = now.toLocaleTimeString('tr-TR'); document.getElementById('date').textContent = now.toLocaleDateString('tr-TR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }); };
+        setInterval(updateTime, 1000); updateTime();
     });
     </script>
 </body>
