@@ -1,11 +1,17 @@
 <!DOCTYPE html>
 <html lang="tr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Uygulama Portalı</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<!-- PWA Kodları (head içine) -->
+<link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#4f46e5">
+<link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/1067/1067256.png">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./service-worker.js');
+    });
+  }
+</script>
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -185,7 +191,7 @@
             </h1>
         </header>
 
-        <!-- YENİ: Hızlı Bildirim & Not Panosu (Dashboard Widget) -->
+        <!-- Hızlı Bildirim & Not Panosu (Dashboard Widget) -->
         <div class="max-w-4xl mx-auto mb-10 w-full">
             <div class="bg-gray-800 dashboard-note-bg rounded-xl shadow-lg border border-gray-700 overflow-hidden transition-all duration-300">
                 <!-- Pano Başlığı (Tıklanabilir) -->
@@ -196,10 +202,12 @@
                         </div>
                         <div>
                             <h3 class="text-lg font-bold text-header">Hızlı Bildirimler & Notlar</h3>
-                            <p class="text-xs text-subheader">Günlük hatırlatmalar ve acil işler</p>
+                            <p class="text-xs text-subheader">Bulut senkronizasyonlu hatırlatıcı</p>
                         </div>
                     </div>
                     <div class="flex items-center space-x-3">
+                        <!-- Senkronizasyon Durumu -->
+                        <span id="sync-status" class="text-xs text-gray-500 hidden sm:block"></span>
                         <!-- Sayaç Rozeti -->
                         <span id="dashboard-count" class="bg-red-500 text-white text-xs font-bold px-2.5 py-1 rounded-full hidden shadow-sm animate-pulse">0</span>
                         <svg id="dashboard-chevron" class="w-6 h-6 text-gray-400 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
@@ -224,8 +232,7 @@
                     
                     <!-- Not Listesi -->
                     <div id="dashboard-list" class="p-3 space-y-2 max-h-64 overflow-y-auto custom-scrollbar">
-                        <!-- JS ile doldurulacak -->
-                        <div class="text-center text-gray-500 py-4 text-sm">Henüz bildirim yok.</div>
+                        <div class="text-center text-gray-500 py-4 text-sm">Yükleniyor...</div>
                     </div>
                 </div>
             </div>
@@ -248,7 +255,7 @@
                  </div>
             </div>
             <div id="open-other-modal" class="category-card card bg-gray-800 p-6 rounded-2xl shadow-lg flex flex-col justify-center items-center text-center cursor-pointer transform hover:-translate-y-2 transition-all duration-300 hover:shadow-yellow-500/50 space-y-3">
-                <div class="bg-yellow-500 p-3 rounded-xl"><svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg></div>
+                <div class="bg-yellow-500 p-3 rounded-xl"><svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg></div>
                 <div>
                     <h2 class="text-xl md:text-2xl font-bold text-header">Diğer Uygulamalar</h2>
                     <p class="text-subheader mt-2 text-sm md:text-base">Sosyal medya ve sık kullanılanlar</p>
@@ -278,7 +285,7 @@
         </div>
     </div>
 
-    <!-- Modallar (İçerik Gizlendi - Önceki kod ile aynı) -->
+    <!-- Modallar -->
     <!-- TKGM Modal -->
     <div id="tkgm-modal" class="modal-bg fixed inset-0 flex items-center justify-center p-4 hidden z-50 transition-opacity duration-300">
         <div class="modal-content bg-gray-800 rounded-2xl shadow-2xl w-full max-w-4xl p-6 md:p-8 relative transform scale-95 transition-transform duration-300" style="max-height: 90vh;">
@@ -522,6 +529,7 @@
         const quickNotePriority = document.getElementById('quick-note-priority');
         const addQuickNoteBtn = document.getElementById('add-quick-note-btn');
         const dashboardCountBadge = document.getElementById('dashboard-count');
+        const syncStatusEl = document.getElementById('sync-status'); // Yeni senkronizasyon durumu elementi
 
         // Toggle Accordion
         dashboardToggle.addEventListener('click', () => {
@@ -533,13 +541,88 @@
             }
         });
 
-        // Load Dashboard Notes from LocalStorage
+        // Load Dashboard Notes from LocalStorage (Fallback)
         let dashboardNotes = JSON.parse(localStorage.getItem('dashboardNotes')) || [];
+
+        // GitHub Integration for Dashboard
+        const DASHBOARD_FILE_PATH = 'portal-notes/dashboard.json'; // Yeni dosya yolu
+        const API_URL_DASHBOARD = `https://api.github.com/repos/${'gokhangeo'}/${'gokhan'}/contents/${DASHBOARD_FILE_PATH}`;
+        let dashboardFileSha = null;
+
+        const updateSyncStatus = (status, color = 'text-gray-500') => {
+            if(syncStatusEl) {
+                syncStatusEl.textContent = status;
+                syncStatusEl.className = `text-xs hidden sm:block ${color}`;
+                setTimeout(() => { if(status !== 'Senkronize ediliyor...') syncStatusEl.textContent = ''; }, 3000);
+            }
+        };
+
+        const saveDashboardToGithub = async () => {
+            updateSyncStatus('Senkronize ediliyor...', 'text-yellow-500');
+            const content = JSON.stringify(dashboardNotes, null, 2);
+            const encodedContent = b64EncodeUnicode(content);
+
+            try {
+                const body = {
+                    message: `Dashboard notları güncellendi - ${new Date().toISOString()}`,
+                    content: encodedContent,
+                };
+                if (dashboardFileSha) {
+                    body.sha = dashboardFileSha;
+                }
+
+                const response = await fetch(API_URL_DASHBOARD, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `token ${GITHUB_TOKEN}`,
+                        'Accept': 'application/vnd.github.v3+json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(body)
+                });
+                
+                if (response.ok || response.status === 201) {
+                    const data = await response.json();
+                    dashboardFileSha = data.content.sha;
+                    updateSyncStatus('Buluta kaydedildi', 'text-green-500');
+                } else {
+                    console.error('Dashboard GitHub kayıt hatası');
+                    updateSyncStatus('Kayıt hatası!', 'text-red-500');
+                }
+            } catch (error) {
+                 console.error('Dashboard GitHub ağ hatası', error);
+                 updateSyncStatus('Bağlantı hatası!', 'text-red-500');
+            }
+        };
+
+        const loadDashboardFromGithub = async () => {
+            try {
+                const response = await fetch(API_URL_DASHBOARD, {
+                    headers: { 'Authorization': `token ${GITHUB_TOKEN}`, 'Accept': 'application/vnd.github.v3+json' }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    dashboardNotes = JSON.parse(b64DecodeUnicode(data.content));
+                    dashboardFileSha = data.sha;
+                    localStorage.setItem('dashboardNotes', JSON.stringify(dashboardNotes)); // Local'i güncelle
+                    renderDashboardNotes();
+                    updateSyncStatus('Buluttan yüklendi', 'text-green-500');
+                } else if (response.status === 404) {
+                    // Dosya yoksa sorun değil, yeni oluşturacağız
+                    console.log('Dashboard dosyası henüz yok, oluşturulacak.');
+                }
+            } catch (error) {
+                console.error('Dashboard yükleme hatası', error);
+                // Hata durumunda local'den devam et
+                renderDashboardNotes();
+            }
+        };
 
         const renderDashboardNotes = () => {
             dashboardList.innerHTML = '';
             
-            // Filter out empty notes just in case
+            // Filter out empty notes
             dashboardNotes = dashboardNotes.filter(note => note.text.trim() !== '');
             localStorage.setItem('dashboardNotes', JSON.stringify(dashboardNotes));
 
@@ -611,12 +694,14 @@
             localStorage.setItem('dashboardNotes', JSON.stringify(dashboardNotes));
             quickNoteInput.value = '';
             renderDashboardNotes();
+            saveDashboardToGithub(); // GitHub'a kaydet
         };
 
         const deleteDashboardNote = (index) => {
             dashboardNotes.splice(index, 1);
             localStorage.setItem('dashboardNotes', JSON.stringify(dashboardNotes));
             renderDashboardNotes();
+            saveDashboardToGithub(); // GitHub'a kaydet
         };
 
         addQuickNoteBtn.addEventListener('click', addDashboardNote);
@@ -624,44 +709,8 @@
             if(e.key === 'Enter') addDashboardNote();
         });
 
-        // Initial render
-        renderDashboardNotes();
-
-
-        const themeToggle = document.getElementById('theme-toggle');
-        const timeEl = document.getElementById('time');
-        const dateEl = document.getElementById('date');
-        const htmlEl = document.documentElement;
-        
-        const sunIcon = `<svg class="w-6 h-6 text-yellow-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>`;
-        const moonIcon = `<svg class="w-6 h-6 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>`;
-
-        const applyTheme = (theme) => {
-            if (theme === 'light') {
-                htmlEl.classList.add('light');
-                themeToggle.innerHTML = moonIcon;
-            } else {
-                htmlEl.classList.remove('light');
-                themeToggle.innerHTML = sunIcon;
-            }
-        };
-
-        let currentTheme = localStorage.getItem('theme') || 'dark';
-        applyTheme(currentTheme);
-
-        themeToggle.addEventListener('click', () => {
-            currentTheme = htmlEl.classList.contains('light') ? 'dark' : 'light';
-            localStorage.setItem('theme', currentTheme);
-            applyTheme(currentTheme);
-        });
-
-        const updateTime = () => {
-            const now = new Date();
-            timeEl.textContent = now.toLocaleTimeString('tr-TR');
-            dateEl.textContent = now.toLocaleDateString('tr-TR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-        };
-        setInterval(updateTime, 1000);
-        updateTime();
+        // Initial render & Load
+        renderDashboardNotes(); // Önce local'i göster
         
         // --- Notepad GitHub Integration (Existing Code) ---
         const notepadMessage = document.getElementById('notepad-message');
@@ -678,6 +727,9 @@
         const GITHUB_REPO = 'gokhan';
         const FILE_PATH = 'portal-notes/notes.json';
         const API_URL = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/${FILE_PATH}`;
+
+        // Load Dashboard notes from GitHub AFTER token is defined
+        loadDashboardFromGithub();
 
         const showNotepadMessage = (message, isError = false, targetEl = notepadMessage) => {
             targetEl.textContent = message;
