@@ -305,54 +305,19 @@
 
     <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // --- Core Elements ---
+        // --- 1. VERİ TANIMLAMALARI (En başta) ---
+        let dashNotes = JSON.parse(localStorage.getItem('dashboardNotes')) || [];
+        let notes = JSON.parse(localStorage.getItem('notes')) || [];
+        const correctPassword = '5034';
+        
+        // Elemanlar
         const loginOverlay = document.getElementById('login-overlay');
         const mainContent = document.getElementById('main-content');
         const passwordInput = document.getElementById('password-input');
-        const loginButton = document.getElementById('login-button');
-        const correctPassword = '5034';
-
-        // 1. LOGIN & SECURITY
-        function performLogin() {
-            localStorage.setItem('isLoggedIn', 'true');
-            loginOverlay.style.opacity = '0';
-            setTimeout(() => {
-                loginOverlay.style.display = 'none';
-                mainContent.classList.remove('hidden');
-                checkReminders();
-            }, 300);
-        }
-
-        if (localStorage.getItem('isLoggedIn') === 'true') {
-            loginOverlay.style.display = 'none';
-            mainContent.classList.remove('hidden');
-            checkReminders();
-        }
-
-        loginButton.addEventListener('click', () => {
-            if(passwordInput.value === correctPassword) performLogin();
-            else {
-                document.getElementById('login-error').textContent = 'Hatalı şifre!';
-                setTimeout(()=> document.getElementById('login-error').textContent='', 2000);
-            }
-        });
-
-        let clicks = 0;
-        document.getElementById('login-header').addEventListener('click', () => {
-            clicks++;
-            if(clicks === 3) { performLogin(); clicks=0; }
-            setTimeout(()=>clicks=0, 1000);
-        });
-
-        document.getElementById('lock-toggle').addEventListener('click', () => {
-            localStorage.removeItem('isLoggedIn');
-            mainContent.classList.add('hidden');
-            loginOverlay.style.display = 'flex';
-            loginOverlay.style.opacity = '1';
-            passwordInput.value = '';
-        });
-
-        // 2. MODAL FUNCTIONS
+        
+        // --- 2. FONKSİYONLAR ---
+        
+        // Modal
         window.openModal = (id) => {
             const m = document.getElementById(id);
             m.classList.remove('hidden');
@@ -364,73 +329,8 @@
             m.children[0].classList.add('scale-95');
             setTimeout(() => m.classList.add('hidden'), 300);
         };
-        
-        ['tkgm','projects','other','notepad'].forEach(k => {
-            const id = k+'-modal';
-            const btn = document.getElementById('open-'+k+'-modal');
-            if(btn) btn.onclick = () => openModal(id);
-            const m = document.getElementById(id);
-            if(m) {
-                m.querySelectorAll('.close-modal-btn').forEach(b => b.onclick = () => closeModal(id));
-                m.onclick = (e) => { if(e.target===m) closeModal(id); };
-            }
-        });
 
-        // 3. WEATHER & NEWS & TIME
-        async function updateData() {
-            try {
-                let wRes = await fetch('https://api.open-meteo.com/v1/forecast?latitude=36.8121&longitude=34.6415&current_weather=true');
-                let wData = await wRes.json();
-                document.getElementById('weather-temp').textContent = Math.round(wData.current_weather.temperature) + '°C';
-            } catch(e) {}
-        }
-        updateData(); setInterval(updateData, 1800000);
-
-        const updateTime = () => { 
-            const now = new Date(); 
-            document.getElementById('time').textContent = now.toLocaleTimeString('tr-TR'); 
-            document.getElementById('date').textContent = now.toLocaleDateString('tr-TR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }); 
-        };
-        setInterval(updateTime, 1000); updateTime();
-        
-        // --- NEWS TICKER (WITH FALLBACK) ---
-        const newsTickerContent = document.getElementById('news-ticker-content');
-        const fallbackNews = [
-            { title: "Piyasalarda son durum: Altın ve Döviz hareketli" },
-            { title: "Teknoloji dünyasında yapay zeka gelişmeleri" },
-            { title: "Spor dünyasından öne çıkan başlıklar" },
-            { title: "Hava durumu mevsim normallerinde seyrediyor" },
-             { title: "Uygulama Portalı güncellendi, yeni özellikler eklendi" }
-        ];
-
-        const fetchNews = async () => {
-            try {
-                // Try fetching live news first
-                const res = await fetch('https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fwww.trthaber.com%2Fsondakika.rss');
-                const data = await res.json();
-                
-                if(data.status === 'ok') {
-                    const items = data.items.map(item => {
-                        return `<span class="inline-block mx-6 py-2"><span class="text-red-400 font-bold mr-1">•</span> ${item.title}</span>`;
-                    }).join('');
-                    newsTickerContent.innerHTML = items; 
-                } else {
-                    throw new Error('API Limit or Error');
-                }
-            } catch (e) {
-                // Fallback if live news fails
-                console.log("Canlı haber alınamadı, yedekler yükleniyor.");
-                const items = fallbackNews.map(item => {
-                    return `<span class="inline-block mx-6 py-2"><span class="text-red-400 font-bold mr-1">•</span> ${item.title}</span>`;
-                }).join('');
-                newsTickerContent.innerHTML = items;
-            }
-        };
-        fetchNews();
-        setInterval(fetchNews, 300000); // Retry every 5 mins
-
-        // 4. DASHBOARD & REMINDERS
-        let dashNotes = JSON.parse(localStorage.getItem('dashboardNotes')) || [];
+        // Dashboard Render
         function renderDash() {
             const list = document.getElementById('dashboard-list');
             const count = document.getElementById('dashboard-count');
@@ -444,41 +344,8 @@
                 </div>
             `).join('') || '<div class="text-center text-gray-500 py-4 text-sm">Bildirim yok.</div>';
         }
-
-        document.getElementById('add-quick-note-btn').onclick = () => {
-            const t = document.getElementById('quick-note-text').value;
-            if(t) {
-                dashNotes.unshift({ t, d: document.getElementById('quick-note-date').value, p: document.getElementById('quick-note-priority').value });
-                localStorage.setItem('dashboardNotes', JSON.stringify(dashNotes));
-                document.getElementById('quick-note-text').value = '';
-                renderDash();
-            }
-        };
-        window.delDash = (i) => { dashNotes.splice(i, 1); localStorage.setItem('dashboardNotes', JSON.stringify(dashNotes)); renderDash(); };
-
-        document.getElementById('dashboard-toggle').onclick = () => {
-            const c = document.getElementById('dashboard-content');
-            const chev = document.getElementById('dashboard-chevron');
-            c.classList.toggle('hidden');
-            chev.style.transform = c.classList.contains('hidden') ? 'rotate(0deg)' : 'rotate(180deg)';
-        };
-        renderDash();
-
-        function checkReminders() {
-            if(loginOverlay.style.display !== 'none' && !loginOverlay.classList.contains('hidden')) return;
-            const now = new Date();
-            const dues = dashNotes.filter(n => n.d && new Date(n.d) <= now);
-            if(dues.length > 0) {
-                document.getElementById('reminder-list').innerHTML = dues.map(n => `<div class="bg-gray-700 p-3 rounded border-l-4 border-red-500"><p class="text-white font-bold">${n.t}</p><p class="text-xs text-red-300">Zamanı geldi!</p></div>`).join('');
-                const rm = document.getElementById('reminder-modal');
-                rm.classList.remove('hidden'); setTimeout(()=>rm.classList.remove('opacity-0'),10);
-            }
-        }
-        document.getElementById('close-reminder').onclick = () => document.getElementById('reminder-modal').classList.add('hidden');
-        document.getElementById('close-reminder-btn').onclick = () => document.getElementById('reminder-modal').classList.add('hidden');
-
-        // 5. NOTEPAD (Classic)
-        let notes = JSON.parse(localStorage.getItem('notes')) || [];
+        
+        // Notepad Render
         function renderNotepad() {
             const list = document.getElementById('notes-list-container');
             list.innerHTML = notes.map((n, i) => `
@@ -489,13 +356,90 @@
             `).join('') || '<p class="text-center text-gray-400">Not yok.</p>';
         }
 
+        // Reminders
+        function checkReminders() {
+            if(loginOverlay.style.display !== 'none' && !loginOverlay.classList.contains('hidden')) return;
+            const now = new Date();
+            const dues = dashNotes.filter(n => n.d && new Date(n.d) <= now);
+            if(dues.length > 0) {
+                document.getElementById('reminder-list').innerHTML = dues.map(n => `<div class="bg-gray-700 p-3 rounded border-l-4 border-red-500"><p class="text-white font-bold">${n.t}</p><p class="text-xs text-red-300">Zamanı geldi!</p></div>`).join('');
+                const rm = document.getElementById('reminder-modal');
+                rm.classList.remove('hidden'); setTimeout(()=>rm.classList.remove('opacity-0'),10);
+            }
+        }
+
+        // --- 3. EVENT LISTENERS ---
+        
+        // Login
+        function performLogin() {
+            localStorage.setItem('isLoggedIn', 'true');
+            loginOverlay.style.opacity = '0';
+            setTimeout(() => {
+                loginOverlay.style.display = 'none';
+                mainContent.classList.remove('hidden');
+                checkReminders();
+            }, 300);
+        }
+
+        document.getElementById('login-button').addEventListener('click', () => {
+            if(passwordInput.value === correctPassword) performLogin();
+            else {
+                document.getElementById('login-error').textContent = 'Hatalı şifre!';
+                setTimeout(()=> document.getElementById('login-error').textContent='', 2000);
+            }
+        });
+
+        // Secret Bypass
+        let clicks = 0;
+        document.getElementById('login-header').addEventListener('click', () => {
+            clicks++; if(clicks===3){ performLogin(); clicks=0; } setTimeout(()=>clicks=0, 1000);
+        });
+
+        // Lock
+        document.getElementById('lock-toggle').addEventListener('click', () => {
+            localStorage.removeItem('isLoggedIn');
+            loginOverlay.style.display = 'flex';
+            loginOverlay.style.opacity = '1';
+            passwordInput.value = '';
+        });
+
+        // Modals
+        ['tkgm','projects','other','notepad'].forEach(k => {
+            const btn = document.getElementById('open-'+k+'-modal');
+            if(btn) btn.onclick = () => openModal(k+'-modal');
+            const m = document.getElementById(k+'-modal');
+            if(m) {
+                m.querySelectorAll('.close-modal-btn').forEach(b => b.onclick = () => closeModal(k+'-modal'));
+                m.onclick = (e) => { if(e.target===m) closeModal(k+'-modal'); };
+            }
+        });
+
+        // Dashboard Actions
+        document.getElementById('add-quick-note-btn').onclick = () => {
+            const t = document.getElementById('quick-note-text').value;
+            if(t) {
+                dashNotes.unshift({ t, d: document.getElementById('quick-note-date').value, p: document.getElementById('quick-note-priority').value });
+                localStorage.setItem('dashboardNotes', JSON.stringify(dashNotes));
+                document.getElementById('quick-note-text').value = '';
+                renderDash();
+            }
+        };
+        window.delDash = (i) => { dashNotes.splice(i, 1); localStorage.setItem('dashboardNotes', JSON.stringify(dashNotes)); renderDash(); };
+        
+        document.getElementById('dashboard-toggle').onclick = () => {
+            const c = document.getElementById('dashboard-content');
+            const chev = document.getElementById('dashboard-chevron');
+            c.classList.toggle('hidden');
+            chev.style.transform = c.classList.contains('hidden') ? 'rotate(0deg)' : 'rotate(180deg)';
+        };
+
+        // Notepad Actions
         document.getElementById('add-new-note-btn').onclick = () => {
             document.getElementById('note-editor-id').value = '';
             document.getElementById('note-editor-content').value = '';
             document.getElementById('note-editor-title').textContent = 'Yeni Not';
             openModal('note-editor-modal');
         };
-
         document.getElementById('save-edited-note-btn').onclick = () => {
             const c = document.getElementById('note-editor-content').value;
             const id = document.getElementById('note-editor-id').value;
@@ -506,7 +450,6 @@
                 renderNotepad();
             }
         };
-
         window.viewNote = (i) => {
             document.getElementById('note-viewer-content').textContent = notes[i].content;
             document.getElementById('note-editor-id').value = i;
@@ -514,16 +457,63 @@
         };
         window.deleteNote = (i) => { notes.splice(i, 1); localStorage.setItem('notes', JSON.stringify(notes)); renderNotepad(); };
         
-        document.getElementById('note-editor-modal').querySelectorAll('.close-modal-btn').forEach(b => b.onclick = () => closeModal('note-editor-modal'));
-        document.getElementById('note-viewer-modal').querySelectorAll('.close-modal-btn').forEach(b => b.onclick = () => closeModal('note-viewer-modal'));
+        // Reminder Actions
+        document.getElementById('close-reminder').onclick = () => document.getElementById('reminder-modal').classList.add('hidden');
+        document.getElementById('close-reminder-btn').onclick = () => document.getElementById('reminder-modal').classList.add('hidden');
+
+        // Copy Note
         document.getElementById('copy-note-btn').onclick = () => {
             navigator.clipboard.writeText(document.getElementById('note-viewer-content').textContent).then(() => {
                 document.getElementById('copy-message').textContent = 'Kopyalandı!'; setTimeout(()=> document.getElementById('copy-message').textContent='', 2000);
             });
         };
-        renderNotepad();
+        
+        // Note Editor Close Btns
+        document.getElementById('note-editor-modal').querySelectorAll('.close-modal-btn').forEach(b => b.onclick = () => closeModal('note-editor-modal'));
+        document.getElementById('note-viewer-modal').querySelectorAll('.close-modal-btn').forEach(b => b.onclick = () => closeModal('note-viewer-modal'));
 
-        // Theme Toggle
+        // Weather & News
+        async function updateData() {
+            try {
+                let wRes = await fetch('https://api.open-meteo.com/v1/forecast?latitude=36.8121&longitude=34.6415&current_weather=true');
+                let wData = await wRes.json();
+                document.getElementById('weather-temp').textContent = Math.round(wData.current_weather.temperature) + '°C';
+            } catch(e) {}
+        }
+        updateData(); setInterval(updateData, 1800000);
+        
+        const fallbackNews = [
+            { title: "Piyasalarda son durum: Altın ve Döviz hareketli" },
+            { title: "Teknoloji dünyasında yapay zeka gelişmeleri" },
+            { title: "Spor dünyasından öne çıkan başlıklar" },
+            { title: "Hava durumu mevsim normallerinde seyrediyor" },
+            { title: "Uygulama Portalı güncellendi" }
+        ];
+
+        async function updateNews() {
+            try {
+                const res = await fetch('https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fwww.trthaber.com%2Fsondakika.rss');
+                const data = await res.json();
+                if(data.status === 'ok') {
+                    const html = data.items.map(i => `<span class="inline-block mx-6 py-2"><span class="text-red-400 font-bold mr-1">•</span> ${i.title}</span>`).join('');
+                    document.getElementById('news-ticker-content').innerHTML = html;
+                } else throw new Error('Limit');
+            } catch(e) {
+                const html = fallbackNews.map(i => `<span class="inline-block mx-6 py-2"><span class="text-red-400 font-bold mr-1">•</span> ${i.title}</span>`).join('');
+                document.getElementById('news-ticker-content').innerHTML = html;
+            }
+        }
+        updateNews(); setInterval(updateNews, 300000);
+
+        // Time
+        const updateTime = () => { 
+            const now = new Date(); 
+            document.getElementById('time').textContent = now.toLocaleTimeString('tr-TR'); 
+            document.getElementById('date').textContent = now.toLocaleDateString('tr-TR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }); 
+        };
+        setInterval(updateTime, 1000); updateTime();
+
+        // Theme
         const themeToggle = document.getElementById('theme-toggle');
         const sunIcon = `<svg class="w-6 h-6 text-yellow-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>`;
         const moonIcon = `<svg class="w-6 h-6 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>`;
@@ -531,13 +521,24 @@
             if(t === 'light') { document.documentElement.classList.add('light'); themeToggle.innerHTML = moonIcon; }
             else { document.documentElement.classList.remove('light'); themeToggle.innerHTML = sunIcon; }
         };
-        let currTheme = localStorage.getItem('theme') || 'dark';
+        let currTheme = localStorage.getItem('theme') || 'dark';l
         applyTheme(currTheme);
         themeToggle.onclick = () => {
             currTheme = document.documentElement.classList.contains('light') ? 'dark' : 'light';
             localStorage.setItem('theme', currTheme);
             applyTheme(currTheme);
         };
+
+        // --- 4. BAŞLATMA (En Son) ---
+        renderDash();
+        renderNotepad();
+
+        // Auto Login Check (Last Step)
+        if (localStorage.getItem('isLoggedIn') === 'true') {
+            loginOverlay.style.display = 'none';
+            mainContent.classList.remove('hidden');
+            checkReminders();
+        }
     });
     </script>
 </body>
