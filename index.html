@@ -392,6 +392,42 @@
             document.getElementById('date').textContent = now.toLocaleDateString('tr-TR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }); 
         };
         setInterval(updateTime, 1000); updateTime();
+        
+        // --- NEWS TICKER (WITH FALLBACK) ---
+        const newsTickerContent = document.getElementById('news-ticker-content');
+        const fallbackNews = [
+            { title: "Piyasalarda son durum: Altın ve Döviz hareketli" },
+            { title: "Teknoloji dünyasında yapay zeka gelişmeleri" },
+            { title: "Spor dünyasından öne çıkan başlıklar" },
+            { title: "Hava durumu mevsim normallerinde seyrediyor" },
+             { title: "Uygulama Portalı güncellendi, yeni özellikler eklendi" }
+        ];
+
+        const fetchNews = async () => {
+            try {
+                // Try fetching live news first
+                const res = await fetch('https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fwww.trthaber.com%2Fsondakika.rss');
+                const data = await res.json();
+                
+                if(data.status === 'ok') {
+                    const items = data.items.map(item => {
+                        return `<span class="inline-block mx-6 py-2"><span class="text-red-400 font-bold mr-1">•</span> ${item.title}</span>`;
+                    }).join('');
+                    newsTickerContent.innerHTML = items; 
+                } else {
+                    throw new Error('API Limit or Error');
+                }
+            } catch (e) {
+                // Fallback if live news fails
+                console.log("Canlı haber alınamadı, yedekler yükleniyor.");
+                const items = fallbackNews.map(item => {
+                    return `<span class="inline-block mx-6 py-2"><span class="text-red-400 font-bold mr-1">•</span> ${item.title}</span>`;
+                }).join('');
+                newsTickerContent.innerHTML = items;
+            }
+        };
+        fetchNews();
+        setInterval(fetchNews, 300000); // Retry every 5 mins
 
         // 4. DASHBOARD & REMINDERS
         let dashNotes = JSON.parse(localStorage.getItem('dashboardNotes')) || [];
