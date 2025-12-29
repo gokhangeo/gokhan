@@ -11,13 +11,11 @@
             font-family: 'Inter', sans-serif;
             transition: background-color 0.3s, color 0.3s;
         }
-        /* Özel scrollbar */
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: #1f2937; }
         ::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: #6b7280; }
 
-        /* Light Tema */
         html.light body { background-color: #f3f4f6; color: #111827; }
         html.light ::-webkit-scrollbar-track { background: #e5e7eb; }
         html.light ::-webkit-scrollbar-thumb { background: #9ca3af; }
@@ -28,41 +26,23 @@
         html.light .footer-text { color: #6b7280; }
         html.light .modal-bg, html.light #login-overlay, html.light #reminder-modal { background-color: rgba(0, 0, 0, 0.5); }
         
-        /* Notlar ve Bildirimler */
-        .note-item {
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 1rem; border-radius: 0.75rem;
-            background-color: #374151; margin-bottom: 0.75rem; transition: background-color 0.2s;
-        }
+        .note-item { display: flex; align-items: center; justify-content: space-between; padding: 1rem; border-radius: 0.75rem; background-color: #374151; margin-bottom: 0.75rem; transition: background-color 0.2s; }
         .note-item:hover { background-color: #4b5563; }
         html.light .note-item { background-color: #f3f4f6; }
         html.light .note-item:hover { background-color: #e5e7eb; }
 
         #login-overlay { transition: opacity 0.5s ease-in-out; }
 
-        /* Hava Durumu */
-        .weather-card {
-            display: flex; align-items: center;
-            background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px);
-            padding: 0.5rem 1rem; border-radius: 1rem; margin-right: 1rem;
-        }
+        .weather-card { display: flex; align-items: center; background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); padding: 0.5rem 1rem; border-radius: 1rem; margin-right: 1rem; }
         html.light .weather-card { background: rgba(0, 0, 0, 0.05); }
 
-        /* Kayan Yazı */
-        @keyframes marquee {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-100%); }
-        }
-        .animate-marquee {
-            display: flex; white-space: nowrap; animation: marquee 90s linear infinite;
-        }
+        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
+        .animate-marquee { display: flex; white-space: nowrap; animation: marquee 90s linear infinite; }
         .news-ticker-container:hover .animate-marquee { animation-play-state: paused; }
 
-        /* Dashboard Not */
         .dashboard-note-item { transition: all 0.3s ease; }
         .dashboard-note-item:hover { transform: translateX(4px); }
         
-        /* Date Picker Fix */
         input[type="datetime-local"]::-webkit-calendar-picker-indicator { filter: invert(1); cursor: pointer; }
         html.light input[type="datetime-local"]::-webkit-calendar-picker-indicator { filter: invert(0); }
 
@@ -77,23 +57,16 @@
 </head>
 <body class="bg-gray-900 text-white antialiased flex flex-col h-screen overflow-hidden">
 
-    <!-- Üst Finans Bandı -->
     <div class="tradingview-widget-container w-full z-40 flex-shrink-0 bg-gray-900" style="height: 46px; overflow: hidden;">
         <div class="tradingview-widget-container__widget"></div>
         <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
         {
-        "symbols": [
-            { "proName": "FX_IDC:USDTRY", "title": "Dolar/TL" },
-            { "proName": "FX_IDC:EURTRY", "title": "Euro/TL" },
-            { "description": "Gram Altın", "proName": "FX_IDC:XAUTRYG" },
-            { "proName": "BINANCE:BTCUSDT", "title": "Bitcoin" }
-        ],
+        "symbols": [ { "proName": "FX_IDC:USDTRY", "title": "Dolar/TL" }, { "proName": "FX_IDC:EURTRY", "title": "Euro/TL" }, { "description": "Gram Altın", "proName": "FX_IDC:XAUTRYG" }, { "proName": "BINANCE:BTCUSDT", "title": "Bitcoin" } ],
         "showSymbolLogo": true, "colorTheme": "dark", "isTransparent": true, "displayMode": "regular", "locale": "tr"
         }
         </script>
     </div>
 
-    <!-- Login Ekranı -->
     <div id="login-overlay" class="fixed inset-0 bg-gray-900 flex items-center justify-center z-[100]">
         <div class="bg-gray-800 p-8 rounded-2xl shadow-2xl w-full max-w-sm text-center">
             <h2 id="login-header" class="text-2xl font-bold mb-6 text-header cursor-pointer select-none" title="Gizli Giriş: 3 Kez Tıkla">Giriş Yap</h2>
@@ -103,7 +76,6 @@
         </div>
     </div>
 
-    <!-- Hatırlatma Pop-up'ı -->
     <div id="reminder-modal" class="fixed inset-0 bg-black/80 flex items-center justify-center z-[110] hidden opacity-0 transition-opacity duration-300">
         <div class="bg-gray-800 p-6 rounded-2xl shadow-2xl max-w-md w-full border border-red-500/50 transform scale-95 transition-transform duration-300">
             <div class="flex justify-between items-center mb-4 border-b border-gray-700 pb-2">
@@ -115,10 +87,8 @@
         </div>
     </div>
 
-    <!-- Ana İçerik -->
     <div id="main-content" class="container mx-auto px-4 py-8 flex-grow overflow-y-auto hidden pb-16">
         
-        <!-- Üst Bilgi Barı -->
         <div class="top-info-bar flex justify-between items-center mb-8">
             <div id="weather-widget" class="weather-card hidden sm:flex">
                 <div id="weather-icon" class="text-2xl mr-3">☀️</div>
@@ -145,7 +115,6 @@
             <h1 class="text-4xl md:text-5xl font-bold mb-2 bg-gradient-to-r from-purple-400 to-indigo-500 text-transparent bg-clip-text">Uygulama Merkezi</h1>
         </header>
 
-        <!-- Hızlı Notlar (Akordiyon) -->
         <div class="max-w-4xl mx-auto mb-10 w-full">
             <div class="bg-gray-800 dashboard-note-bg rounded-xl shadow-lg border border-gray-700 overflow-hidden transition-all duration-300">
                 <div id="dashboard-toggle" class="p-4 flex justify-between items-center cursor-pointer hover:bg-gray-700/50 transition-colors">
@@ -182,7 +151,6 @@
             </div>
         </div>
 
-        <!-- Ana Kartlar -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
              <div id="open-tkgm-modal" class="category-card card bg-gray-800 p-6 rounded-2xl shadow-lg flex flex-col justify-center items-center text-center cursor-pointer transform hover:-translate-y-2 transition-all duration-300 hover:shadow-blue-500/50 space-y-3">
                 <div class="bg-blue-500 p-3 rounded-xl"><svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z"></path></svg></div>
@@ -201,7 +169,6 @@
         <footer class="text-center mt-12 footer-text pb-4"><p>© Gökhan ELGÜL tarafından tasarlanmıştır.</p></footer>
     </div>
     
-    <!-- Alt Haber Bandı -->
     <div class="fixed bottom-0 w-full h-10 bg-gray-900 border-t border-gray-700 flex items-center z-50 news-ticker-container shadow-2xl">
         <div class="bg-red-600 text-white text-xs md:text-sm font-bold px-3 md:px-4 h-full flex items-center z-10 flex-shrink-0 shadow-md uppercase tracking-wider">Son Dakika</div>
         <div class="overflow-hidden relative w-full h-full flex items-center bg-gray-800">
@@ -235,7 +202,7 @@
         <div class="modal-content bg-gray-800 rounded-2xl shadow-2xl w-full max-w-4xl p-6 md:p-8 relative transform scale-95 transition-transform duration-300" style="max-height: 90vh;">
             <button class="close-modal-btn absolute top-4 right-4 text-gray-500 hover:text-white text-3xl leading-none z-10">&times;</button>
             <h2 class="text-2xl md:text-3xl font-bold text-center mb-8 text-header">Kişisel Projeler</h2>
-            <section class="overflow-y-auto"><main class="card-grid grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+             <section class="overflow-y-auto"><main class="card-grid grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
                 <a href="https://gokhangeo.github.io/istakip/" target="_blank" class="card bg-gray-700 rounded-xl shadow-lg p-4 flex items-center space-x-3 hover:bg-gray-600"><div class="bg-indigo-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg></div><div><h2 class="text-lg font-semibold text-header">MEGSİS</h2><p class="text-sm text-subheader">Süreçler</p></div></a>
                 <a href="https://gokhangeo.github.io/tkmevzuat/" target="_blank" class="card bg-gray-700 rounded-xl shadow-lg p-4 flex items-center space-x-3 hover:bg-gray-600"><div class="bg-purple-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v11.494m-9-5.747h18"></path></svg></div><div><h2 class="text-lg font-semibold text-header">TK Mevzuat</h2><p class="text-sm text-subheader">Mevzuat</p></div></a>
                 <a href="https://gokhangeo.github.io/mersinistakip/" target="_blank" class="card bg-gray-700 rounded-xl shadow-lg p-4 flex items-center space-x-3 hover:bg-gray-600"><div class="bg-sky-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path></svg></div><div><h2 class="text-lg font-semibold text-header">İhale</h2><p class="text-sm text-subheader">22-a, 2B</p></div></a>
@@ -266,7 +233,6 @@
                     <a href="https://github.com/" target="_blank" class="bg-gray-700 hover:bg-gray-600 p-4 rounded-xl flex flex-col items-center justify-center space-y-2 transition-all hover:scale-105"><svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"></path></svg><span class="font-semibold text-header">GitHub</span></a>
                     <a href="https://chat.openai.com/" target="_blank" class="bg-gray-700 hover:bg-gray-600 p-4 rounded-xl flex flex-col items-center justify-center space-y-2 transition-all hover:scale-105"><svg class="w-8 h-8 text-teal-400" fill="currentColor" viewBox="0 0 24 24"><path d="M20.73,8.21a2.84,2.84,0,0,0-4-3.83,2.83,2.83,0,0,0-4.63,2,2.84,2.84,0,0,0-1.5,5.1,2.84,2.84,0,0,0,4,3.83,2.83,2.83,0,0,0,4.63-2,2.84,2.84,0,0,0,1.5-5.1ZM12.06,14a1,1,0,1,1-1-1A1,1,0,0,1,12.06,14ZM16,12.06a1,1,0,1,1,1,1A1,1,0,0,1,16,12.06Zm-1-4a1,1,0,1,1-1-1A1,1,0,0,1,15,8.11Zm-4,.05a1,1,0,1,1,1-1A1,1,0,0,1,11,8.16Zm-2.8,2.9a1,1,0,1,1,1.05-1,1,1,0,0,1-1.05,1ZM9.05,16a1,1,0,1,1,1,1A1,1,0,0,1,9.05,16Z"></path></svg><span class="font-semibold text-header">ChatGPT</span></a>
                     <a href="https://tr.tradingview.com/chart/djP0YvRF/" target="_blank" class="bg-gray-700 hover:bg-gray-600 p-4 rounded-xl flex flex-col items-center justify-center space-y-2 transition-all hover:scale-105"><svg class="w-8 h-8 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 11V7a2 2 0 012-2h2a2 2 0 012 2v4m-4 5v-1.5a1.5 1.5 0 011.5-1.5h1a1.5 1.5 0 011.5 1.5V16m-4 0h4m-4 0H7m0 0v-5m0 5v2m6-11v-1.5a1.5 1.5 0 00-1.5-1.5h-1a1.5 1.5 0 00-1.5 1.5V5m4 0H9m0 0v5m0-5V3"></path></svg><span class="font-semibold text-header">TradingView</span></a>
-                    <a id="open-notepad-modal" class="cursor-pointer bg-gray-700 hover:bg-gray-600 p-4 rounded-xl flex flex-col items-center justify-center space-y-2 transition-all hover:scale-105"><svg class="w-8 h-8 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg><span class="font-semibold text-header">Not Defteri</span></a>
                     <a href="https://web.whatsapp.com/" target="_blank" class="bg-gray-700 hover:bg-gray-600 p-4 rounded-xl flex flex-col items-center justify-center space-y-2 transition-all hover:scale-105"><svg class="w-8 h-8 text-green-500" fill="currentColor" viewBox="0 0 24 24"><path d="M16.75 13.96c.25.13.42.2.46.3.04.1.04.62-.12 1.3.1.02-.38.13-.78.13-.4 0-1.04-.1-1.6-.33-.56-.23-1.1-.56-1.54-.9-.44-.34-.8-.75-1.1-1.22-.3-.47-.54-.98-.7-1.5-.15-.52-.22-1.04-.22-1.56 0-.52.06-1.04.18-1.56.12-.52.32-1.03.6-1.5.28-.48.62-.9.98-1.25.38-.36.78-.64 1.2-.82.42-.18.85-.28 1.3-.28.45 0 .9.1 1.32.28.42.18.8.44 1.12.8.32.34.58.76.76 1.22.18.48.28.98.28 1.5 0 .52-.1.98-.28 1.44-.18.46-.44.86-.76 1.2ZM20.5 3.5C18.2 1.2 15.2 0 12 0 5.4 0 0 5.4 0 12c0 2.2.6 4.2 1.6 6L0 24l6.2-1.6c1.8 1 3.8 1.6 6 1.6h.2c6.5 0 11.8-5.3 11.8-11.8 0-3.2-1.2-6.2-3.6-8.6Zm-8.4 16.7c-2 0-3.8-.6-5.4-1.6L4 19.8l1.4-2.6c-1-1.6-1.6-3.6-1.6-5.6C3.8 6.8 7.4 3 12 3c2.2 0 4.2.8 5.8 2.4 1.6 1.6 2.4 3.6 2.4 5.8.2 4.6-3.4 8.4-8.2 8.4Z"/></svg><span class="font-semibold text-header">WhatsApp</span></a>
                     <a href="https://notebooklm.google.com/" target="_blank" class="bg-gray-700 hover:bg-gray-600 p-4 rounded-xl flex flex-col items-center justify-center space-y-2 transition-all hover:scale-105"><svg class="w-8 h-8 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v11.494m-9-5.747h18"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20.253H6.5a2.5 2.5 0 01-2.5-2.5V6.253a2.5 2.5 0 012.5-2.5H10m4 0h3.5a2.5 2.5 0 012.5 2.5v11.494a2.5 2.5 0 01-2.5 2.5H14"></path></svg><span class="font-semibold text-header">NotebookLM</span></a>
                 </div>
@@ -330,19 +296,36 @@
             setTimeout(() => m.classList.add('hidden'), 300);
         };
 
-        // Dashboard Render
+        // Dashboard Render - FIX: Remove initial "Yükleniyor..." if notes empty
         function renderDash() {
             const list = document.getElementById('dashboard-list');
             const count = document.getElementById('dashboard-count');
-            if(dashNotes.length > 0) { count.textContent = dashNotes.length; count.classList.remove('hidden'); }
-            else { count.classList.add('hidden'); }
+            
+            // Clean up invalid notes
+            dashNotes = dashNotes.filter(n => n && n.t);
+            localStorage.setItem('dashboardNotes', JSON.stringify(dashNotes));
+
+            if(dashNotes.length > 0) { 
+                count.textContent = dashNotes.length; 
+                count.classList.remove('hidden'); 
+            } else { 
+                count.classList.add('hidden'); 
+            }
+
+            if (dashNotes.length === 0) {
+                list.innerHTML = '<div class="text-center text-gray-500 py-4 text-sm">Not yok.</div>';
+                return;
+            }
 
             list.innerHTML = dashNotes.map((n, i) => `
                 <div class="dashboard-note-item bg-gray-700 p-3 rounded shadow-sm border-l-4 ${n.p==='critical'?'border-red-500':'border-indigo-500'} flex justify-between items-start mb-2">
-                    <div><p class="text-sm font-medium text-white">${n.t}</p><p class="text-xs text-gray-400">${n.d ? new Date(n.d).toLocaleString('tr-TR') : ''}</p></div>
+                    <div>
+                        <p class="text-sm font-medium text-white">${n.t}</p>
+                        <p class="text-xs text-gray-400">${n.d ? new Date(n.d).toLocaleString('tr-TR') : 'Tarihsiz'}</p>
+                    </div>
                     <button onclick="delDash(${i})" class="text-gray-400 hover:text-red-400"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
                 </div>
-            `).join('') || '<div class="text-center text-gray-500 py-4 text-sm">Bildirim yok.</div>';
+            `).join('');
         }
         
         // Notepad Render
@@ -381,11 +364,22 @@
             }, 300);
         }
 
-        document.getElementById('login-button').addEventListener('click', () => {
-            if(passwordInput.value === correctPassword) performLogin();
-            else {
+        const attemptLogin = () => {
+            if (passwordInput.value === correctPassword) {
+                performLogin();
+            } else {
                 document.getElementById('login-error').textContent = 'Hatalı şifre!';
-                setTimeout(()=> document.getElementById('login-error').textContent='', 2000);
+                passwordInput.value = '';
+                setTimeout(() => document.getElementById('login-error').textContent='', 2000);
+            }
+        };
+
+        document.getElementById('login-button').addEventListener('click', attemptLogin);
+
+        // Add Enter key listener for password input
+        passwordInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                attemptLogin();
             }
         });
 
@@ -418,13 +412,21 @@
         document.getElementById('add-quick-note-btn').onclick = () => {
             const t = document.getElementById('quick-note-text').value;
             if(t) {
-                dashNotes.unshift({ t, d: document.getElementById('quick-note-date').value, p: document.getElementById('quick-note-priority').value });
+                dashNotes.unshift({ 
+                    t, 
+                    d: document.getElementById('quick-note-date').value, 
+                    p: document.getElementById('quick-note-priority').value 
+                });
                 localStorage.setItem('dashboardNotes', JSON.stringify(dashNotes));
                 document.getElementById('quick-note-text').value = '';
                 renderDash();
             }
         };
-        window.delDash = (i) => { dashNotes.splice(i, 1); localStorage.setItem('dashboardNotes', JSON.stringify(dashNotes)); renderDash(); };
+        window.delDash = (i) => { 
+            dashNotes.splice(i, 1); 
+            localStorage.setItem('dashboardNotes', JSON.stringify(dashNotes)); 
+            renderDash(); 
+        };
         
         document.getElementById('dashboard-toggle').onclick = () => {
             const c = document.getElementById('dashboard-content');
@@ -521,7 +523,7 @@
             if(t === 'light') { document.documentElement.classList.add('light'); themeToggle.innerHTML = moonIcon; }
             else { document.documentElement.classList.remove('light'); themeToggle.innerHTML = sunIcon; }
         };
-        let currTheme = localStorage.getItem('theme') || 'dark';l
+        let currTheme = localStorage.getItem('theme') || 'dark';
         applyTheme(currTheme);
         themeToggle.onclick = () => {
             currTheme = document.documentElement.classList.contains('light') ? 'dark' : 'light';
@@ -530,6 +532,7 @@
         };
 
         // --- 4. BAŞLATMA (En Son) ---
+        // Render Immediately to clear "Loading" state
         renderDash();
         renderNotepad();
 
