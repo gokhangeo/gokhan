@@ -67,6 +67,7 @@
         </script>
     </div>
 
+    <!-- Giriş Ekranı -->
     <div id="login-overlay" class="fixed inset-0 bg-gray-900 flex items-center justify-center z-[100]">
         <div class="bg-gray-800 p-8 rounded-2xl shadow-2xl w-full max-w-sm text-center border border-gray-700">
             <h2 id="login-header" class="text-2xl font-bold mb-6 text-header cursor-pointer select-none" title="Gizli Giriş: 3 Kez Tıkla">Giriş Yap</h2>
@@ -115,6 +116,7 @@
             <h1 class="text-4xl md:text-5xl font-bold mb-2 bg-gradient-to-r from-purple-400 to-indigo-500 text-transparent bg-clip-text">Uygulama Merkezi</h1>
         </header>
 
+        <!-- Hızlı Notlar -->
         <div class="max-w-4xl mx-auto mb-10 w-full">
             <div class="bg-gray-800 dashboard-note-bg rounded-xl shadow-lg border border-gray-700 overflow-hidden transition-all duration-300">
                 <div id="dashboard-toggle" class="p-4 flex justify-between items-center cursor-pointer hover:bg-gray-700/50 transition-colors">
@@ -145,20 +147,24 @@
                         <button id="add-quick-note-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-lg text-sm transition-colors flex items-center justify-center flex-shrink-0">Ekle</button>
                     </div>
                     <div id="dashboard-list" class="p-3 space-y-2 max-h-64 overflow-y-auto custom-scrollbar text-sm">
-                        </div>
+                        <!-- Veriler renderDash() ile gelecek -->
+                    </div>
                 </div>
             </div>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+             <!-- Kategori 1 -->
              <div id="open-tkgm-modal" class="category-card card bg-gray-800 p-6 rounded-2xl shadow-lg flex flex-col justify-center items-center text-center cursor-pointer transform hover:-translate-y-2 transition-all duration-300 hover:shadow-blue-500/50 space-y-3">
                 <div class="bg-blue-500 p-3 rounded-xl"><svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z"></path></svg></div>
                 <div><h2 class="text-xl md:text-2xl font-bold text-header">TKGM Sistemleri</h2><p class="text-subheader mt-2 text-sm md:text-base">Resmi kurum uygulamaları</p></div>
             </div>
+            <!-- Kategori 2 -->
             <div id="open-projects-modal" class="category-card card bg-gray-800 p-6 rounded-2xl shadow-lg flex flex-col justify-center items-center text-center cursor-pointer transform hover:-translate-y-2 transition-all duration-300 hover:shadow-purple-500/50 space-y-3">
                  <div class="bg-purple-500 p-3 rounded-xl"><svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg></div>
                  <div><h2 class="text-xl md:text-2xl font-bold text-header">Kişisel Projeler</h2><p class="text-subheader mt-2 text-sm md:text-base">Geliştirilen özel araçlar</p></div>
             </div>
+            <!-- Kategori 3 -->
             <div id="open-other-modal" class="category-card card bg-gray-800 p-6 rounded-2xl shadow-lg flex flex-col justify-center items-center text-center cursor-pointer transform hover:-translate-y-2 transition-all duration-300 hover:shadow-yellow-500/50 space-y-3">
                 <div class="bg-yellow-500 p-3 rounded-xl"><svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg></div>
                 <div><h2 class="text-xl md:text-2xl font-bold text-header">Diğer Uygulamalar</h2><p class="text-subheader mt-2 text-sm md:text-base">Sosyal medya ve sık kullanılanlar</p></div>
@@ -178,6 +184,7 @@
         </div>
     </div>
 
+    <!-- TKGM MODAL -->
     <div id="tkgm-modal" class="modal-bg fixed inset-0 flex items-center justify-center p-4 hidden z-50 transition-opacity duration-300">
         <div class="modal-content bg-gray-800 rounded-2xl shadow-2xl w-full max-w-4xl p-6 md:p-8 relative transform scale-95 transition-transform duration-300" style="max-height: 90vh;">
             <button class="close-modal-btn absolute top-4 right-4 text-gray-500 hover:text-white text-3xl leading-none z-10">&times;</button>
@@ -198,6 +205,7 @@
         </div>
     </div>
 
+    <!-- PROJELER MODAL -->
     <div id="projects-modal" class="modal-bg fixed inset-0 flex items-center justify-center p-4 hidden z-50 transition-opacity duration-300">
         <div class="modal-content bg-gray-800 rounded-2xl shadow-2xl w-full max-w-4xl p-6 md:p-8 relative transform scale-95 transition-transform duration-300" style="max-height: 90vh;">
             <button class="close-modal-btn absolute top-4 right-4 text-gray-500 hover:text-white text-3xl leading-none z-10">&times;</button>
@@ -226,6 +234,7 @@
         </div>
     </div>
 
+    <!-- DİĞER UYGULAMALAR MODAL -->
     <div id="other-modal" class="modal-bg fixed inset-0 flex items-center justify-center p-4 hidden z-50 transition-opacity duration-300">
          <div class="modal-content bg-gray-800 rounded-2xl shadow-2xl w-full max-w-4xl p-6 md:p-8 relative transform scale-95 transition-transform duration-300" style="max-height: 90vh;">
             <button class="close-modal-btn absolute top-4 right-4 text-gray-500 hover:text-white text-3xl leading-none z-10">&times;</button>
@@ -321,10 +330,10 @@
         // Kilitle
         document.getElementById('lock-toggle').addEventListener('click', () => {
             localStorage.removeItem('isLoggedIn');
-            location.reload(); // En güvenli temizlik
+            location.reload(); 
         });
 
-        // Diğer Fonksiyonlar (Hava, Saat, Tema vb.)
+        // Diğer Fonksiyonlar
         window.openModal = (id) => {
             const m = document.getElementById(id);
             m.classList.remove('hidden');
@@ -406,6 +415,65 @@
             } catch(e) {}
         }
         updateData();
+
+        // --- YENİ HABER GÜNCELLEME SİSTEMİ ---
+        const fallbackNews = [
+            { title: "Türkiye genelinde konut satışları artış gösterdi" },
+            { title: "Teknoloji dünyasında yapay zeka yatırımları hızlanıyor" },
+            { title: "Milli sporcularımızdan uluslararası arenada yeni başarılar" },
+            { title: "Meteoroloji'den hafta sonu için önemli hava durumu uyarısı" },
+            { title: "Yerli otomobil TOGG üretim kapasitesini artırıyor" },
+            { title: "Turizm sezonunda rekor beklentisi: Rezervasyonlar doldu" },
+            { title: "Eğitimde dijital dönüşüm: Yeni müfredat çalışmaları başladı" },
+            { title: "Sağlık Bakanlığı'ndan mevsimsel hastalıklara karşı uyarı" },
+            { title: "Enerji piyasalarında hareketlilik: Yenilenebilir enerji gündemde" },
+            { title: "Kültür ve sanat etkinlikleri tüm hızıyla devam ediyor" }
+        ];
+
+        async function updateNews() {
+            const ticker = document.getElementById('news-ticker-content');
+            
+            // Render fonksiyonu: Haberleri ekrana basar
+            const render = (items) => {
+                const html = items.map(i => 
+                    `<span class="inline-block mx-6 py-2">
+                        <span class="text-red-400 font-bold mr-1">•</span> ${i.title}
+                     </span>`
+                ).join('');
+                ticker.innerHTML = html;
+            };
+
+            try {
+                // 2 saniyelik zaman aşımı ile fetch denemesi
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 2000);
+
+                const res = await fetch('https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fwww.cnnturk.com%2Ffeed%2F66%2Findex.rss', { 
+                    signal: controller.signal 
+                });
+                
+                clearTimeout(timeoutId); // Zaman aşımını iptal et
+
+                if (!res.ok) throw new Error('Haber servisi yanıt vermedi');
+
+                const data = await res.json();
+                
+                if (data.status === 'ok' && data.items.length > 0) {
+                    render(data.items);
+                } else {
+                    throw new Error('Haber listesi boş');
+                }
+
+            } catch (e) {
+                // Hata durumunda (zaman aşımı, servis hatası vb.) hemen yedek listeyi yükle
+                console.log("Haber yüklenemedi, yedek liste devrede.");
+                render(fallbackNews);
+            }
+        }
+        
+        // İlk yükleme ve periyodik güncelleme
+        updateNews(); 
+        setInterval(updateNews, 300000); // 5 dakikada bir güncelle
 
         // Başlangıç Kontrolü
         if (localStorage.getItem('isLoggedIn') === 'true') {
