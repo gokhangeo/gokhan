@@ -416,7 +416,15 @@
         }
         updateData();
 
-        // --- YENİ HABER GÜNCELLEME SİSTEMİ ---
+        // --- YENİ HABER GÜNCELLEME SİSTEMİ (GELİŞMİŞ) ---
+        const rssSources = [
+            'https://www.trthaber.com/sondakika.rss',
+            'https://www.cnnturk.com/feed/66/index.rss',
+            'https://www.haberturk.com/rss/kategori/gundem.xml',
+            'https://www.ntv.com.tr/gundem.rss',
+            'https://www.star.com.tr/rss/sondakika.xml'
+        ];
+
         const fallbackNews = [
             { title: "Türkiye genelinde konut satışları artış gösterdi" },
             { title: "Teknoloji dünyasında yapay zeka yatırımları hızlanıyor" },
@@ -433,9 +441,13 @@
         async function updateNews() {
             const ticker = document.getElementById('news-ticker-content');
             
-            // Render fonksiyonu: Haberleri ekrana basar
+            // Rastgele bir haber kaynağı seç (Çeşitlilik için)
+            const randomSource = rssSources[Math.floor(Math.random() * rssSources.length)];
+            
             const render = (items) => {
-                const html = items.map(i => 
+                // Haberleri karıştır ki hep aynı sırayla gelmesin
+                const shuffled = items.sort(() => 0.5 - Math.random());
+                const html = shuffled.map(i => 
                     `<span class="inline-block mx-6 py-2">
                         <span class="text-red-400 font-bold mr-1">•</span> ${i.title}
                      </span>`
@@ -444,36 +456,37 @@
             };
 
             try {
-                // 2 saniyelik zaman aşımı ile fetch denemesi
                 const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 2000);
+                const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 saniye bekleme süresi
 
-                const res = await fetch('https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fwww.cnnturk.com%2Ffeed%2F66%2Findex.rss', { 
+                // Cache önlemek için timestamp ekle
+                const res = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(randomSource)}&t=${Date.now()}`, { 
                     signal: controller.signal 
                 });
                 
-                clearTimeout(timeoutId); // Zaman aşımını iptal et
+                clearTimeout(timeoutId);
 
-                if (!res.ok) throw new Error('Haber servisi yanıt vermedi');
+                if (!res.ok) throw new Error('Servis hatası');
 
                 const data = await res.json();
                 
                 if (data.status === 'ok' && data.items.length > 0) {
                     render(data.items);
                 } else {
-                    throw new Error('Haber listesi boş');
+                    throw new Error('Boş veri');
                 }
 
             } catch (e) {
-                // Hata durumunda (zaman aşımı, servis hatası vb.) hemen yedek listeyi yükle
-                console.log("Haber yüklenemedi, yedek liste devrede.");
-                render(fallbackNews);
+                console.log("Haber kaynağı değiştiriliyor...");
+                // Hata durumunda mevcut içerik boşsa yedeği yükle, değilse dokunma
+                if (!ticker.innerHTML.includes('span')) {
+                    render(fallbackNews);
+                }
             }
         }
         
-        // İlk yükleme ve periyodik güncelleme
         updateNews(); 
-        setInterval(updateNews, 300000); // 5 dakikada bir güncelle
+        setInterval(updateNews, 60000); // Her 1 dakikada bir yenile
 
         // Başlangıç Kontrolü
         if (localStorage.getItem('isLoggedIn') === 'true') {
