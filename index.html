@@ -68,11 +68,11 @@
     </div>
 
     <div id="login-overlay" class="fixed inset-0 bg-gray-900 flex items-center justify-center z-[100]">
-        <div class="bg-gray-800 p-8 rounded-2xl shadow-2xl w-full max-w-sm text-center">
+        <div class="bg-gray-800 p-8 rounded-2xl shadow-2xl w-full max-w-sm text-center border border-gray-700">
             <h2 id="login-header" class="text-2xl font-bold mb-6 text-header cursor-pointer select-none" title="Gizli Giriş: 3 Kez Tıkla">Giriş Yap</h2>
-            <input type="password" id="password-input" class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 text-white text-center focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Şifrenizi Girin">
+            <input type="password" id="password-input" class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 text-white text-center focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Şifrenizi Girin" autocomplete="current-password">
             <button id="login-button" class="mt-6 w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-lg transition-colors">Giriş</button>
-            <p id="login-error" class="mt-4 text-red-500 h-5"></p>
+            <p id="login-error" class="mt-4 text-red-500 h-5 font-medium"></p>
         </div>
     </div>
 
@@ -90,7 +90,7 @@
     <div id="main-content" class="container mx-auto px-4 py-8 flex-grow overflow-y-auto hidden pb-16">
         
         <div class="top-info-bar flex justify-between items-center mb-8">
-            <div id="weather-widget" class="weather-card hidden sm:flex">
+            <div id="weather-widget" class="weather-card flex">
                 <div id="weather-icon" class="text-2xl mr-3">☀️</div>
                 <div>
                     <div id="weather-temp" class="text-lg font-bold text-header">--°C</div>
@@ -144,9 +144,8 @@
                         </select>
                         <button id="add-quick-note-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-lg text-sm transition-colors flex items-center justify-center flex-shrink-0">Ekle</button>
                     </div>
-                    <div id="dashboard-list" class="p-3 space-y-2 max-h-64 overflow-y-auto custom-scrollbar">
-                        <div class="text-center text-gray-500 py-4 text-sm">Yükleniyor...</div>
-                    </div>
+                    <div id="dashboard-list" class="p-3 space-y-2 max-h-64 overflow-y-auto custom-scrollbar text-sm">
+                        </div>
                 </div>
             </div>
         </div>
@@ -179,22 +178,23 @@
         </div>
     </div>
 
-    <!-- Modallar -->
     <div id="tkgm-modal" class="modal-bg fixed inset-0 flex items-center justify-center p-4 hidden z-50 transition-opacity duration-300">
         <div class="modal-content bg-gray-800 rounded-2xl shadow-2xl w-full max-w-4xl p-6 md:p-8 relative transform scale-95 transition-transform duration-300" style="max-height: 90vh;">
             <button class="close-modal-btn absolute top-4 right-4 text-gray-500 hover:text-white text-3xl leading-none z-10">&times;</button>
             <h2 class="text-2xl md:text-3xl font-bold text-center mb-8 text-header">TKGM Sistemleri</h2>
-            <section class="overflow-y-auto"><main class="card-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-                <a href="https://ebys.tkgm.gov.tr/edys-web/sistemeGiris.xhtml" target="_blank" class="card bg-gray-700 rounded-xl shadow-lg p-4 flex items-center space-x-3 hover:bg-gray-600"><div class="bg-gray-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg></div><div><h2 class="text-lg font-semibold text-header">EBYS</h2><p class="text-sm text-subheader">Elektronik Belge</p></div></a>
-                <a href="https://bulut.tkgm.gov.tr/" target="_blank" class="card bg-gray-700 rounded-xl shadow-lg p-4 flex items-center space-x-3 hover:bg-gray-600"><div class="bg-cyan-400 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"></path></svg></div><div><h2 class="text-lg font-semibold text-header">BULUT</h2><p class="text-sm text-subheader">TKGM Bulut</p></div></a>
-                <a href="https://cbs.tkgm.gov.tr/login.aspx" target="_blank" class="card bg-gray-700 rounded-xl shadow-lg p-4 flex items-center space-x-3 hover:bg-gray-600"><div class="bg-green-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9V3m0 18a9 9 0 009-9m-9 9a9 9 0 00-9-9"></path></svg></div><div><h2 class="text-lg font-semibold text-header">CBS</h2><p class="text-sm text-subheader">Coğrafi Bilgi</p></div></a>
-                <a href="https://www.tkgm.gov.tr/" target="_blank" class="card bg-gray-700 rounded-xl shadow-lg p-4 flex items-center space-x-3 hover:bg-gray-600"><div class="bg-blue-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z"></path></svg></div><div><h2 class="text-lg font-semibold text-header">TKGM</h2><p class="text-sm text-subheader">Kurumsal Site</p></div></a>
-                <a href="https://ybs.tkgm.gov.tr/" target="_blank" class="card bg-gray-700 rounded-xl shadow-lg p-4 flex items-center space-x-3 hover:bg-gray-600"><div class="bg-yellow-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"></path></svg></div><div><h2 class="text-lg font-semibold text-header">YBS</h2><p class="text-sm text-subheader">Yönetim Bilgi</p></div></a>
-                <a href="https://yts.tkgm.gov.tr/" target="_blank" class="card bg-gray-700 rounded-xl shadow-lg p-4 flex items-center space-x-3 hover:bg-gray-600"><div class="bg-red-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg></div><div><h2 class="text-lg font-semibold text-header">YTS</h2><p class="text-sm text-subheader">Yatırım Takip</p></div></a>
-                <a href="https://thagis.tkgm.gov.tr/TKGM" target="_blank" class="card bg-gray-700 rounded-xl shadow-lg p-4 flex items-center space-x-3 hover:bg-gray-600"><div class="bg-teal-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 9l-2.053 2.053a1 1 0 01-1.414 0L9 9v11z"></path></svg></div><div><h2 class="text-lg font-semibold text-header">Netigma</h2><p class="text-sm text-subheader">THA Bilgi</p></div></a>
-                <a href="https://webposta.tkgm.gov.tr/owa/" target="_blank" class="card bg-gray-700 rounded-xl shadow-lg p-4 flex items-center space-x-3 hover:bg-gray-600"><div class="bg-orange-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg></div><div><h2 class="text-lg font-semibold text-header">Web-Mail</h2><p class="text-sm text-subheader">E-Posta</p></div></a>
-                <a href="https://parselsorgu.tkgm.gov.tr/" target="_blank" class="card bg-gray-700 rounded-xl shadow-lg p-4 flex items-center space-x-3 hover:bg-gray-600"><div class="bg-lime-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0116 0z"></path></svg></div><div><h2 class="text-lg font-semibold text-header">Parsel Sorgu</h2><p class="text-sm text-subheader">Sorgulama</p></div></a>
-            </main></section>
+            <section class="overflow-y-auto">
+                <main class="card-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+                    <a href="https://ebys.tkgm.gov.tr/edys-web/sistemeGiris.xhtml" target="_blank" class="card bg-gray-700 rounded-xl shadow-lg p-4 flex items-center space-x-3 hover:bg-gray-600"><div class="bg-gray-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg></div><div><h2 class="text-lg font-semibold text-header">EBYS</h2><p class="text-sm text-subheader">Elektronik Belge</p></div></a>
+                    <a href="https://bulut.tkgm.gov.tr/" target="_blank" class="card bg-gray-700 rounded-xl shadow-lg p-4 flex items-center space-x-3 hover:bg-gray-600"><div class="bg-cyan-400 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"></path></svg></div><div><h2 class="text-lg font-semibold text-header">BULUT</h2><p class="text-sm text-subheader">TKGM Bulut</p></div></a>
+                    <a href="https://cbs.tkgm.gov.tr/login.aspx" target="_blank" class="card bg-gray-700 rounded-xl shadow-lg p-4 flex items-center space-x-3 hover:bg-gray-600"><div class="bg-green-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9V3m0 18a9 9 0 009-9m-9 9a9 9 0 00-9-9"></path></svg></div><div><h2 class="text-lg font-semibold text-header">CBS</h2><p class="text-sm text-subheader">Coğrafi Bilgi</p></div></a>
+                    <a href="https://www.tkgm.gov.tr/" target="_blank" class="card bg-gray-700 rounded-xl shadow-lg p-4 flex items-center space-x-3 hover:bg-gray-600"><div class="bg-blue-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z"></path></svg></div><div><h2 class="text-lg font-semibold text-header">TKGM</h2><p class="text-sm text-subheader">Kurumsal Site</p></div></a>
+                    <a href="https://ybs.tkgm.gov.tr/" target="_blank" class="card bg-gray-700 rounded-xl shadow-lg p-4 flex items-center space-x-3 hover:bg-gray-600"><div class="bg-yellow-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"></path></svg></div><div><h2 class="text-lg font-semibold text-header">YBS</h2><p class="text-sm text-subheader">Yönetim Bilgi</p></div></a>
+                    <a href="https://yts.tkgm.gov.tr/" target="_blank" class="card bg-gray-700 rounded-xl shadow-lg p-4 flex items-center space-x-3 hover:bg-gray-600"><div class="bg-red-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg></div><div><h2 class="text-lg font-semibold text-header">YTS</h2><p class="text-sm text-subheader">Yatırım Takip</p></div></a>
+                    <a href="https://thagis.tkgm.gov.tr/TKGM" target="_blank" class="card bg-gray-700 rounded-xl shadow-lg p-4 flex items-center space-x-3 hover:bg-gray-600"><div class="bg-teal-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 9l-2.053 2.053a1 1 0 01-1.414 0L9 9v11z"></path></svg></div><div><h2 class="text-lg font-semibold text-header">Netigma</h2><p class="text-sm text-subheader">THA Bilgi</p></div></a>
+                    <a href="https://webposta.tkgm.gov.tr/owa/" target="_blank" class="card bg-gray-700 rounded-xl shadow-lg p-4 flex items-center space-x-3 hover:bg-gray-600"><div class="bg-orange-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg></div><div><h2 class="text-lg font-semibold text-header">Web-Mail</h2><p class="text-sm text-subheader">E-Posta</p></div></a>
+                    <a href="https://parselsorgu.tkgm.gov.tr/" target="_blank" class="card bg-gray-700 rounded-xl shadow-lg p-4 flex items-center space-x-3 hover:bg-gray-600"><div class="bg-lime-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0116 0z"></path></svg></div><div><h2 class="text-lg font-semibold text-header">Parsel Sorgu</h2><p class="text-sm text-subheader">Sorgulama</p></div></a>
+                </main>
+            </section>
         </div>
     </div>
 
@@ -202,27 +202,218 @@
         <div class="modal-content bg-gray-800 rounded-2xl shadow-2xl w-full max-w-4xl p-6 md:p-8 relative transform scale-95 transition-transform duration-300" style="max-height: 90vh;">
             <button class="close-modal-btn absolute top-4 right-4 text-gray-500 hover:text-white text-3xl leading-none z-10">&times;</button>
             <h2 class="text-2xl md:text-3xl font-bold text-center mb-8 text-header">Kişisel Projeler</h2>
-             <section class="overflow-y-auto"><main class="card-grid grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-                <a href="https://gokhangeo.github.io/istakip/" target="_blank" class="card bg-gray-700 rounded-xl shadow-lg p-4 flex items-center space-x-3 hover:bg-gray-600"><div class="bg-indigo-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg></div><div><h2 class="text-lg font-semibold text-header">MEGSİS</h2><p class="text-sm text-subheader">Süreçler</p></div></a>
-                <a href="https://gokhangeo.github.io/tkmevzuat/" target="_blank" class="card bg-gray-700 rounded-xl shadow-lg p-4 flex items-center space-x-3 hover:bg-gray-600"><div class="bg-purple-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v11.494m-9-5.747h18"></path></svg></div><div><h2 class="text-lg font-semibold text-header">TK Mevzuat</h2><p class="text-sm text-subheader">Mevzuat</p></div></a>
-                <a href="https://gokhangeo.github.io/ihale/" target="_blank" class="card bg-gray-700 rounded-xl shadow-lg p-4 flex items-center space-x-3 hover:bg-gray-600"><div class="bg-sky-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path></svg></div><div><h2 class="text-lg font-semibold text-header">İhale</h2><p class="text-sm text-subheader">22-a, 2B</p></div></a>
-                <a href="https://gokhangeo.github.io/isyonetim/" target="_blank" class="card bg-gray-700 rounded-xl shadow-lg p-4 flex items-center space-x-3 hover:bg-gray-600"><div class="bg-emerald-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745"></path></svg></div><div><h2 class="text-lg font-semibold text-header">İş Yönetim</h2><p class="text-sm text-subheader">İş Dağılımı</p></div></a>
-                <a href="https://gokhangeo.github.io/THA/" target="_blank" class="card bg-gray-700 rounded-xl shadow-lg p-4 flex items-center space-x-3 hover:bg-gray-600"><div class="bg-rose-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h6m-6 4h6m-6 4h6"></path></svg></div><div><h2 class="text-lg font-semibold text-header">Mersin TH</h2><p class="text-sm text-subheader">Tescil Harici</p></div></a>
-                <a href="https://gokhangeo.github.io/mersin-norm/" target="_blank" class="card bg-gray-700 rounded-xl shadow-lg p-4 flex items-center space-x-3 hover:bg-gray-600"><div class="bg-amber-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0"></path></svg></div><div><h2 class="text-lg font-semibold text-header">Norm</h2><p class="text-sm text-subheader">Kadro</p></div></a>
-                <a href="https://gokhangeo.github.io/evraktakip/" target="_blank" class="card bg-gray-700 rounded-xl shadow-lg p-4 flex items-center space-x-3 hover:bg-gray-600"><div class="bg-teal-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path></svg></div><div><h2 class="text-lg font-semibold text-header">Evrak</h2><p class="text-sm text-subheader">Takip</p></div></a>
-                <a href="https://gokhangeo.github.io/personelmesai/" target="_blank" class="card bg-gray-700 rounded-xl shadow-lg p-4 flex items-center space-x-3 hover:bg-gray-600"><div class="bg-cyan-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></div><div><h2 class="text-lg font-semibold text-header">Mesai</h2><p class="text-sm text-subheader">Takip</p></div></a>
-                <a href="https://gokhangeo.github.io/asistan/" target="_blank" class="card bg-gray-700 rounded-xl shadow-lg p-4 flex items-center space-x-3 hover:bg-gray-600"><div class="bg-pink-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"></path></svg></div><div><h2 class="text-lg font-semibold text-header">Asistan</h2><p class="text-sm text-subheader">Dijital</p></div></a>
-                <a href="https://gokhangeo.github.io/telafi/" target="_blank" class="card bg-gray-700 rounded-xl shadow-lg p-4 flex items-center space-x-3 hover:bg-gray-600"><div class="bg-lime-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m-8 4h10M9 15h.01M5 21h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg></div><div><h2 class="text-lg font-semibold text-header">Bilirkişi</h2><p class="text-sm text-subheader">Telafi</p></div></a>
-                <a href="https://gokhangeo.github.io/hesap/" target="_blank" class="card bg-gray-700 rounded-xl shadow-lg p-4 flex items-center space-x-3 hover:bg-gray-600"><div class="bg-emerald-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"></path></svg></div><div><h2 class="text-lg font-semibold text-header">Bütçe</h2><p class="text-sm text-subheader">Hesap</p></div></a>
-                <a href="https://gokhangeo.github.io/NOT/" target="_blank" class="card bg-gray-700 rounded-xl shadow-lg p-4 flex items-center space-x-3 hover:bg-gray-600"><div class="bg-fuchsia-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5"></path></svg></div><div><h2 class="text-lg font-semibold text-header">NOT</h2><p class="text-sm text-subheader">Notlar</p></div></a>
-                <a href="https://gokhangeo.github.io/guncelleme/" target="_blank" class="card bg-gray-700 rounded-xl shadow-lg p-4 flex items-center space-x-3 hover:bg-gray-600"><div class="bg-orange-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9"></path></svg></div><div><h2 class="text-lg font-semibold text-header">Güncelleme</h2><p class="text-sm text-subheader">Versiyon</p></div></a>
-                <a href="https://gokhangeo.github.io/hub/" target="_blank" class="card bg-gray-700 rounded-xl shadow-lg p-4 flex items-center space-x-3 hover:bg-gray-600"><div class="bg-slate-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01"></path></svg></div><div><h2 class="text-lg font-semibold text-header">Yerel Sunucu</h2><p class="text-sm text-subheader">Local Host</p></div></a>
-                 <a href="https://gokhangeo.github.io/bulut/" target="_blank" class="card bg-gray-700 rounded-xl shadow-lg p-4 flex items-center space-x-3 hover:bg-gray-600"><div class="bg-sky-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"></path></svg></div><div><h2 class="text-lg font-semibold text-header">Bulut</h2><p class="text-sm text-subheader">Kişisel Depo</p></div></a>
-                 <a href="https://gokhangeo.github.io/tablo/" target="_blank" class="card bg-gray-700 rounded-xl shadow-lg p-4 flex items-center space-x-3 hover:bg-gray-600"><div class="bg-cyan-600 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg></div><div><h2 class="text-lg font-semibold text-header">Tablo</h2><p class="text-sm text-subheader">Veri Tablosu</p></div></a>
-                 <a href="https://gokhangeo.github.io/megsis/" target="_blank" class="card bg-gray-700 rounded-xl shadow-lg p-4 flex items-center space-x-3 hover:bg-gray-600"><div class="bg-indigo-600 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></div><div><h2 class="text-lg font-semibold text-header">Başvuru Takip</h2><p class="text-sm text-subheader">MEGSİS</p></div></a>
-            </main></section>
+             <section class="overflow-y-auto">
+                <main class="card-grid grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+                    <a href="https://gokhangeo.github.io/istakip/" target="_blank" class="card bg-gray-700 rounded-xl shadow-lg p-4 flex items-center space-x-3 hover:bg-gray-600"><div class="bg-indigo-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg></div><div><h2 class="text-lg font-semibold text-header">MEGSİS</h2><p class="text-sm text-subheader">Süreçler</p></div></a>
+                    <a href="https://gokhangeo.github.io/tkmevzuat/" target="_blank" class="card bg-gray-700 rounded-xl shadow-lg p-4 flex items-center space-x-3 hover:bg-gray-600"><div class="bg-purple-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v11.494m-9-5.747h18"></path></svg></div><div><h2 class="text-lg font-semibold text-header">TK Mevzuat</h2><p class="text-sm text-subheader">Mevzuat</p></div></a>
+                    <a href="https://gokhangeo.github.io/ihale/" target="_blank" class="card bg-gray-700 rounded-xl shadow-lg p-4 flex items-center space-x-3 hover:bg-gray-600"><div class="bg-sky-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path></svg></div><div><h2 class="text-lg font-semibold text-header">İhale</h2><p class="text-sm text-subheader">22-a, 2B</p></div></a>
+                    <a href="https://gokhangeo.github.io/isyonetim/" target="_blank" class="card bg-gray-700 rounded-xl shadow-lg p-4 flex items-center space-x-3 hover:bg-gray-600"><div class="bg-emerald-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745"></path></svg></div><div><h2 class="text-lg font-semibold text-header">İş Yönetim</h2><p class="text-sm text-subheader">İş Dağılımı</p></div></a>
+                    <a href="https://gokhangeo.github.io/THA/" target="_blank" class="card bg-gray-700 rounded-xl shadow-lg p-4 flex items-center space-x-3 hover:bg-gray-600"><div class="bg-rose-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h6m-6 4h6m-6 4h6"></path></svg></div><div><h2 class="text-lg font-semibold text-header">Mersin TH</h2><p class="text-sm text-subheader">Tescil Harici</p></div></a>
+                    <a href="https://gokhangeo.github.io/mersin-norm/" target="_blank" class="card bg-gray-700 rounded-xl shadow-lg p-4 flex items-center space-x-3 hover:bg-gray-600"><div class="bg-amber-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0"></path></svg></div><div><h2 class="text-lg font-semibold text-header">Norm</h2><p class="text-sm text-subheader">Kadro</p></div></a>
+                    <a href="https://gokhangeo.github.io/evraktakip/" target="_blank" class="card bg-gray-700 rounded-xl shadow-lg p-4 flex items-center space-x-3 hover:bg-gray-600"><div class="bg-teal-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path></svg></div><div><h2 class="text-lg font-semibold text-header">Evrak</h2><p class="text-sm text-subheader">Takip</p></div></a>
+                    <a href="https://gokhangeo.github.io/personelmesai/" target="_blank" class="card bg-gray-700 rounded-xl shadow-lg p-4 flex items-center space-x-3 hover:bg-gray-600"><div class="bg-cyan-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></div><div><h2 class="text-lg font-semibold text-header">Mesai</h2><p class="text-sm text-subheader">Takip</p></div></a>
+                    <a href="https://gokhangeo.github.io/asistan/" target="_blank" class="card bg-gray-700 rounded-xl shadow-lg p-4 flex items-center space-x-3 hover:bg-gray-600"><div class="bg-pink-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"></path></svg></div><div><h2 class="text-lg font-semibold text-header">Asistan</h2><p class="text-sm text-subheader">Dijital</p></div></a>
+                    <a href="https://gokhangeo.github.io/telafi/" target="_blank" class="card bg-gray-700 rounded-xl shadow-lg p-4 flex items-center space-x-3 hover:bg-gray-600"><div class="bg-lime-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m-8 4h10M9 15h.01M5 21h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg></div><div><h2 class="text-lg font-semibold text-header">Bilirkişi</h2><p class="text-sm text-subheader">Telafi</p></div></a>
+                    <a href="https://gokhangeo.github.io/hesap/" target="_blank" class="card bg-gray-700 rounded-xl shadow-lg p-4 flex items-center space-x-3 hover:bg-gray-600"><div class="bg-emerald-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"></path></svg></div><div><h2 class="text-lg font-semibold text-header">Bütçe</h2><p class="text-sm text-subheader">Hesap</p></div></a>
+                    <a href="https://gokhangeo.github.io/NOT/" target="_blank" class="card bg-gray-700 rounded-xl shadow-lg p-4 flex items-center space-x-3 hover:bg-gray-600"><div class="bg-fuchsia-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5"></path></svg></div><div><h2 class="text-lg font-semibold text-header">NOT</h2><p class="text-sm text-subheader">Notlar</p></div></a>
+                    <a href="https://gokhangeo.github.io/guncelleme/" target="_blank" class="card bg-gray-700 rounded-xl shadow-lg p-4 flex items-center space-x-3 hover:bg-gray-600"><div class="bg-orange-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9"></path></svg></div><div><h2 class="text-lg font-semibold text-header">Güncelleme</h2><p class="text-sm text-subheader">Versiyon</p></div></a>
+                    <a href="https://gokhangeo.github.io/hub/" target="_blank" class="card bg-gray-700 rounded-xl shadow-lg p-4 flex items-center space-x-3 hover:bg-gray-600"><div class="bg-slate-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01"></path></svg></div><div><h2 class="text-lg font-semibold text-header">Yerel Sunucu</h2><p class="text-sm text-subheader">Local Host</p></div></a>
+                    <a href="https://gokhangeo.github.io/bulut/" target="_blank" class="card bg-gray-700 rounded-xl shadow-lg p-4 flex items-center space-x-3 hover:bg-gray-600"><div class="bg-sky-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"></path></svg></div><div><h2 class="text-lg font-semibold text-header">Bulut</h2><p class="text-sm text-subheader">Kişisel Depo</p></div></a>
+                    <a href="https://gokhangeo.github.io/tablo/" target="_blank" class="card bg-gray-700 rounded-xl shadow-lg p-4 flex items-center space-x-3 hover:bg-gray-600"><div class="bg-cyan-600 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg></div><div><h2 class="text-lg font-semibold text-header">Tablo</h2><p class="text-sm text-subheader">Veri Tablosu</p></div></a>
+                    <a href="https://gokhangeo.github.io/megsis/" target="_blank" class="card bg-gray-700 rounded-xl shadow-lg p-4 flex items-center space-x-3 hover:bg-gray-600"><div class="bg-indigo-600 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></div><div><h2 class="text-lg font-semibold text-header">Başvuru Takip</h2><p class="text-sm text-subheader">MEGSİS</p></div></a>
+                </main>
+            </section>
         </div>
     </div>
 
     <div id="other-modal" class="modal-bg fixed inset-0 flex items-center justify-center p-4 hidden z-50 transition-opacity duration-300">
-<!-- ... existing code ... -->
+         <div class="modal-content bg-gray-800 rounded-2xl shadow-2xl w-full max-w-4xl p-6 md:p-8 relative transform scale-95 transition-transform duration-300" style="max-height: 90vh;">
+            <button class="close-modal-btn absolute top-4 right-4 text-gray-500 hover:text-white text-3xl leading-none z-10">&times;</button>
+            <h2 class="text-2xl md:text-3xl font-bold text-center mb-8 text-header">Sosyal Medya ve Araçlar</h2>
+            <div class="overflow-y-auto">
+                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+                    <a href="https://x.com" target="_blank" class="bg-gray-700 hover:bg-gray-600 p-4 rounded-xl flex flex-col items-center justify-center space-y-2 transition-all hover:scale-105"><svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 16 16"><path d="M12.6.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867-5.07-4.425 5.07H.316l5.733-6.57L0 .75h5.063l3.495 4.633L12.602.75Zm-2.267 12.95h1.506L5.032 2.15H3.436l6.9 11.55Z"></path></svg><span class="font-semibold text-header">X</span></a>
+                    <a href="https://youtube.com" target="_blank" class="bg-gray-700 hover:bg-gray-600 p-4 rounded-xl flex flex-col items-center justify-center space-y-2 transition-all hover:scale-105"><svg class="w-8 h-8 text-red-500" fill="currentColor" viewBox="0 0 24 24"><path d="M21.582,6.186C21.23,4.92,20.218,3.908,18.952,3.56C17.3,3.001,12,3,12,3S6.7,3.001,5.048,3.56 C3.782,3.908,2.77,4.92,2.418,6.186C1.999,7.844,2,12,2,12s-0.001,4.156,0.418,5.814c0.352,1.266,1.364,2.278,2.63,2.628 C6.7,21,12,21,12,21s5.3-0.001,6.952-0.558c1.266-0.35,2.278-1.362,2.63-2.628C22,16.156,22,12,22,12S22,7.844,21.582,6.186z M10,15.464V8.536L16,12L10,15.464z"></path></svg><span class="font-semibold text-header">YouTube</span></a>
+                    <a href="https://facebook.com" target="_blank" class="bg-gray-700 hover:bg-gray-600 p-4 rounded-xl flex flex-col items-center justify-center space-y-2 transition-all hover:scale-105"><svg class="w-8 h-8 text-blue-500" fill="currentColor" viewBox="0 0 24 24"><path d="M18,2H15a5,5,0,0,0-5,5v3H7v4h3v8h4V14h3l1-4H14V7a1,1,0,0,1,1-1h3Z"></path></svg><span class="font-semibold text-header">Facebook</span></a>
+                    <a href="https://gemini.google.com/" target="_blank" class="bg-gray-700 hover:bg-gray-600 p-4 rounded-xl flex flex-col items-center justify-center space-y-2 transition-all hover:scale-105"><svg class="w-8 h-8 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.82 5.82 22 7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg><span class="font-semibold text-header">Gemini</span></a>
+                    <a href="https://github.com/" target="_blank" class="bg-gray-700 hover:bg-gray-600 p-4 rounded-xl flex flex-col items-center justify-center space-y-2 transition-all hover:scale-105"><svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"></path></svg><span class="font-semibold text-header">GitHub</span></a>
+                    <a href="https://chat.openai.com/" target="_blank" class="bg-gray-700 hover:bg-gray-600 p-4 rounded-xl flex flex-col items-center justify-center space-y-2 transition-all hover:scale-105"><svg class="w-8 h-8 text-teal-400" fill="currentColor" viewBox="0 0 24 24"><path d="M20.73,8.21a2.84,2.84,0,0,0-4-3.83,2.83,2.83,0,0,0-4.63,2,2.84,2.84,0,0,0-1.5,5.1,2.84,2.84,0,0,0,4,3.83,2.83,2.83,0,0,0,4.63-2,2.84,2.84,0,0,0,1.5-5.1ZM12.06,14a1,1,0,1,1-1-1A1,1,0,0,1,12.06,14ZM16,12.06a1,1,0,1,1,1,1A1,1,0,0,1,16,12.06Zm-1-4a1,1,0,1,1-1-1A1,1,0,0,1,15,8.11Zm-4,.05a1,1,0,1,1,1-1A1,1,0,0,1,11,8.16Zm-2.8,2.9a1,1,0,1,1,1.05-1,1,1,0,0,1-1.05,1ZM9.05,16a1,1,0,1,1,1,1A1,1,0,0,1,9.05,16Z"></path></svg><span class="font-semibold text-header">ChatGPT</span></a>
+                    <a href="https://tr.tradingview.com/chart/djP0YvRF/" target="_blank" class="bg-gray-700 hover:bg-gray-600 p-4 rounded-xl flex flex-col items-center justify-center space-y-2 transition-all hover:scale-105"><svg class="w-8 h-8 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 11V7a2 2 0 012-2h2a2 2 0 012 2v4m-4 5v-1.5a1.5 1.5 0 011.5-1.5h1a1.5 1.5 0 011.5 1.5V16m-4 0h4m-4 0H7m0 0v-5m0 5v2m6-11v-1.5a1.5 1.5 0 00-1.5-1.5h-1a1.5 1.5 0 00-1.5 1.5V5m4 0H9m0 0v5m0-5V3"></path></svg><span class="font-semibold text-header">TradingView</span></a>
+                    <a href="https://web.whatsapp.com/" target="_blank" class="bg-gray-700 hover:bg-gray-600 p-4 rounded-xl flex flex-col items-center justify-center space-y-2 transition-all hover:scale-105"><svg class="w-8 h-8 text-green-500" fill="currentColor" viewBox="0 0 24 24"><path d="M16.75 13.96c.25.13.42.2.46.3.04.1.04.62-.12 1.3.1.02-.38.13-.78.13-.4 0-1.04-.1-1.6-.33-.56-.23-1.1-.56-1.54-.9-.44-.34-.8-.75-1.1-1.22-.3-.47-.54-.98-.7-1.5-.15-.52-.22-1.04-.22-1.56 0-.52.06-1.04.18-1.56.12-.52.32-1.03.6-1.5.28-.48.62-.9.98-1.25.38-.36.78-.64 1.2-.82.42-.18.85-.28 1.3-.28.45 0 .9.1 1.32.28.42.18.8.44 1.12.8.32.34.58.76.76 1.22.18.48.28.98.28 1.5 0 .52-.1.98-.28 1.44-.18.46-.44.86-.76 1.2ZM20.5 3.5C18.2 1.2 15.2 0 12 0 5.4 0 0 5.4 0 12c0 2.2.6 4.2 1.6 6L0 24l6.2-1.6c1.8 1 3.8 1.6 6 1.6h.2c6.5 0 11.8-5.3 11.8-11.8 0-3.2-1.2-6.2-3.6-8.6Zm-8.4 16.7c-2 0-3.8-.6-5.4-1.6L4 19.8l1.4-2.6c-1-1.6-1.6-3.6-1.6-5.6C3.8 6.8 7.4 3 12 3c2.2 0 4.2.8 5.8 2.4 1.6 1.6 2.4 3.6 2.4 5.8.2 4.6-3.4 8.4-8.2 8.4Z"/></svg><span class="font-semibold text-header">WhatsApp</span></a>
+                    <a href="https://notebooklm.google.com/" target="_blank" class="bg-gray-700 hover:bg-gray-600 p-4 rounded-xl flex flex-col items-center justify-center space-y-2 transition-all hover:scale-105"><svg class="w-8 h-8 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v11.494m-9-5.747h18"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20.253H6.5a2.5 2.5 0 01-2.5-2.5V6.253a2.5 2.5 0 012.5-2.5H10m4 0h3.5a2.5 2.5 0 012.5 2.5v11.494a2.5 2.5 0 01-2.5 2.5H14"></path></svg><span class="font-semibold text-header">NotebookLM</span></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // --- 1. VERİ TANIMLAMALARI ---
+        let dashNotes = JSON.parse(localStorage.getItem('dashboardNotes')) || [];
+        const correctPassword = '5034';
+        
+        const loginOverlay = document.getElementById('login-overlay');
+        const mainContent = document.getElementById('main-content');
+        const passwordInput = document.getElementById('password-input');
+        const loginError = document.getElementById('login-error');
+
+        // --- 2. FONKSİYONLAR ---
+        
+        // Dashboard Render
+        function renderDash() {
+            const list = document.getElementById('dashboard-list');
+            const count = document.getElementById('dashboard-count');
+            
+            dashNotes = dashNotes.filter(n => n && n.t);
+            localStorage.setItem('dashboardNotes', JSON.stringify(dashNotes));
+
+            if(dashNotes.length > 0) { 
+                count.textContent = dashNotes.length; 
+                count.classList.remove('hidden'); 
+            } else { 
+                count.classList.add('hidden'); 
+            }
+
+            if (dashNotes.length === 0) {
+                list.innerHTML = '<div class="text-center text-gray-500 py-4">Henüz not yok.</div>';
+                return;
+            }
+
+            list.innerHTML = dashNotes.map((n, i) => `
+                <div class="dashboard-note-item bg-gray-700/50 p-3 rounded-lg border-l-4 ${n.p==='critical'?'border-red-500':'border-indigo-500'} flex justify-between items-start mb-2">
+                    <div>
+                        <p class="text-white font-medium">${n.t}</p>
+                        <p class="text-[10px] text-gray-400 mt-1 uppercase">${n.d ? new Date(n.d).toLocaleString('tr-TR') : 'Tarihsiz'}</p>
+                    </div>
+                    <button onclick="delDash(${i})" class="text-gray-500 hover:text-red-400 transition-colors ml-2"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+                </div>
+            `).join('');
+        }
+
+        // Giriş İşlemi
+        function performLogin() {
+            localStorage.setItem('isLoggedIn', 'true');
+            loginOverlay.classList.add('opacity-0');
+            setTimeout(() => {
+                loginOverlay.style.display = 'none';
+                mainContent.classList.remove('hidden');
+                renderDash();
+                checkReminders();
+            }, 300);
+        }
+
+        const handleLoginAttempt = () => {
+            const val = passwordInput.value.trim();
+            if (val === correctPassword) {
+                performLogin();
+            } else if (val !== "") {
+                loginError.textContent = 'Şifre Hatalı Müdürüm!';
+                passwordInput.value = '';
+                passwordInput.focus();
+                setTimeout(() => loginError.textContent = '', 3000);
+            }
+        };
+
+        // Event Listeners
+        document.getElementById('login-button').addEventListener('click', handleLoginAttempt);
+        passwordInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleLoginAttempt(); });
+
+        // Kilitle
+        document.getElementById('lock-toggle').addEventListener('click', () => {
+            localStorage.removeItem('isLoggedIn');
+            location.reload(); // En güvenli temizlik
+        });
+
+        // Diğer Fonksiyonlar (Hava, Saat, Tema vb.)
+        window.openModal = (id) => {
+            const m = document.getElementById(id);
+            m.classList.remove('hidden');
+            setTimeout(() => { m.classList.remove('opacity-0'); m.children[0].classList.remove('scale-95'); }, 10);
+        };
+        window.closeModal = (id) => {
+            const m = document.getElementById(id);
+            m.classList.add('opacity-0'); m.children[0].classList.add('scale-95');
+            setTimeout(() => m.classList.add('hidden'), 300);
+        };
+
+        ['tkgm','projects','other'].forEach(k => {
+            document.getElementById('open-'+k+'-modal').onclick = () => openModal(k+'-modal');
+            const m = document.getElementById(k+'-modal');
+            m.querySelectorAll('.close-modal-btn').forEach(b => b.onclick = () => closeModal(k+'-modal'));
+            m.onclick = (e) => { if(e.target===m) closeModal(k+'-modal'); };
+        });
+
+        document.getElementById('dashboard-toggle').onclick = () => {
+            const c = document.getElementById('dashboard-content');
+            const chev = document.getElementById('dashboard-chevron');
+            c.classList.toggle('hidden');
+            chev.style.transform = c.classList.contains('hidden') ? 'rotate(0deg)' : 'rotate(180deg)';
+        };
+
+        document.getElementById('add-quick-note-btn').onclick = () => {
+            const t = document.getElementById('quick-note-text').value;
+            if(t) {
+                dashNotes.unshift({ 
+                    t, d: document.getElementById('quick-note-date').value, 
+                    p: document.getElementById('quick-note-priority').value 
+                });
+                localStorage.setItem('dashboardNotes', JSON.stringify(dashNotes));
+                document.getElementById('quick-note-text').value = '';
+                renderDash();
+            }
+        };
+
+        window.delDash = (i) => { 
+            dashNotes.splice(i, 1); localStorage.setItem('dashboardNotes', JSON.stringify(dashNotes)); renderDash(); 
+        };
+
+        function checkReminders() {
+            const now = new Date();
+            const dues = dashNotes.filter(n => n.d && new Date(n.d) <= now);
+            if(dues.length > 0) {
+                document.getElementById('reminder-list').innerHTML = dues.map(n => `<div class="bg-gray-700 p-3 rounded border-l-4 border-red-500"><p class="text-white font-bold">${n.t}</p><p class="text-xs text-red-300">Zamanı Geldi!</p></div>`).join('');
+                openModal('reminder-modal');
+            }
+        }
+        document.getElementById('close-reminder').onclick = () => closeModal('reminder-modal');
+        document.getElementById('close-reminder-btn').onclick = () => closeModal('reminder-modal');
+
+        const updateTime = () => { 
+            const now = new Date(); 
+            document.getElementById('time').textContent = now.toLocaleTimeString('tr-TR'); 
+            document.getElementById('date').textContent = now.toLocaleDateString('tr-TR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }); 
+        };
+        setInterval(updateTime, 1000); updateTime();
+
+        const themeToggle = document.getElementById('theme-toggle');
+        const applyTheme = (t) => {
+            if(t === 'light') { document.documentElement.classList.add('light'); themeToggle.innerHTML = '🌙'; }
+            else { document.documentElement.classList.remove('light'); themeToggle.innerHTML = '☀️'; }
+        };
+        let currTheme = localStorage.getItem('theme') || 'dark';
+        applyTheme(currTheme);
+        themeToggle.onclick = () => {
+            currTheme = currTheme === 'light' ? 'dark' : 'light';
+            localStorage.setItem('theme', currTheme);
+            applyTheme(currTheme);
+        };
+
+        async function updateData() {
+            try {
+                let wRes = await fetch('https://api.open-meteo.com/v1/forecast?latitude=36.8121&longitude=34.6415&current_weather=true');
+                let wData = await wRes.json();
+                document.getElementById('weather-temp').textContent = Math.round(wData.current_weather.temperature) + '°C';
+            } catch(e) {}
+        }
+        updateData();
+
+        // Başlangıç Kontrolü
+        if (localStorage.getItem('isLoggedIn') === 'true') {
+            performLogin();
+        } else {
+            passwordInput.focus();
+        }
+    });
+    </script>
+</body>
+</html>
