@@ -40,9 +40,6 @@
         .animate-marquee { display: flex; white-space: nowrap; animation: marquee 90s linear infinite; }
         .news-ticker-container:hover .animate-marquee { animation-play-state: paused; }
 
-        .dashboard-note-item { transition: all 0.3s ease; }
-        .dashboard-note-item:hover { transform: translateX(4px); }
-        
         input[type="datetime-local"]::-webkit-calendar-picker-indicator { filter: invert(1); cursor: pointer; }
         html.light input[type="datetime-local"]::-webkit-calendar-picker-indicator { filter: invert(0); }
 
@@ -77,17 +74,6 @@
         </div>
     </div>
 
-    <div id="reminder-modal" class="fixed inset-0 bg-black/80 flex items-center justify-center z-[110] hidden opacity-0 transition-opacity duration-300">
-        <div class="bg-gray-800 p-6 rounded-2xl shadow-2xl max-w-md w-full border border-red-500/50 transform scale-95 transition-transform duration-300">
-            <div class="flex justify-between items-center mb-4 border-b border-gray-700 pb-2">
-                <h3 class="text-xl font-bold text-header flex items-center"><span class="text-2xl mr-2">🔔</span> Hatırlatmalar</h3>
-                <button id="close-reminder" class="text-gray-400 hover:text-white text-2xl leading-none">&times;</button>
-            </div>
-            <div id="reminder-list" class="space-y-3 max-h-60 overflow-y-auto"></div>
-            <button id="close-reminder-btn" class="mt-6 w-full bg-gray-700 hover:bg-gray-600 text-white font-medium py-2 rounded-lg transition-colors">Tamam</button>
-        </div>
-    </div>
-
     <div id="main-content" class="container mx-auto px-4 py-8 flex-grow overflow-y-auto hidden pb-16">
         
         <div class="top-info-bar flex justify-between items-center mb-8">
@@ -112,46 +98,11 @@
             </div>
         </div>
 
-        <header class="text-center mb-8">
+        <header class="text-center mb-12">
             <h1 class="text-4xl md:text-5xl font-bold mb-2 bg-gradient-to-r from-purple-400 to-indigo-500 text-transparent bg-clip-text">Uygulama Merkezi</h1>
         </header>
 
-        <!-- Hızlı Notlar -->
-        <div class="max-w-4xl mx-auto mb-10 w-full">
-            <div class="bg-gray-800 dashboard-note-bg rounded-xl shadow-lg border border-gray-700 overflow-hidden transition-all duration-300">
-                <div id="dashboard-toggle" class="p-4 flex justify-between items-center cursor-pointer hover:bg-gray-700/50 transition-colors">
-                    <div class="flex items-center space-x-3">
-                        <div class="bg-indigo-600/20 text-indigo-400 p-2 rounded-lg">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
-                        </div>
-                        <div>
-                            <h3 class="text-lg font-bold text-header">Hızlı Bildirimler & Notlar</h3>
-                            <p class="text-xs text-subheader">Bulut senkronizasyonlu hatırlatıcı</p>
-                        </div>
-                    </div>
-                    <div class="flex items-center space-x-3">
-                        <span id="sync-status" class="text-xs text-gray-500 hidden sm:block"></span>
-                        <span id="dashboard-count" class="bg-red-500 text-white text-xs font-bold px-2.5 py-1 rounded-full hidden shadow-sm animate-pulse">0</span>
-                        <svg id="dashboard-chevron" class="w-6 h-6 text-gray-400 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                    </div>
-                </div>
-                <div id="dashboard-content" class="hidden border-t border-gray-700 bg-gray-900/30">
-                    <div class="p-4 border-b border-gray-700/50 flex flex-col md:flex-row gap-3">
-                        <input type="text" id="quick-note-text" placeholder="Not ekle..." class="flex-grow p-2.5 rounded-lg bg-gray-700 border border-gray-600 text-white text-sm focus:outline-none focus:border-indigo-500">
-                        <input type="datetime-local" id="quick-note-date" class="p-2.5 rounded-lg bg-gray-700 border border-gray-600 text-white text-sm cursor-pointer">
-                        <select id="quick-note-priority" class="p-2.5 rounded-lg bg-gray-700 border border-gray-600 text-white text-sm cursor-pointer">
-                            <option value="normal">Normal</option>
-                            <option value="important">Önemli</option>
-                            <option value="critical">Kritik</option>
-                        </select>
-                        <button id="add-quick-note-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-lg text-sm transition-colors flex items-center justify-center flex-shrink-0">Ekle</button>
-                    </div>
-                    <div id="dashboard-list" class="p-3 space-y-2 max-h-64 overflow-y-auto custom-scrollbar text-sm">
-                        <!-- Veriler renderDash() ile gelecek -->
-                    </div>
-                </div>
-            </div>
-        </div>
+        <!-- Notlar Bölümü Kaldırıldı -->
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
              <!-- Kategori 1 -->
@@ -258,7 +209,6 @@
     <script>
     document.addEventListener('DOMContentLoaded', () => {
         // --- 1. VERİ TANIMLAMALARI ---
-        let dashNotes = JSON.parse(localStorage.getItem('dashboardNotes')) || [];
         const correctPassword = '5034';
         
         const loginOverlay = document.getElementById('login-overlay');
@@ -266,48 +216,18 @@
         const passwordInput = document.getElementById('password-input');
         const loginError = document.getElementById('login-error');
 
-        // --- 2. FONKSİYONLAR ---
+        // --- 2. GITHUB / NOT FONKSİYONLARI KALDIRILDI ---
+        // Hata veren kısım temizlendi.
+
+        // --- 3. STANDART FONKSİYONLAR ---
         
-        // Dashboard Render
-        function renderDash() {
-            const list = document.getElementById('dashboard-list');
-            const count = document.getElementById('dashboard-count');
-            
-            dashNotes = dashNotes.filter(n => n && n.t);
-            localStorage.setItem('dashboardNotes', JSON.stringify(dashNotes));
-
-            if(dashNotes.length > 0) { 
-                count.textContent = dashNotes.length; 
-                count.classList.remove('hidden'); 
-            } else { 
-                count.classList.add('hidden'); 
-            }
-
-            if (dashNotes.length === 0) {
-                list.innerHTML = '<div class="text-center text-gray-500 py-4">Henüz not yok.</div>';
-                return;
-            }
-
-            list.innerHTML = dashNotes.map((n, i) => `
-                <div class="dashboard-note-item bg-gray-700/50 p-3 rounded-lg border-l-4 ${n.p==='critical'?'border-red-500':'border-indigo-500'} flex justify-between items-start mb-2">
-                    <div>
-                        <p class="text-white font-medium">${n.t}</p>
-                        <p class="text-[10px] text-gray-400 mt-1 uppercase">${n.d ? new Date(n.d).toLocaleString('tr-TR') : 'Tarihsiz'}</p>
-                    </div>
-                    <button onclick="delDash(${i})" class="text-gray-500 hover:text-red-400 transition-colors ml-2"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
-                </div>
-            `).join('');
-        }
-
-        // Giriş İşlemi
         function performLogin() {
             localStorage.setItem('isLoggedIn', 'true');
             loginOverlay.classList.add('opacity-0');
             setTimeout(() => {
                 loginOverlay.style.display = 'none';
                 mainContent.classList.remove('hidden');
-                renderDash();
-                checkReminders();
+                // renderDash() ve checkAndSetupGist() çağrıları kaldırıldı
             }, 300);
         }
 
@@ -327,13 +247,11 @@
         document.getElementById('login-button').addEventListener('click', handleLoginAttempt);
         passwordInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleLoginAttempt(); });
 
-        // Kilitle
         document.getElementById('lock-toggle').addEventListener('click', () => {
             localStorage.removeItem('isLoggedIn');
             location.reload(); 
         });
 
-        // Diğer Fonksiyonlar
         window.openModal = (id) => {
             const m = document.getElementById(id);
             m.classList.remove('hidden');
@@ -352,40 +270,7 @@
             m.onclick = (e) => { if(e.target===m) closeModal(k+'-modal'); };
         });
 
-        document.getElementById('dashboard-toggle').onclick = () => {
-            const c = document.getElementById('dashboard-content');
-            const chev = document.getElementById('dashboard-chevron');
-            c.classList.toggle('hidden');
-            chev.style.transform = c.classList.contains('hidden') ? 'rotate(0deg)' : 'rotate(180deg)';
-        };
-
-        document.getElementById('add-quick-note-btn').onclick = () => {
-            const t = document.getElementById('quick-note-text').value;
-            if(t) {
-                dashNotes.unshift({ 
-                    t, d: document.getElementById('quick-note-date').value, 
-                    p: document.getElementById('quick-note-priority').value 
-                });
-                localStorage.setItem('dashboardNotes', JSON.stringify(dashNotes));
-                document.getElementById('quick-note-text').value = '';
-                renderDash();
-            }
-        };
-
-        window.delDash = (i) => { 
-            dashNotes.splice(i, 1); localStorage.setItem('dashboardNotes', JSON.stringify(dashNotes)); renderDash(); 
-        };
-
-        function checkReminders() {
-            const now = new Date();
-            const dues = dashNotes.filter(n => n.d && new Date(n.d) <= now);
-            if(dues.length > 0) {
-                document.getElementById('reminder-list').innerHTML = dues.map(n => `<div class="bg-gray-700 p-3 rounded border-l-4 border-red-500"><p class="text-white font-bold">${n.t}</p><p class="text-xs text-red-300">Zamanı Geldi!</p></div>`).join('');
-                openModal('reminder-modal');
-            }
-        }
-        document.getElementById('close-reminder').onclick = () => closeModal('reminder-modal');
-        document.getElementById('close-reminder-btn').onclick = () => closeModal('reminder-modal');
+        // Notlar paneli ile ilgili event listener'lar kaldırıldı.
 
         const updateTime = () => { 
             const now = new Date(); 
@@ -416,7 +301,7 @@
         }
         updateData();
 
-        // --- YENİ HABER GÜNCELLEME SİSTEMİ (GELİŞMİŞ) ---
+        // Haberler
         const rssSources = [
             'https://www.trthaber.com/sondakika.rss',
             'https://www.cnnturk.com/feed/66/index.rss',
@@ -440,12 +325,9 @@
 
         async function updateNews() {
             const ticker = document.getElementById('news-ticker-content');
-            
-            // Rastgele bir haber kaynağı seç (Çeşitlilik için)
             const randomSource = rssSources[Math.floor(Math.random() * rssSources.length)];
             
             const render = (items) => {
-                // Haberleri karıştır ki hep aynı sırayla gelmesin
                 const shuffled = items.sort(() => 0.5 - Math.random());
                 const html = shuffled.map(i => 
                     `<span class="inline-block mx-6 py-2">
@@ -457,9 +339,8 @@
 
             try {
                 const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 saniye bekleme süresi
+                const timeoutId = setTimeout(() => controller.abort(), 5000); 
 
-                // Cache önlemek için timestamp ekle
                 const res = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(randomSource)}&t=${Date.now()}`, { 
                     signal: controller.signal 
                 });
@@ -478,7 +359,6 @@
 
             } catch (e) {
                 console.log("Haber kaynağı değiştiriliyor...");
-                // Hata durumunda mevcut içerik boşsa yedeği yükle, değilse dokunma
                 if (!ticker.innerHTML.includes('span')) {
                     render(fallbackNews);
                 }
@@ -486,7 +366,7 @@
         }
         
         updateNews(); 
-        setInterval(updateNews, 60000); // Her 1 dakikada bir yenile
+        setInterval(updateNews, 60000); 
 
         // Başlangıç Kontrolü
         if (localStorage.getItem('isLoggedIn') === 'true') {
