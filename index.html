@@ -58,12 +58,12 @@
         }
         .modal-content > section,
         .modal-content > .overflow-y-auto {
-            flex: 1 1 auto;
+            flex: 0 1 auto;
             min-height: 0;
             overflow-y: auto;
             overscroll-behavior: contain;
             -webkit-overflow-scrolling: touch;
-            padding-bottom: 1rem;
+            padding: .85rem .15rem .25rem;
         }
 
         input[type="datetime-local"]::-webkit-calendar-picker-indicator { filter: invert(1); cursor: pointer; }
@@ -74,12 +74,8 @@
         html.light .glass-panel { background: rgba(255,255,255,0.88); border-color: #e5e7eb; }
         .app-count { font-size: .72rem; font-weight: 700; padding: .25rem .55rem; border-radius: 999px; background: rgba(255,255,255,.1); color: #d1d5db; }
         html.light .app-count { background: #f3f4f6; color: #4b5563; }
-        .modal-sticky-header { position: sticky; top: 0; z-index: 20; margin: -1.5rem -1.5rem 1rem; padding: 1.25rem 1.5rem 1rem; background: rgba(31,41,55,.96); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(107,114,128,.25); border-radius: 1rem 1rem 0 0; }
+        .modal-sticky-header { position: relative; flex: 0 0 auto; z-index: 20; margin: -1.5rem -1.5rem 0; padding: 1.1rem 1.5rem 1rem; background: rgba(31,41,55,.96); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(107,114,128,.25); border-radius: 1rem 1rem 0 0; }
         html.light .modal-sticky-header { background: rgba(255,255,255,.96); border-color: #e5e7eb; }
-        .filter-chip { padding: .45rem .8rem; border-radius: 999px; background: #374151; color: #d1d5db; font-size: .8rem; font-weight: 600; transition: .2s; }
-        .filter-chip:hover, .filter-chip.active { background: #6366f1; color: #fff; }
-        html.light .filter-chip { background: #e5e7eb; color: #374151; }
-        html.light .filter-chip:hover, html.light .filter-chip.active { background: #4f46e5; color: #fff; }
         .quick-card { transition: transform .2s, background-color .2s; }
         .quick-card:hover { transform: translateY(-3px); }
         .ticker-hidden { transform: translateY(100%); }
@@ -89,7 +85,7 @@
             .card-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
             .modal-content { padding: 1rem; max-height: calc(100dvh - 82px) !important; border-radius: 1rem; }
             .modal-bg { align-items: flex-start; padding: 40px .5rem 42px; }
-            .modal-sticky-header { margin: -1rem -1rem .75rem; padding: 1rem 1rem .75rem; }
+            .modal-sticky-header { margin: -1rem -1rem 0; padding: .9rem 1rem .8rem; }
             .animate-marquee { animation-duration: 240s; }
             .top-info-bar { flex-direction: column; gap: 1rem; }
             #main-content { padding-bottom: 3.25rem; }
@@ -98,8 +94,6 @@
             .card-grid { grid-template-columns: 1fr !important; }
             #project-grid .card { padding: .85rem; }
             #project-search { padding: .7rem; }
-            #project-filters { flex-wrap: nowrap; overflow-x: auto; padding-bottom: .25rem; scrollbar-width: none; }
-            #project-filters::-webkit-scrollbar { display: none; }
             .top-actions { width: 100%; justify-content: space-between; }
         }
     </style>
@@ -179,7 +173,7 @@
                     <div class="bg-purple-500/15 text-purple-400 p-3 rounded-xl group-hover:bg-purple-500 group-hover:text-white transition-colors">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
                     </div>
-                    <div class="min-w-0"><h2 class="text-lg font-bold text-header">Kişisel Projeler</h2><p class="text-sm text-subheader">20 uygulama</p></div>
+                    <div class="min-w-0"><h2 class="text-lg font-bold text-header">Kişisel Projeler</h2><p class="text-sm text-subheader">21 uygulama</p></div>
                     <span class="ml-auto text-gray-500 group-hover:text-purple-400">›</span>
                 </div>
             </button>
@@ -221,7 +215,7 @@
     <!-- PROJELER MODAL -->
     <div id="projects-modal" class="modal-bg fixed inset-0 flex items-center justify-center p-4 hidden z-50 transition-opacity duration-300">
         <div class="modal-content bg-gray-800 rounded-2xl shadow-2xl w-full max-w-4xl p-6 md:p-8 relative transform scale-95 transition-transform duration-300" style="max-height: 90vh;">
-            <div class="modal-sticky-header"><button class="close-modal-btn absolute top-4 right-4 text-gray-500 hover:text-white text-3xl leading-none z-10">&times;</button><h2 class="text-2xl md:text-3xl font-bold text-center text-header mb-4">Kişisel Projeler</h2><input id="project-search" type="search" placeholder="Uygulama ara..." class="w-full p-3 rounded-xl bg-gray-700 border border-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"><div id="project-filters" class="flex gap-2 flex-wrap mt-3"></div></div>
+            <div class="modal-sticky-header"><button class="close-modal-btn absolute top-4 right-4 text-gray-500 hover:text-white text-3xl leading-none z-10">&times;</button><h2 class="text-2xl md:text-3xl font-bold text-center text-header mb-3">Kişisel Projeler</h2><input id="project-search" type="search" placeholder="Uygulama ara..." class="w-full p-3 rounded-xl bg-gray-700 border border-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"></div>
              <section class="overflow-y-auto">
                 <main id="project-grid" class="card-grid grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
                     <a href="https://gokhangeo.github.io/istakip/" target="_blank" class="card bg-gray-700 rounded-xl shadow-lg p-4 flex items-center space-x-3 hover:bg-gray-600"><div class="bg-indigo-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg></div><div><h2 class="text-lg font-semibold text-header">MEGSİS</h2><p class="text-sm text-subheader">Süreçler</p></div></a>
@@ -240,7 +234,8 @@
                     <a href="https://gokhangeo.github.io/mersin-norm/" target="_blank" class="card bg-gray-700 rounded-xl shadow-lg p-4 flex items-center space-x-3 hover:bg-gray-600"><div class="bg-amber-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0"></path></svg></div><div><h2 class="text-lg font-semibold text-header">Norm</h2><p class="text-sm text-subheader">Kadro</p></div></a>
                     <a href="https://gokhangeo.github.io/evraktakip/" target="_blank" class="card bg-gray-700 rounded-xl shadow-lg p-4 flex items-center space-x-3 hover:bg-gray-600"><div class="bg-teal-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path></svg></div><div><h2 class="text-lg font-semibold text-header">Evrak</h2><p class="text-sm text-subheader">Takip</p></div></a>
                     <a href="https://gokhangeo.github.io/personelmesai/" target="_blank" class="card bg-gray-700 rounded-xl shadow-lg p-4 flex items-center space-x-3 hover:bg-gray-600"><div class="bg-cyan-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></div><div><h2 class="text-lg font-semibold text-header">Mesai</h2><p class="text-sm text-subheader">Takip</p></div></a>
-                    <a href="https://gokhangeo.github.io/asistan/" target="_blank" class="card bg-gray-700 rounded-xl shadow-lg p-4 flex items-center space-x-3 hover:bg-gray-600"><div class="bg-pink-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"></path></svg></div><div><h2 class="text-lg font-semibold text-header">Asistan</h2><p class="text-sm text-subheader">Dijital</p></div></a>
+                    <a href="https://gokhangeo.github.io/mersinkm/" target="_blank" class="card bg-gray-700 rounded-xl shadow-lg p-4 flex items-center space-x-3 hover:bg-gray-600"><div class="bg-blue-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6M9 9h.01M15 9h.01M9 12h.01M15 12h.01"></path></svg></div><div><h2 class="text-lg font-semibold text-header">Mersin KM</h2><p class="text-sm text-subheader">Kadastro Müdürlüğü</p></div></a>
+                    <a href="https://gokhangeo.github.io/teknikbelge/" target="_blank" class="card bg-gray-700 rounded-xl shadow-lg p-4 flex items-center space-x-3 hover:bg-gray-600"><div class="bg-cyan-600 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6M7 3h7l5 5v11a2 2 0 01-2 2H7a2 2 0 01-2-2V5a2 2 0 012-2zm7 0v5h5"></path></svg></div><div><h2 class="text-lg font-semibold text-header">Teknik Belge</h2><p class="text-sm text-subheader">Belge ve Doküman</p></div></a>
                     <a href="https://gokhangeo.github.io/telafi/" target="_blank" class="card bg-gray-700 rounded-xl shadow-lg p-4 flex items-center space-x-3 hover:bg-gray-600"><div class="bg-lime-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m-8 4h10M9 15h.01M5 21h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg></div><div><h2 class="text-lg font-semibold text-header">Bilirkişi</h2><p class="text-sm text-subheader">Telafi</p></div></a>
                     <a href="https://gokhangeo.github.io/hesap/" target="_blank" class="card bg-gray-700 rounded-xl shadow-lg p-4 flex items-center space-x-3 hover:bg-gray-600"><div class="bg-emerald-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"></path></svg></div><div><h2 class="text-lg font-semibold text-header">Bütçe</h2><p class="text-sm text-subheader">Hesap</p></div></a>
                     <a href="https://gokhangeo.github.io/NOT/" target="_blank" class="card bg-gray-700 rounded-xl shadow-lg p-4 flex items-center space-x-3 hover:bg-gray-600"><div class="bg-fuchsia-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5"></path></svg></div><div><h2 class="text-lg font-semibold text-header">NOT</h2><p class="text-sm text-subheader">Notlar</p></div></a>
@@ -465,39 +460,18 @@
             newsBar.querySelector('.bg-red-600').classList.toggle('hidden', collapsed);
         };
 
-        // Proje arama ve kategori filtreleri
+        // Kişisel projelerde yalnızca arama
         const projectGrid = document.getElementById('project-grid');
         const projectCards = [...projectGrid.querySelectorAll(':scope > a')];
-        const categoryMap = {
-            'İş ve Süreç': ['MEGSİS','İhale','İhale Takip','İş Yönetim','Evrak','Başvuru Takip'],
-            'Kadastro ve Harita': ['Mersin TH','THA Takip','İKA','Bilirkişilik','Bilirkişi'],
-            'Personel ve Yönetim': ['Norm','Mesai','Bütçe'],
-            'Yardımcı Araçlar': ['Asistan','NOT','Güncelleme','Yerel Sunucu','Depo','Sözler','TK Mevzuat']
-        };
         projectCards.forEach(card => {
             const title = card.querySelector('h2')?.textContent.trim() || '';
-            let cat = 'Diğer';
-            for (const [name, keys] of Object.entries(categoryMap)) if (keys.some(k => title.includes(k))) { cat = name; break; }
-            card.dataset.category = cat;
-            card.dataset.search = (title + ' ' + (card.querySelector('p')?.textContent || '')).toLocaleLowerCase('tr-TR');
+            const description = card.querySelector('p')?.textContent.trim() || '';
+            card.dataset.search = `${title} ${description}`.toLocaleLowerCase('tr-TR');
         });
-        const categories = ['Tümü', ...new Set(projectCards.map(c => c.dataset.category))];
-        const filters = document.getElementById('project-filters');
-        let activeCategory = 'Tümü';
-        const applyProjectFilter = () => {
-            const q = document.getElementById('project-search').value.toLocaleLowerCase('tr-TR').trim();
-            projectCards.forEach(card => {
-                const okCategory = activeCategory === 'Tümü' || card.dataset.category === activeCategory;
-                card.classList.toggle('hidden', !(okCategory && card.dataset.search.includes(q)));
-            });
-        };
-        categories.forEach((category, i) => {
-            const b = document.createElement('button'); b.type = 'button'; b.textContent = category;
-            b.className = 'filter-chip' + (i === 0 ? ' active' : '');
-            b.onclick = () => { activeCategory = category; filters.querySelectorAll('button').forEach(x => x.classList.remove('active')); b.classList.add('active'); applyProjectFilter(); };
-            filters.appendChild(b);
+        document.getElementById('project-search').addEventListener('input', (event) => {
+            const query = event.target.value.toLocaleLowerCase('tr-TR').trim();
+            projectCards.forEach(card => card.classList.toggle('hidden', !card.dataset.search.includes(query)));
         });
-        document.getElementById('project-search').addEventListener('input', applyProjectFilter);
 
         // Başlangıç Kontrolü
         if (localStorage.getItem('isLoggedIn') === 'true') {
