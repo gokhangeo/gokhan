@@ -1,0 +1,28 @@
+TKGM BASLATICI - KURULUM
+========================
+
+1) Bu klasoru kalici bir yere tasiyin (ornek: Belgeler\TKGM-Baslatici).
+   Kisayol bu klasordeki dosyayi acar; klasoru sonradan tasirsaniz 2. adimi tekrarlayin.
+
+2) "Kisayol-Olustur.bat" dosyasina cift tiklayin.
+   Masaustune ve Baslat menusune "TKGM Baslatici" kisayolu eklenir.
+
+3) Masaustundeki "TKGM Baslatici" simgesine cift tiklayin.
+   Adres cubugu olmayan ayri bir pencere acilir. Bir karta tikladiginizda
+   ilgili site Edge'de yeni sekmede acilir.
+
+   Gorev cubuguna sabitlemek icin: pencere aciksa gorev cubugundaki simgesine
+   sag tiklayip "Gorev cubuguna sabitle" deyin.
+
+KISAYOLLAR
+  1-9, 0       : Siradaki sistemi ac
+  Harf yazmak  : Arama
+  Enter        : Aramadaki ilk sonucu ac
+  Ok tuslari   : Kartlar arasinda gezin
+  Esc          : Aramayi temizle
+
+SISTEM EKLEMEK / CIKARMAK
+  TKGM-Baslatici.html dosyasini Not Defteri ile acin, "SISTEMLER" listesine
+  bir satir ekleyin veya silin, kaydedin. Kisayolu yeniden olusturmaniz gerekmez.
+
+Kurulum gerekmez, yonetici izni istemez, internete bir sey yuklemez.
