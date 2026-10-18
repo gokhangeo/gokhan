@@ -1,12 +1,12 @@
-# TKGM Baslatici - Masaustu ve Baslat menusu kisayolu olusturur.
+# TKGM Uygulamalar - Masaustu ve Baslat menusu kisayolu olusturur.
 # Kisayol, Microsoft Edge'i adres cubugu olmayan "uygulama penceresi" modunda acar.
 $ErrorActionPreference = 'Stop'
 
 $klasor = Split-Path -Parent $MyInvocation.MyCommand.Path
-$html   = Join-Path $klasor 'TKGM-Baslatici.html'
+$html   = Join-Path $klasor 'TKGM-Uygulamalar.html'
 $ikon   = Join-Path $klasor 'simge.ico'
 
-if (-not (Test-Path $html)) { Write-Host "TKGM-Baslatici.html bulunamadi: $html"; exit 1 }
+if (-not (Test-Path $html)) { Write-Host "TKGM-Uygulamalar.html bulunamadi: $html"; exit 1 }
 
 # Edge'in yerini bul
 $edge = $null
@@ -24,13 +24,13 @@ $url = ([System.Uri]$html).AbsoluteUri
 $ws  = New-Object -ComObject WScript.Shell
 
 foreach ($hedef in @([Environment]::GetFolderPath('Desktop'), [Environment]::GetFolderPath('Programs'))) {
-    $lnk = Join-Path $hedef 'TKGM Baslatici.lnk'
+    $lnk = Join-Path $hedef 'TKGM Uygulamalar.lnk'
     $k = $ws.CreateShortcut($lnk)
     $k.TargetPath       = $edge
     $k.Arguments        = "--app=`"$url`" --window-size=1000,680"
     $k.WorkingDirectory = $klasor
     $k.IconLocation     = "$ikon,0"
-    $k.Description      = 'TKGM sistemlerine hizli erisim'
+    $k.Description      = 'TKGM Uygulamalar'
     $k.Save()
     Write-Host "Kisayol olusturuldu: $lnk"
 }

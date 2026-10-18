@@ -1,0 +1,29 @@
+{
+  "name": "tkgm-uygulamalar",
+  "productName": "TKGM Uygulamalar",
+  "version": "1.0.0",
+  "description": "TKGM Uygulamalar",
+  "author": "Gökhan ELGÜL",
+  "private": true,
+  "main": "main.js",
+  "scripts": {
+    "hazirla": "node -e \"const fs=require('fs');for(const f of ['TKGM-Uygulamalar.html','simge.png','simge.ico'])fs.copyFileSync('../'+f,f)\"",
+    "start": "npm run hazirla && electron .",
+    "build": "npm run hazirla && electron-builder --win portable --x64"
+  },
+  "devDependencies": {
+    "electron": "33.2.1",
+    "electron-builder": "25.1.8"
+  },
+  "build": {
+    "appId": "com.gokhangeo.tkgmuygulamalar",
+    "productName": "TKGM Uygulamalar",
+    "files": ["main.js", "TKGM-Uygulamalar.html", "simge.png"],
+    "directories": { "output": "dist" },
+    "win": {
+      "icon": "simge.ico",
+      "signAndEditExecutable": false
+    },
+    "portable": { "artifactName": "TKGM-Uygulamalar.exe" }
+  }
+}
