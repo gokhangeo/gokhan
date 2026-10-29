@@ -248,7 +248,6 @@
                 <div id="dosyalar" class="dosya-bolum">
                     <div class="dosya-ust">
                         <h3 class="text-header">Dosyalar</h3>
-                        <button id="dosya-anahtar" type="button" class="dosya-dugme" title="İsteğe bağlı: farklı bir GitHub anahtarı gir">Anahtar</button>
                         <button id="dosya-yenile" type="button" class="dosya-dugme" title="Listeyi GitHub'dan yeniden al">Yenile</button>
                     </div>
                     <div id="dosya-icerik"><p class="dosya-not">Dosyalar yükleniyor...</p></div>
@@ -626,9 +625,8 @@
         // --- DOSYALAR: GitHub'daki TÜM depolardaki en güncel APK / IPA / EXE dosyaları ---
         // gokhangeo hesabındaki her depo taranır: sürümler (releases) + depo içindeki dosyalar.
         // Her uygulamanın yalnızca SON sürümü listelenir (tür başına tek dosya).
-        // Gizli depolar (rea vb.) için sayfaya gömülü anahtar kullanılır; "Anahtar" düğmesiyle
-        // bu tarayıcıya başka bir anahtar girilirse o öncelikli olur. Gizli depodaki dosyalar,
-        // GitHub'a giriş yapılmış tarayıcıda iner.
+        // Gizli depolar (rea vb.) için sayfaya gömülü anahtar kullanılır. Gizli depodaki
+        // dosyalar, GitHub'a giriş yapılmış tarayıcıda iner.
         const GH_KULLANICI = 'gokhangeo';
         const _gp = ['6a0aGBTj', 'd7oahk2S', 'C8Oov8yB', '128xUP1u', '1Im4', 'ghp' + '_'];
         const gomuluAnahtar = () => _gp.slice().reverse().join('');
@@ -640,7 +638,7 @@
             centik: 'Çentik', notebook: 'Notebook Asistan', mandalina: 'Mandalina', newpipe: 'NewPipe',
             yandexnavi: 'Yandex Navi', tkgmeimzakurulumyardimcisi: 'TKGM E-İmza Kurulum Yardımcısı',
         };
-        const anahtarAl = () => { try { return localStorage.getItem('reaToken') || gomuluAnahtar(); } catch (e) { return gomuluAnahtar(); } };
+        const anahtarAl = gomuluAnahtar;
         const boyut = (b) => b >= 1048576 ? (b / 1048576).toFixed(1) + ' MB' : Math.max(1, Math.round(b / 1024)) + ' KB';
         const tarih = (t) => t ? new Date(t).toLocaleDateString('tr-TR', { day: 'numeric', month: 'short', year: 'numeric' }) : '';
         const surumSil = (s) => s.replace(DOSYA_UZANTI, '').replace(/[-_ ]?v?\d+(\.\d+)*$/i, '');
@@ -711,7 +709,7 @@
             } catch (e) {
                 // Anahtar geçersizse yalnızca herkese açık depolar
                 anahtar = '';
-                uyari = '<p class="dosya-not">GitHub anahtarı geçersiz ya da süresi dolmuş; yalnızca herkese açık depolar gösteriliyor. <b>Anahtar</b> düğmesiyle yeni anahtar girin.</p>';
+                uyari = '<p class="dosya-not">GitHub anahtarı geçersiz ya da süresi dolmuş; yalnızca herkese açık depolar gösteriliyor.</p>';
                 try { depolar = await sayfaliAl(`users/${GH_KULLANICI}/repos?sort=pushed`); } catch (e2) { depolar = []; }
             }
             depolar = depolar.filter(d => d.size > 0);
@@ -744,13 +742,6 @@
         };
         document.getElementById('open-projects-modal').addEventListener('click', () => { if (!dosyaYuklendi) dosyalariYukle(); });
         document.getElementById('dosya-yenile').addEventListener('click', dosyalariYukle);
-        document.getElementById('dosya-anahtar').addEventListener('click', () => {
-            let kayitli = ''; try { kayitli = localStorage.getItem('reaToken') || ''; } catch (e) {}
-            const yeni = prompt('Farklı bir GitHub anahtarı kullanmak için girin (yalnızca bu tarayıcıda saklanır).\nBoş bırakıp Tamam derseniz sayfadaki varsayılan anahtar kullanılır.', kayitli);
-            if (yeni === null) return;
-            try { yeni.trim() ? localStorage.setItem('reaToken', yeni.trim()) : localStorage.removeItem('reaToken'); } catch (e) {}
-            dosyalariYukle();
-        });
 
         // Başlangıç Kontrolü (oturum açıksa giriş ekranı <head> içinde zaten gizlendi)
         if (localStorage.getItem('isLoggedIn') === 'true') {
