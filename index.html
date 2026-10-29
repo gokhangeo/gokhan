@@ -97,6 +97,26 @@
         .ticker-hidden { transform: translateY(100%); }
         #news-bar { transition: transform .3s ease; }
 
+        /* Kişisel Projeler > Dosyalar (GitHub'daki son APK/IPA/EXE) */
+        .dosya-bolum { margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid rgba(107,114,128,.35); }
+        .dosya-ust { display: flex; align-items: center; gap: .5rem; margin-bottom: .75rem; flex-wrap: wrap; }
+        .dosya-ust h3 { font-size: 1.25rem; font-weight: 700; margin-right: auto; }
+        .dosya-dugme { font-size: .8rem; padding: .35rem .7rem; border-radius: .6rem; background: #374151; border: 1px solid #4b5563; color: #d1d5db; }
+        .dosya-dugme:hover { background: #4b5563; color: #fff; }
+        .dosya-grup { font-size: .75rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: #9ca3af; margin: 1rem 0 .5rem; }
+        .dosya-liste { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: .6rem; }
+        .dosya-satir { display: flex; align-items: center; gap: .7rem; padding: .7rem .8rem; border-radius: .8rem; background: #374151; color: inherit; text-decoration: none; min-width: 0; transition: background-color .2s; }
+        .dosya-satir:hover { background: #4b5563; }
+        .dosya-tur { flex-shrink: 0; width: 2.6rem; text-align: center; font-size: .68rem; font-weight: 800; padding: .45rem 0; border-radius: .5rem; color: #fff; }
+        .dosya-tur.apk { background: #16a34a; } .dosya-tur.ipa { background: #2563eb; } .dosya-tur.exe { background: #9333ea; }
+        .dosya-bilgi { min-width: 0; flex: 1; }
+        .dosya-ad { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .dosya-alt { font-size: .75rem; color: #9ca3af; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .dosya-not { font-size: .85rem; color: #9ca3af; padding: .5rem 0; }
+        html.light .dosya-satir { background: #f3f4f6; } html.light .dosya-satir:hover { background: #e5e7eb; }
+        html.light .dosya-dugme { background: #fff; border-color: #d1d5db; color: #374151; }
+        html.light .dosya-alt, html.light .dosya-not, html.light .dosya-grup { color: #6b7280; }
+
         @media (max-width: 768px) {
             .card-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
             .modal-content { padding: 1rem; max-height: calc(100dvh - 82px) !important; border-radius: 1rem; }
@@ -225,6 +245,14 @@
             <div class="modal-sticky-header"><button class="close-modal-btn absolute top-4 right-4 text-gray-500 hover:text-white text-3xl leading-none z-10" aria-label="Kapat">&times;</button><h2 class="text-2xl md:text-3xl font-bold text-center text-header mb-3">Kişisel Projeler</h2><input id="project-search" type="search" placeholder="Uygulama ara..." class="w-full p-3 rounded-xl bg-gray-700 border border-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"></div>
             <section class="overflow-y-auto">
                 <main id="projects-grid" class="card-grid grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6"></main>
+                <div id="dosyalar" class="dosya-bolum">
+                    <div class="dosya-ust">
+                        <h3 class="text-header">Dosyalar</h3>
+                        <button id="dosya-anahtar" type="button" class="dosya-dugme" title="Gizli Rea deposunu listelemek için GitHub okuma anahtarı">Rea anahtarı</button>
+                        <button id="dosya-yenile" type="button" class="dosya-dugme" title="Listeyi GitHub'dan yeniden al">Yenile</button>
+                    </div>
+                    <div id="dosya-icerik"><p class="dosya-not">Dosyalar yükleniyor...</p></div>
+                </div>
             </section>
         </div>
     </div>
@@ -592,6 +620,85 @@
         document.getElementById('project-search').addEventListener('input', (event) => {
             const query = event.target.value.toLocaleLowerCase('tr-TR').trim();
             projectCards.forEach(card => card.classList.toggle('hidden', !card.dataset.search.includes(query)));
+            document.querySelectorAll('#dosya-icerik .dosya-satir').forEach(a => a.classList.toggle('hidden', !a.dataset.search.includes(query)));
+        });
+
+        // --- DOSYALAR: GitHub'daki en güncel APK / IPA / EXE dosyaları ---
+        // 1) Herkese açık gokhangeo/apk deposunun apk/ klasörü ve sürümleri (anahtarsız).
+        // 2) Gizli gokhangeo/rea sürümleri: her uygulamanın SON sürümü. Gizli depo olduğu için
+        //    bu cihazda bir kez "Rea anahtarı" (yalnızca okuma izinli GitHub anahtarı) girilir;
+        //    anahtar yalnızca bu tarayıcıda saklanır. İndirme GitHub'a giriş yapılmış tarayıcıda açılır.
+        const DOSYA_UZANTI = /\.(apk|ipa|exe)$/i;
+        const UYGULAMA_ADI = {
+            '': 'Ataç', 'atac-py': 'Ataç (Python)', 'ev-ekrani': 'Ev Ekranı', 'arac-ekrani': 'Araç Ekranı',
+            'turkiptv': 'TurkIPTV', 'turkiptv-ios': 'TurkIPTV iOS', 'zip-zip': 'Zıp Zıp', 'kutu-kurucu': 'Kutu Kurucu',
+            'winkeeper': 'WinKeeper', 'winkeeper-android': 'WinKeeper Android', 'megsis-otomatik-onay': 'MEGSİS Otomatik Onay',
+            'centik': 'Çentik', 'notebook': 'Notebook Asistan',
+        };
+        const anahtarAl = () => { try { return localStorage.getItem('reaToken') || ''; } catch (e) { return ''; } };
+        const boyut = (b) => b >= 1048576 ? (b / 1048576).toFixed(1) + ' MB' : Math.max(1, Math.round(b / 1024)) + ' KB';
+        const tarih = (t) => t ? new Date(t).toLocaleDateString('tr-TR', { day: 'numeric', month: 'short', year: 'numeric' }) : '';
+        const aile = (etiket) => etiket.replace(/-?v?\d+(\.\d+)*$/i, '').toLowerCase();
+        const ghJson = async (yol, anahtar) => {
+            const h = { Accept: 'application/vnd.github+json' };
+            if (anahtar) h.Authorization = 'Bearer ' + anahtar;
+            const r = await fetch('https://api.github.com/' + yol, { headers: h, cache: 'no-store' });
+            if (!r.ok) throw new Error(r.status === 401 || r.status === 404 ? 'anahtar' : 'HTTP ' + r.status);
+            return r.json();
+        };
+        // Her uygulama ailesinin en yeni sürümündeki apk/ipa/exe dosyaları
+        const sonSurumler = (surumler) => {
+            const enYeni = {};
+            surumler.filter(r => !r.draft && r.assets.some(a => DOSYA_UZANTI.test(a.name))).forEach(r => {
+                const k = aile(r.tag_name);
+                if (!enYeni[k] || new Date(r.published_at) > new Date(enYeni[k].published_at)) enYeni[k] = r;
+            });
+            return Object.entries(enYeni).flatMap(([k, r]) => r.assets.filter(a => DOSYA_UZANTI.test(a.name)).map(a => ({
+                uygulama: UYGULAMA_ADI[k] || k.replace(/-/g, ' ').replace(/^./, c => c.toUpperCase()),
+                ad: a.name, boyut: a.size, tarih: r.published_at, surum: r.tag_name, url: a.browser_download_url,
+            })));
+        };
+        const satir = (d) => {
+            const tur = d.ad.split('.').pop().toLowerCase();
+            const ara = `${d.uygulama} ${d.ad} ${d.surum || ''} dosya ${tur}`.toLocaleLowerCase('tr-TR');
+            const alt = [d.surum, boyut(d.boyut), tarih(d.tarih)].filter(Boolean).join(' · ');
+            return `<a class="dosya-satir" href="${escapeHtml(d.url)}" target="_blank" rel="noopener" download data-search="${escapeHtml(ara)}"><span class="dosya-tur ${tur}">${tur.toUpperCase()}</span><span class="dosya-bilgi"><span class="dosya-ad text-header block">${escapeHtml(d.uygulama)}</span><span class="dosya-alt block">${escapeHtml(d.ad)}${alt ? ' · ' + escapeHtml(alt) : ''}</span></span></a>`;
+        };
+        const grup = (baslik, liste) => liste.length ? `<p class="dosya-grup">${baslik}</p><div class="dosya-liste">${liste.sort((a, b) => a.uygulama.localeCompare(b.uygulama, 'tr')).map(satir).join('')}</div>` : '';
+
+        let dosyaYuklendi = false;
+        const dosyalariYukle = async () => {
+            dosyaYuklendi = true;
+            const kutu = document.getElementById('dosya-icerik');
+            kutu.innerHTML = '<p class="dosya-not">Dosyalar GitHub\'dan alınıyor...</p>';
+            const anahtar = anahtarAl();
+            const [acik, acikSurum, rea] = await Promise.allSettled([
+                ghJson('repos/gokhangeo/apk/contents/apk'),
+                ghJson('repos/gokhangeo/apk/releases?per_page=100'),
+                anahtar ? Promise.all([1, 2, 3].map(s => ghJson('repos/gokhangeo/rea/releases?per_page=100&page=' + s, anahtar))).then(s => s.flat()) : Promise.reject(new Error('yok')),
+            ]);
+            const acikDosyalar = (acik.status === 'fulfilled' ? acik.value : []).filter(f => f.type === 'file' && DOSYA_UZANTI.test(f.name))
+                .map(f => ({ uygulama: f.name.replace(DOSYA_UZANTI, ''), ad: f.name, boyut: f.size, url: f.download_url }))
+                .concat(acikSurum.status === 'fulfilled' ? sonSurumler(acikSurum.value) : []);
+            let html = grup('Herkese açık (apk deposu)', acikDosyalar);
+            if (rea.status === 'fulfilled') {
+                html += grup('Rea sürümleri (her uygulamanın son hâli)', sonSurumler(rea.value));
+            } else if (!anahtar) {
+                html += '<p class="dosya-not">Rea deposu gizli olduğu için EXE, IPA ve diğer APK\'lar görünmüyor. Bu cihazda bir kez <b>Rea anahtarı</b> düğmesiyle okuma anahtarını girin.</p>';
+            } else {
+                html += `<p class="dosya-not">Rea sürümleri alınamadı (${rea.reason && rea.reason.message === 'anahtar' ? 'anahtar geçersiz ya da süresi dolmuş' : 'bağlantı hatası'}). Rea anahtarı düğmesiyle yeni anahtar girin.</p>`;
+            }
+            kutu.innerHTML = html || '<p class="dosya-not">GitHub\'a ulaşılamadı. Biraz sonra Yenile\'ye basın.</p>';
+            const q = document.getElementById('project-search').value.toLocaleLowerCase('tr-TR').trim();
+            if (q) kutu.querySelectorAll('.dosya-satir').forEach(a => a.classList.toggle('hidden', !a.dataset.search.includes(q)));
+        };
+        document.getElementById('open-projects-modal').addEventListener('click', () => { if (!dosyaYuklendi) dosyalariYukle(); });
+        document.getElementById('dosya-yenile').addEventListener('click', dosyalariYukle);
+        document.getElementById('dosya-anahtar').addEventListener('click', () => {
+            const yeni = prompt('Rea deposu için GitHub okuma anahtarı (fine-grained, yalnızca gokhangeo/rea → Contents: Read).\nBoş bırakıp Tamam derseniz kayıtlı anahtar silinir.', anahtarAl());
+            if (yeni === null) return;
+            try { yeni.trim() ? localStorage.setItem('reaToken', yeni.trim()) : localStorage.removeItem('reaToken'); } catch (e) {}
+            dosyalariYukle();
         });
 
         // Başlangıç Kontrolü (oturum açıksa giriş ekranı <head> içinde zaten gizlendi)
