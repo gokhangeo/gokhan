@@ -653,10 +653,19 @@
                 const k = aile(r.tag_name);
                 if (!enYeni[k] || new Date(r.published_at) > new Date(enYeni[k].published_at)) enYeni[k] = r;
             });
-            return Object.entries(enYeni).flatMap(([k, r]) => r.assets.filter(a => DOSYA_UZANTI.test(a.name)).map(a => ({
+            // Aynı sürümde aynı türden birden çok dosya varsa tek dosya: EXE'de kurulum, APK'da sürüm numaralı olan
+            const tercih = (a) => /setup|kurulum/i.test(a.name) ? (/\.exe$/i.test(a.name) ? 0 : 2) : 1;
+            return Object.entries(enYeni).flatMap(([k, r]) => {
+                const tek = {};
+                r.assets.filter(a => DOSYA_UZANTI.test(a.name)).forEach(a => {
+                    const tur = a.name.split('.').pop().toLowerCase();
+                    if (!tek[tur] || tercih(a) < tercih(tek[tur])) tek[tur] = a;
+                });
+                return Object.values(tek).map(a => ({ anahtar: k.replace(/[^a-z0-9]/g, ''),
                 uygulama: UYGULAMA_ADI[k] || k.replace(/-/g, ' ').replace(/^./, c => c.toUpperCase()),
                 ad: a.name, boyut: a.size, tarih: r.published_at, surum: r.tag_name, url: a.browser_download_url,
-            })));
+                }));
+            });
         };
         const satir = (d) => {
             const tur = d.ad.split('.').pop().toLowerCase();
@@ -680,9 +689,15 @@
             const acikDosyalar = (acik.status === 'fulfilled' ? acik.value : []).filter(f => f.type === 'file' && DOSYA_UZANTI.test(f.name))
                 .map(f => ({ uygulama: f.name.replace(DOSYA_UZANTI, ''), ad: f.name, boyut: f.size, url: f.download_url }))
                 .concat(acikSurum.status === 'fulfilled' ? sonSurumler(acikSurum.value) : []);
-            let html = grup('Herkese açık (apk deposu)', acikDosyalar);
+            let html;
             if (rea.status === 'fulfilled') {
-                html += grup('Rea sürümleri (her uygulamanın son hâli)', sonSurumler(rea.value));
+                // Tek liste: Rea'daki son sürümler + apk deposunda olup Rea'da olmayanlar (NewPipe vb.)
+                const reaDosyalar = sonSurumler(rea.value);
+                const reaVar = new Set(reaDosyalar.map(d => d.anahtar));
+                html = grup('Her uygulamanın son sürümü', reaDosyalar.concat(acikDosyalar.filter(d => !reaVar.has(d.uygulama.toLowerCase().replace(/[^a-z0-9]/g, '')))));
+            } else html = grup('Herkese açık (apk deposu)', acikDosyalar);
+            if (rea.status === 'fulfilled') {
+                // tek liste yukarıda kuruldu
             } else if (!anahtar) {
                 html += '<p class="dosya-not">Rea deposu gizli olduğu için EXE, IPA ve diğer APK\'lar görünmüyor. Bu cihazda bir kez <b>Rea anahtarı</b> düğmesiyle okuma anahtarını girin.</p>';
             } else {
