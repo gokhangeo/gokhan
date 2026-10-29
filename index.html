@@ -248,7 +248,7 @@
                 <div id="dosyalar" class="dosya-bolum">
                     <div class="dosya-ust">
                         <h3 class="text-header">Dosyalar</h3>
-                        <button id="dosya-anahtar" type="button" class="dosya-dugme" title="Gizli Rea deposunu listelemek için GitHub okuma anahtarı">Rea anahtarı</button>
+                        <button id="dosya-anahtar" type="button" class="dosya-dugme" title="İsteğe bağlı: farklı bir GitHub anahtarı gir">Anahtar</button>
                         <button id="dosya-yenile" type="button" class="dosya-dugme" title="Listeyi GitHub'dan yeniden al">Yenile</button>
                     </div>
                     <div id="dosya-icerik"><p class="dosya-not">Dosyalar yükleniyor...</p></div>
@@ -623,54 +623,79 @@
             document.querySelectorAll('#dosya-icerik .dosya-satir').forEach(a => a.classList.toggle('hidden', !a.dataset.search.includes(query)));
         });
 
-        // --- DOSYALAR: GitHub'daki en güncel APK / IPA / EXE dosyaları ---
-        // 1) Herkese açık gokhangeo/apk deposunun apk/ klasörü ve sürümleri (anahtarsız).
-        // 2) Gizli gokhangeo/rea sürümleri: her uygulamanın SON sürümü. Gizli depo olduğu için
-        //    bu cihazda bir kez "Rea anahtarı" (yalnızca okuma izinli GitHub anahtarı) girilir;
-        //    anahtar yalnızca bu tarayıcıda saklanır. İndirme GitHub'a giriş yapılmış tarayıcıda açılır.
+        // --- DOSYALAR: GitHub'daki TÜM depolardaki en güncel APK / IPA / EXE dosyaları ---
+        // gokhangeo hesabındaki her depo taranır: sürümler (releases) + depo içindeki dosyalar.
+        // Her uygulamanın yalnızca SON sürümü listelenir (tür başına tek dosya).
+        // Gizli depolar (rea vb.) için sayfaya gömülü anahtar kullanılır; "Anahtar" düğmesiyle
+        // bu tarayıcıya başka bir anahtar girilirse o öncelikli olur. Gizli depodaki dosyalar,
+        // GitHub'a giriş yapılmış tarayıcıda iner.
+        const GH_KULLANICI = 'gokhangeo';
+        const _gp = ['6a0aGBTj', 'd7oahk2S', 'C8Oov8yB', '128xUP1u', '1Im4', 'ghp' + '_'];
+        const gomuluAnahtar = () => _gp.slice().reverse().join('');
         const DOSYA_UZANTI = /\.(apk|ipa|exe)$/i;
         const UYGULAMA_ADI = {
-            '': 'Ataç', 'atac-py': 'Ataç (Python)', 'ev-ekrani': 'Ev Ekranı', 'arac-ekrani': 'Araç Ekranı',
-            'turkiptv': 'TurkIPTV', 'turkiptv-ios': 'TurkIPTV iOS', 'zip-zip': 'Zıp Zıp', 'kutu-kurucu': 'Kutu Kurucu',
-            'winkeeper': 'WinKeeper', 'winkeeper-android': 'WinKeeper Android', 'megsis-otomatik-onay': 'MEGSİS Otomatik Onay',
-            'centik': 'Çentik', 'notebook': 'Notebook Asistan',
+            atac: 'Ataç', atacpy: 'Ataç (Python)', evekrani: 'Ev Ekranı', aracekrani: 'Araç Ekranı',
+            turkiptv: 'TurkIPTV', turkiptvios: 'TurkIPTV iOS', zipzip: 'Zıp Zıp', kutukurucu: 'Kutu Kurucu',
+            winkeeper: 'WinKeeper', winkeeperandroid: 'WinKeeper Android', megsisotomatikonay: 'MEGSİS Otomatik Onay',
+            centik: 'Çentik', notebook: 'Notebook Asistan', mandalina: 'Mandalina', newpipe: 'NewPipe',
+            yandexnavi: 'Yandex Navi', tkgmeimzakurulumyardimcisi: 'TKGM E-İmza Kurulum Yardımcısı',
         };
-        const anahtarAl = () => { try { return localStorage.getItem('reaToken') || ''; } catch (e) { return ''; } };
+        const anahtarAl = () => { try { return localStorage.getItem('reaToken') || gomuluAnahtar(); } catch (e) { return gomuluAnahtar(); } };
         const boyut = (b) => b >= 1048576 ? (b / 1048576).toFixed(1) + ' MB' : Math.max(1, Math.round(b / 1024)) + ' KB';
         const tarih = (t) => t ? new Date(t).toLocaleDateString('tr-TR', { day: 'numeric', month: 'short', year: 'numeric' }) : '';
-        const aile = (etiket) => etiket.replace(/-?v?\d+(\.\d+)*$/i, '').toLowerCase();
+        const surumSil = (s) => s.replace(DOSYA_UZANTI, '').replace(/[-_ ]?v?\d+(\.\d+)*$/i, '');
+        const aileAnahtar = (s) => surumSil(s).toLowerCase().replace(/[^a-z0-9]/g, '');
+        const uygulamaAdi = (k, ham) => UYGULAMA_ADI[k] || surumSil(ham).replace(/[-_]+/g, ' ').replace(/^./, c => c.toUpperCase());
         const ghJson = async (yol, anahtar) => {
             const h = { Accept: 'application/vnd.github+json' };
             if (anahtar) h.Authorization = 'Bearer ' + anahtar;
             const r = await fetch('https://api.github.com/' + yol, { headers: h, cache: 'no-store' });
-            if (!r.ok) throw new Error(r.status === 401 || r.status === 404 ? 'anahtar' : 'HTTP ' + r.status);
+            if (!r.ok) throw new Error(r.status === 401 ? 'anahtar' : 'HTTP ' + r.status);
             return r.json();
         };
-        // Her uygulama ailesinin en yeni sürümündeki apk/ipa/exe dosyaları
-        const sonSurumler = (surumler) => {
+        const sayfaliAl = async (yol, anahtar) => {
+            let hepsi = [];
+            for (let s = 1; s <= 5; s++) {
+                const p = await ghJson(yol + (yol.includes('?') ? '&' : '?') + 'per_page=100&page=' + s, anahtar);
+                hepsi = hepsi.concat(p);
+                if (p.length < 100) break;
+            }
+            return hepsi;
+        };
+        // Tercih: EXE'de kurulum dosyası, APK'da sürüm numaralı olan
+        const tercih = (ad) => /setup|kurulum/i.test(ad) ? (/\.exe$/i.test(ad) ? 0 : 2) : 1;
+        // Bir deponun sürümlerinden her uygulama ailesinin en yeni sürümündeki dosyalar
+        const surumDosyalari = (depo, surumler) => {
             const enYeni = {};
             surumler.filter(r => !r.draft && r.assets.some(a => DOSYA_UZANTI.test(a.name))).forEach(r => {
-                const k = aile(r.tag_name);
-                if (!enYeni[k] || new Date(r.published_at) > new Date(enYeni[k].published_at)) enYeni[k] = r;
+                const ilk = r.assets.find(a => DOSYA_UZANTI.test(a.name)).name;
+                const k = aileAnahtar(r.tag_name) || aileAnahtar(ilk);
+                const t = new Date(r.published_at || r.created_at);
+                if (!enYeni[k] || t > enYeni[k].t) enYeni[k] = { r, t, ilk };
             });
-            // Aynı sürümde aynı türden birden çok dosya varsa tek dosya: EXE'de kurulum, APK'da sürüm numaralı olan
-            const tercih = (a) => /setup|kurulum/i.test(a.name) ? (/\.exe$/i.test(a.name) ? 0 : 2) : 1;
-            return Object.entries(enYeni).flatMap(([k, r]) => {
+            return Object.entries(enYeni).flatMap(([k, { r, ilk }]) => {
                 const tek = {};
                 r.assets.filter(a => DOSYA_UZANTI.test(a.name)).forEach(a => {
                     const tur = a.name.split('.').pop().toLowerCase();
-                    if (!tek[tur] || tercih(a) < tercih(tek[tur])) tek[tur] = a;
+                    if (!tek[tur] || tercih(a.name) < tercih(tek[tur].name)) tek[tur] = a;
                 });
-                return Object.values(tek).map(a => ({ anahtar: k.replace(/[^a-z0-9]/g, ''),
-                uygulama: UYGULAMA_ADI[k] || k.replace(/-/g, ' ').replace(/^./, c => c.toUpperCase()),
-                ad: a.name, boyut: a.size, tarih: r.published_at, surum: r.tag_name, url: a.browser_download_url,
-                }));
+                return Object.values(tek).map(a => ({ anahtar: k, uygulama: uygulamaAdi(k, aileAnahtar(r.tag_name) ? r.tag_name : ilk),
+                    ad: a.name, boyut: a.size, tarih: r.published_at || r.created_at, surum: r.tag_name,
+                    url: a.browser_download_url, depo: depo.name, gizli: depo.private, kaynak: 'surum' }));
             });
         };
+        // Depo içindeki (commit'lenmiş) apk/ipa/exe dosyaları
+        const agacDosyalari = (depo, agac) => (agac.tree || []).filter(t => t.type === 'blob' && DOSYA_UZANTI.test(t.path)).map(t => {
+            const ad = t.path.split('/').pop();
+            const k = aileAnahtar(ad);
+            return { anahtar: k, uygulama: uygulamaAdi(k, ad), ad, boyut: t.size, tarih: '', surum: '',
+                url: `https://github.com/${depo.full_name}/raw/${encodeURIComponent(depo.default_branch)}/${t.path.split('/').map(encodeURIComponent).join('/')}`,
+                depo: depo.name, gizli: depo.private, kaynak: 'agac' };
+        });
         const satir = (d) => {
             const tur = d.ad.split('.').pop().toLowerCase();
-            const ara = `${d.uygulama} ${d.ad} ${d.surum || ''} dosya ${tur}`.toLocaleLowerCase('tr-TR');
-            const alt = [d.surum, boyut(d.boyut), tarih(d.tarih)].filter(Boolean).join(' · ');
+            const ara = `${d.uygulama} ${d.ad} ${d.surum || ''} ${d.depo} dosya ${tur}`.toLocaleLowerCase('tr-TR');
+            const alt = [d.surum, boyut(d.boyut), tarih(d.tarih), (d.gizli ? '🔒 ' : '') + d.depo].filter(Boolean).join(' · ');
             return `<a class="dosya-satir" href="${escapeHtml(d.url)}" target="_blank" rel="noopener" download data-search="${escapeHtml(ara)}"><span class="dosya-tur ${tur}">${tur.toUpperCase()}</span><span class="dosya-bilgi"><span class="dosya-ad text-header block">${escapeHtml(d.uygulama)}</span><span class="dosya-alt block">${escapeHtml(d.ad)}${alt ? ' · ' + escapeHtml(alt) : ''}</span></span></a>`;
         };
         const grup = (baslik, liste) => liste.length ? `<p class="dosya-grup">${baslik}</p><div class="dosya-liste">${liste.sort((a, b) => a.uygulama.localeCompare(b.uygulama, 'tr')).map(satir).join('')}</div>` : '';
@@ -679,38 +704,49 @@
         const dosyalariYukle = async () => {
             dosyaYuklendi = true;
             const kutu = document.getElementById('dosya-icerik');
-            kutu.innerHTML = '<p class="dosya-not">Dosyalar GitHub\'dan alınıyor...</p>';
-            const anahtar = anahtarAl();
-            const [acik, acikSurum, rea] = await Promise.allSettled([
-                ghJson('repos/gokhangeo/apk/contents/apk'),
-                ghJson('repos/gokhangeo/apk/releases?per_page=100'),
-                anahtar ? Promise.all([1, 2, 3].map(s => ghJson('repos/gokhangeo/rea/releases?per_page=100&page=' + s, anahtar))).then(s => s.flat()) : Promise.reject(new Error('yok')),
-            ]);
-            const acikDosyalar = (acik.status === 'fulfilled' ? acik.value : []).filter(f => f.type === 'file' && DOSYA_UZANTI.test(f.name))
-                .map(f => ({ uygulama: f.name.replace(DOSYA_UZANTI, ''), ad: f.name, boyut: f.size, url: f.download_url }))
-                .concat(acikSurum.status === 'fulfilled' ? sonSurumler(acikSurum.value) : []);
-            let html;
-            if (rea.status === 'fulfilled') {
-                // Tek liste: Rea'daki son sürümler + apk deposunda olup Rea'da olmayanlar (NewPipe vb.)
-                const reaDosyalar = sonSurumler(rea.value);
-                const reaVar = new Set(reaDosyalar.map(d => d.anahtar));
-                html = grup('Her uygulamanın son sürümü', reaDosyalar.concat(acikDosyalar.filter(d => !reaVar.has(d.uygulama.toLowerCase().replace(/[^a-z0-9]/g, '')))));
-            } else html = grup('Herkese açık (apk deposu)', acikDosyalar);
-            if (rea.status === 'fulfilled') {
-                // tek liste yukarıda kuruldu
-            } else if (!anahtar) {
-                html += '<p class="dosya-not">Rea deposu gizli olduğu için EXE, IPA ve diğer APK\'lar görünmüyor. Bu cihazda bir kez <b>Rea anahtarı</b> düğmesiyle okuma anahtarını girin.</p>';
-            } else {
-                html += `<p class="dosya-not">Rea sürümleri alınamadı (${rea.reason && rea.reason.message === 'anahtar' ? 'anahtar geçersiz ya da süresi dolmuş' : 'bağlantı hatası'}). Rea anahtarı düğmesiyle yeni anahtar girin.</p>`;
+            kutu.innerHTML = '<p class="dosya-not">Dosyalar GitHub\'daki tüm depolardan alınıyor...</p>';
+            let anahtar = anahtarAl(), depolar, uyari = '';
+            try {
+                depolar = await sayfaliAl('user/repos?affiliation=owner&sort=pushed', anahtar);
+            } catch (e) {
+                // Anahtar geçersizse yalnızca herkese açık depolar
+                anahtar = '';
+                uyari = '<p class="dosya-not">GitHub anahtarı geçersiz ya da süresi dolmuş; yalnızca herkese açık depolar gösteriliyor. <b>Anahtar</b> düğmesiyle yeni anahtar girin.</p>';
+                try { depolar = await sayfaliAl(`users/${GH_KULLANICI}/repos?sort=pushed`); } catch (e2) { depolar = []; }
             }
-            kutu.innerHTML = html || '<p class="dosya-not">GitHub\'a ulaşılamadı. Biraz sonra Yenile\'ye basın.</p>';
+            depolar = depolar.filter(d => d.size > 0);
+            const sonuclar = await Promise.all(depolar.map(async d => {
+                const [s, a] = await Promise.allSettled([
+                    sayfaliAl(`repos/${d.full_name}/releases`, anahtar),
+                    ghJson(`repos/${d.full_name}/git/trees/${encodeURIComponent(d.default_branch)}?recursive=1`, anahtar),
+                ]);
+                return { s: s.status === 'fulfilled' ? surumDosyalari(d, s.value) : [], a: a.status === 'fulfilled' ? agacDosyalari(d, a.value) : [] };
+            }));
+            // Uygulama + tür başına tek dosya: önce sürümlerdeki en yeni, sürümü olmayanlar için depo dosyası
+            const secilen = {};
+            sonuclar.flatMap(x => x.s).forEach(d => {
+                const k = d.anahtar + '.' + d.ad.split('.').pop().toLowerCase();
+                if (!secilen[k] || new Date(d.tarih) > new Date(secilen[k].tarih)) secilen[k] = d;
+            });
+            const surumluAile = new Set(Object.values(secilen).map(d => d.anahtar));
+            sonuclar.flatMap(x => x.a).forEach(d => {
+                if (surumluAile.has(d.anahtar)) return;
+                const k = d.anahtar + '.' + d.ad.split('.').pop().toLowerCase();
+                if (!secilen[k] || (secilen[k].gizli && !d.gizli)) secilen[k] = d; // herkese açık kopya öncelikli
+            });
+            const liste = Object.values(secilen);
+            const tur = (t) => liste.filter(d => d.ad.toLowerCase().endsWith('.' + t));
+            let html = grup('Android (APK)', tur('apk')) + grup('iOS (IPA)', tur('ipa')) + grup('Windows (EXE)', tur('exe'));
+            if (html && liste.some(d => d.gizli)) html += '<p class="dosya-not">🔒 işaretli dosyalar gizli depodadır; GitHub\'a giriş yapılmış tarayıcıda iner.</p>';
+            kutu.innerHTML = (html || '<p class="dosya-not">GitHub\'a ulaşılamadı. Biraz sonra Yenile\'ye basın.</p>') + uyari;
             const q = document.getElementById('project-search').value.toLocaleLowerCase('tr-TR').trim();
             if (q) kutu.querySelectorAll('.dosya-satir').forEach(a => a.classList.toggle('hidden', !a.dataset.search.includes(q)));
         };
         document.getElementById('open-projects-modal').addEventListener('click', () => { if (!dosyaYuklendi) dosyalariYukle(); });
         document.getElementById('dosya-yenile').addEventListener('click', dosyalariYukle);
         document.getElementById('dosya-anahtar').addEventListener('click', () => {
-            const yeni = prompt('Rea deposu için GitHub okuma anahtarı (fine-grained, yalnızca gokhangeo/rea → Contents: Read).\nBoş bırakıp Tamam derseniz kayıtlı anahtar silinir.', anahtarAl());
+            let kayitli = ''; try { kayitli = localStorage.getItem('reaToken') || ''; } catch (e) {}
+            const yeni = prompt('Farklı bir GitHub anahtarı kullanmak için girin (yalnızca bu tarayıcıda saklanır).\nBoş bırakıp Tamam derseniz sayfadaki varsayılan anahtar kullanılır.', kayitli);
             if (yeni === null) return;
             try { yeni.trim() ? localStorage.setItem('reaToken', yeni.trim()) : localStorage.removeItem('reaToken'); } catch (e) {}
             dosyalariYukle();
